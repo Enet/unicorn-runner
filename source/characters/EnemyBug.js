@@ -9,10 +9,7 @@ import {
     loadSpriteSheet
 } from 'loaders.js';
 
-import bugLineImage from 'images/bug_line.png';
-
 export const ENEMY_BUG = {
-    imageURL: bugLineImage,
     frames: [
         {
             name: 'frame-1',
@@ -50,9 +47,9 @@ export const ENEMY_BUG = {
     ]
 };
 
-export function loadEnemyBug () {
-    return loadSpriteSheet(ENEMY_BUG)
-        .then(createEnemyBugFactory);
+export function loadEnemyBug (manager) {
+    const sprite = loadSpriteSheet(ENEMY_BUG, manager.getImage('bugLine'));
+    return createEnemyBugFactory(sprite);
 }
 
 

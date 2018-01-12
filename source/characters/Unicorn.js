@@ -11,10 +11,7 @@ import {
     Killable
 } from 'Traits.js';
 
-import unicornFullImage from 'images/unicorn_full.png';
-
 export const UNICORN = {
-    imageURL: unicornFullImage,
     frames: [
         {
             name: 'idle',
@@ -107,9 +104,9 @@ export const UNICORN = {
     ]
 };
 
-export function loadUnicorn () {
-    return loadSpriteSheet(UNICORN)
-        .then(createUnicornFactory);
+export function loadUnicorn (manager) {
+    const sprite = loadSpriteSheet(UNICORN, manager.getImage('unicornFull'));
+    return createUnicornFactory(sprite);
 }
 
 export function createUnicornFactory (sprite) {

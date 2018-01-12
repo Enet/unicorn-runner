@@ -9,10 +9,7 @@ import {
     loadSpriteSheet
 } from 'loaders.js';
 
-import rainbowLineImage from 'images/rainbow_line.png';
-
 export const RAINBOW = {
-    imageURL: rainbowLineImage,
     frames: [
         {
             name: 'spark-1',
@@ -55,9 +52,9 @@ export const RAINBOW = {
     ]
 };
 
-export function loadRainbow () {
-    return loadSpriteSheet(RAINBOW)
-        .then(createRainbowFactory);
+export function loadRainbow (manager) {
+    const sprite = loadSpriteSheet(RAINBOW, manager.getImage('rainbowLine'));
+    return createRainbowFactory(sprite);
 }
 
 export class BehaviorRainbow extends Trait {

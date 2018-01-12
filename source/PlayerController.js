@@ -3,16 +3,13 @@ import {
     Vec2
 } from 'math.js';
 
-const SCORE_ID = 'score';
-const scoreNode = document.getElementById(SCORE_ID);
-
 export default class PlayerController extends Trait {
-    constructor () {
+    constructor (onChange) {
         super('playerController');
         this.checkpoint = new Vec2(0, 0);
         this.player = null;
         this.score = 0;
-        this.scoreSelector = scoreNode;
+        this.onChange = onChange;
     }
 
     setPlayer (entity) {
@@ -22,7 +19,7 @@ export default class PlayerController extends Trait {
             this.score += 50;
 
             setTimeout(() => {
-                this.scoreSelector.innerHTML = this.score;
+                this.onChange(this.score);
             }, 0);
         }
     }

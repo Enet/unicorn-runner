@@ -6,12 +6,7 @@ import {
     drawStaticBackground,
     createSpriteLayer
 } from 'layers.js';
-import {
-    loadImage
-} from 'loaders.js';
 import Level from 'Level.js';
-
-import boardUpdateImage from 'images/board_update.png';
 
 export function setupCollision (levelSpec, level) {
     const mergedTiles = levelSpec.layers.reduce((mergedTiles, layerSpec) => {
@@ -21,11 +16,11 @@ export function setupCollision (levelSpec, level) {
     level.setCollisionGrid(collisionGrid);
 }
 
-export function setupBackgrounds (levelSpec, level, backgroundSprites) {
+export function setupBackgrounds (levelSpec, level, manager) {
     levelSpec.layers.forEach(layer => {
         const backgroundGrid = createBackgroundGrid(layer.tiles, levelSpec.patterns);
-        const backgroundLayer = createBackgroundLayer(level, backgroundGrid, backgroundSprites);
-        const staticBackgroundLayer = drawStaticBackground();
+        const backgroundLayer = createBackgroundLayer(level, backgroundGrid, manager);
+        const staticBackgroundLayer = drawStaticBackground(manager);
         level.comp.layers.push(staticBackgroundLayer);
         level.comp.layers.push(backgroundLayer);
     });
@@ -44,20 +39,12 @@ export function setupEntities (levelSpec, level, entityFactory) {
 }
 
 export function createLevelLoader (entityFactory) {
-    return function loadLevel(name) {
-        return new Promise(resolve => resolve(name))
-            .then(levelSpec => Promise.all([
-                levelSpec,
-                loadImage(boardUpdateImage)
-            ]))
-            .then(([levelSpec, image]) => {
-                const level = new Level();
-                setupCollision(levelSpec, level);
-                setupBackgrounds(levelSpec, level, image);
-                setupEntities(levelSpec, level, entityFactory);
-
-                return level;
-            });
+    return function loadLevel (levelSpec, manager) {
+        const level = new Level();
+        setupCollision(levelSpec, level);
+        setupBackgrounds(levelSpec, level, manager);
+        setupEntities(levelSpec, level, entityFactory);
+        return level;
     }
 }
 

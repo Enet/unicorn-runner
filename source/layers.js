@@ -1,17 +1,10 @@
-import {
-    loadImage
-} from 'loaders.js';
 import TileResolver from 'TileResolver.js';
 import SpriteSheet from 'SpriteSheet.js';
 
-import glassBackImage from 'images/glass_back.png';
-import grassImage from 'images/grass.png';
-import glassFrontImage from 'images/glass_front.png';
-
-export function createBackgroundLayer (level, tiles, image) {
+export function createBackgroundLayer (level, tiles, manager) {
     const resolver = new TileResolver(tiles);
     const buffer = document.createElement('canvas');
-    const sprites = new SpriteSheet(image, 60, 60);
+    const sprites = new SpriteSheet(manager.getImage('boardUpdate'), 60, 60);
 
     sprites.define('ground', 0, 0, 60, 60);
 
@@ -46,15 +39,14 @@ export function createBackgroundLayer (level, tiles, image) {
     };
 }
 
-export function drawStaticBackground () {
+export function drawStaticBackground (manager) {
     const buffer = document.createElement('canvas');
     buffer.width = 840 + 60;
     buffer.height = 660;
 
-    let GrassImage;
-    let GlassBackImage;
-    let GlassFrontImage;
-    let loaded = 0;
+    let GrassImage = manager.getImage('grass');
+    let GlassBackImage = manager.getImage('glassBack');
+    let GlassFrontImage = manager.getImage('glassFront');
 
     function drawGradient (context) {
         let gradient = context.createLinearGradient(0, 0, 0, buffer.width);
@@ -63,23 +55,6 @@ export function drawStaticBackground () {
         gradient.addColorStop(1, '#268BEF');
         context.fillStyle = gradient;
         context.fillRect(0, 0, buffer.width, buffer.height);
-    }
-
-    function loadGrass () {
-        loadImage(glassBackImage).then(function(result) {
-            GlassBackImage = result;
-            loaded++;
-        });
-
-        loadImage(grassImage).then(function(result) {
-            GrassImage = result;
-            loaded++;
-        });
-
-        loadImage(glassFrontImage).then(function(result) {
-            GlassFrontImage = result;
-            loaded++;
-        });
     }
 
     function drawGrass (context, camera) {
@@ -93,12 +68,9 @@ export function drawStaticBackground () {
         }
     }
 
-    loadGrass();
     return function drawBackgroundLayer (context, camera) {
-        if (loaded > 2) {
-            drawGradient(context);
-            drawGrass(context, camera);
-        }
+        drawGradient(context);
+        drawGrass(context, camera);
     }
 }
 
