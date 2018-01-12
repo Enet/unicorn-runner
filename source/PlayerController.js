@@ -1,10 +1,20 @@
-class PlayerController extends Trait {
+import {
+    Trait
+} from 'Entity.js';
+import {
+    Vec2
+} from 'math.js';
+
+const SCORE_ID = 'score';
+const scoreNode = document.getElementById(SCORE_ID);
+
+export default class PlayerController extends Trait {
     constructor() {
         super('playerController');
         this.checkpoint = new Vec2(0, 0);
         this.player = null;
         this.score = 0;
-        this.scoreSelector = document.getElementById('unicorn-score');
+        this.scoreSelector = scoreNode;
     }
 
     setPlayer(entity) {

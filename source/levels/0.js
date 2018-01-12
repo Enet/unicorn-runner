@@ -1,4 +1,4 @@
-const LEVEL = {
+export default {
     layers: [
         {
             tiles: [
@@ -95,113 +95,48 @@ const LEVEL = {
     ],
     entities: [
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [408, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [780, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [1608, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [1800, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [2580, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [3288, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [3960, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [4448, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [4620, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [5588, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [7388, 0]
         }
     ]
 };
-
-function loadChars() {
-    const entityFactories = {};
-
-    function addFactory(name) {
-        return factory => entityFactories[name] = factory;
-    }
-
-
-    return Promise.all([
-        loadUnicorn().then(addFactory('unicorn')),
-        loadEnemyBug().then(addFactory('enemyBug')),
-        loadRainbow().then(addFactory('rainbow')),
-    ])
-    .then(() => entityFactories);
-}
-
-function createPlayerEnv(playerEntity) {
-    const playerEnv = new Entity();
-    const playerControl = new PlayerController();
-    playerControl.checkpoint.set(64, 64);
-    playerControl.setPlayer(playerEntity);
-    playerEnv.addTrait(playerControl);
-    return playerEnv;
-}
-
-async function main(canvas) {
-    const context = canvas.getContext('2d');
-    const charsFactory = await loadChars();
-    const loadLevel = await createLevelLoader(charsFactory);
-    const level = await loadLevel(LEVEL);
-    const camera = new Camera();
-    const unicorn = charsFactory.unicorn();
-    const playerEnv = createPlayerEnv(unicorn);
-
-    level.entities.add(playerEnv);
-
-    ['keydown', 'keyup'].forEach(eventName => {
-        window.addEventListener(eventName, event => {
-            if (event.code === 'Space') {
-                const keyState = event.type === 'keydown' ? 1 : 0;
-
-                if (keyState > 0) {
-                    unicorn.jump.start();
-                } else {
-                    unicorn.jump.cancel();
-                }
-            } else {
-                unicorn.jump.cancel();
-            }
-        });
-    });
-
-    const timer = new Timer(1/60);
-    timer.update = function update(deltaTime) {
-        level.update(deltaTime);
-        camera.pos.x = Math.max(0, unicorn.pos.x - 100);
-        level.comp.draw(context, camera);
-    }
-
-    timer.start();
-}
-
-const canvas = document.getElementById('screen');
-main(canvas);

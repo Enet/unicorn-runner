@@ -1,0 +1,26 @@
+{
+    "colors": false,
+    "depthLimit": 6,
+    "duplicates": false,
+    "efficient": "always",
+    "exclude": [],
+    "globalDupe": false,
+    "groupOutputByFile": true,
+    "indentPref": 4,
+    "leadingZero": "always",
+    "namingConvention": "BEM",
+    "namingConventionStrict": true,
+    "none": "always",
+    "noImportant": true,
+    "parenSpace": "never",
+    "quotePref": "single",
+    "semicolons": "never",
+    "universal": "never",
+    "sortOrder": false,
+    "reporterOptions": {
+        "columns": ["lineData", "severity", "description", "rule"],
+        "columnSplitter": "  ",
+        "showHeaders": false,
+        "truncate": true
+    }
+}

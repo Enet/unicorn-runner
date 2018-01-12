@@ -1,0 +1,42 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "sourceType": "module",
+        "allowImportExportEverywhere": false,
+        "codeFrame": true,
+        "ecmaVersion": 7,
+        "ecmaFeatures": {
+
+        }
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "paths": ["source", "node_modules"]
+            }
+        }
+    },
+    "rules": {
+        "indent": ["error", 4, {"SwitchCase": 1}],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "single", {"allowTemplateLiterals": true}],
+        "comma-dangle": ["error", "never"],
+        "one-var": ["error", "never"],
+        "eqeqeq": ["error", "always"],
+        "curly": ["error", "all"],
+        "no-extra-parens": ["error", "all", {"nestedBinaryExpressions": false}],
+        "comma-spacing": ["error", {"before": false, "after": true}],
+        "camelcase": ["error", {"properties": "always"}],
+        "no-use-before-define": ["error", {"variables": true, "classes": true, "functions": false}],
+        "no-unused-vars": ["error", {"vars": "all", "args": "none"}],
+        "no-console": ["warn"],
+        "no-debugger": ["warn"]
+    }
+}

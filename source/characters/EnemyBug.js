@@ -1,5 +1,20 @@
-const ENEMY_BUG = {
-    imageURL: 'img/bug_line.png',
+import {
+    Trait,
+    Entity
+} from 'Entity.js';
+import {
+    Physics,
+    Solid,
+    Killable
+} from 'Traits.js';
+import {
+    loadSpriteSheet
+} from 'loaders.js';
+
+import bugLineImage from 'images/bug_line.png';
+
+export const ENEMY_BUG = {
+    imageURL: bugLineImage,
     frames: [
         {
             name: 'frame-1',
@@ -37,13 +52,13 @@ const ENEMY_BUG = {
     ]
 };
 
-function loadEnemyBug() {
+export function loadEnemyBug() {
     return loadSpriteSheet(ENEMY_BUG)
-    .then(createEnemyBugFactory);
+        .then(createEnemyBugFactory);
 }
 
 
-class BehaviorEnemyBug extends Trait {
+export class BehaviorEnemyBug extends Trait {
     constructor() {
         super('behavior');
     }
@@ -58,7 +73,7 @@ class BehaviorEnemyBug extends Trait {
 }
 
 
-function createEnemyBugFactory(sprite) {
+export function createEnemyBugFactory(sprite) {
     const standAnim = sprite.animations.get('anim');
 
     function routeAnim(enemyBug) {

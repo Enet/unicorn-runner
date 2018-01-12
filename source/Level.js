@@ -1,4 +1,10 @@
-class Level {
+import Compositor from 'Compositor.js';
+import EntityCollider from 'EntityCollider.js';
+import {
+    TileCollider
+} from 'TileCreation.js';
+
+export default class Level {
     constructor() {
         this.gravity = 1500;
         this.totalTime = 0;

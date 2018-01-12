@@ -1,4 +1,8 @@
-class TileResolver {
+import {
+    Sides
+} from 'Entity.js';
+
+export class TileResolver {
     constructor(matrix, tileSize = 60) {
         this.matrix = matrix;
         this.tileSize = tileSize;
@@ -31,7 +35,7 @@ class TileResolver {
                 x1,
                 x2,
                 y1,
-                y2,
+                y2
             };
         }
     }
@@ -56,7 +60,7 @@ class TileResolver {
     }
 }
 
-class TileCollider {
+export class TileCollider {
     constructor(matrix) {
         this.tiles = new TileResolver(matrix);
     }

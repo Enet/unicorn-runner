@@ -1,4 +1,16 @@
-function createBackgroundLayer(level, tiles, image) {
+import {
+    loadImage
+} from 'loaders.js';
+import {
+    TileResolver
+} from 'TileCreation.js';
+import SpriteSheet from 'SpriteSheet.js';
+
+import glassBackImage from 'images/glass_back.png';
+import grassImage from 'images/grass.png';
+import glassFrontImage from 'images/glass_front.png';
+
+export function createBackgroundLayer(level, tiles, image) {
     const resolver = new TileResolver(tiles);
     const buffer = document.createElement('canvas');
     const sprites = new SpriteSheet(image, 60, 60);
@@ -36,7 +48,7 @@ function createBackgroundLayer(level, tiles, image) {
     };
 }
 
-function drawStaticBackground() {
+export function drawStaticBackground() {
     const buffer = document.createElement('canvas');
     buffer.width = 840 + 60;
     buffer.height = 660;
@@ -45,7 +57,6 @@ function drawStaticBackground() {
     let GlassBackImage;
     let GlassFrontImage;
     let loaded = 0;
-    const context = buffer.getContext('2d');
 
     function drawGradient(context) {
         let gradient = context.createLinearGradient(0, 0, 0, buffer.width);
@@ -57,17 +68,17 @@ function drawStaticBackground() {
     }
 
     function loadGrass() {
-        loadImage('img/glass_back.png').then(function(result) {
+        loadImage(glassBackImage).then(function(result) {
             GlassBackImage = result;
             loaded++;
         });
 
-        loadImage('img/grass.png').then(function(result) {
+        loadImage(grassImage).then(function(result) {
             GrassImage = result;
             loaded++;
         });
 
-        loadImage('img/glass_front.png').then(function(result) {
+        loadImage(glassFrontImage).then(function(result) {
             GlassFrontImage = result;
             loaded++;
         });
@@ -93,7 +104,7 @@ function drawStaticBackground() {
     }
 }
 
-function createSpriteLayer(entities, width = 172, height = 119) {
+export function createSpriteLayer(entities, width = 172, height = 119) {
     const spriteBuffer = document.createElement('canvas');
     spriteBuffer.width = width;
     spriteBuffer.height = height;

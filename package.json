@@ -1,0 +1,36 @@
+{
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.1",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "css-loader": "^0.28.8",
+    "eslint": "^4.15.0",
+    "eslint-loader": "^1.9.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.6",
+    "nib": "^1.1.2",
+    "style-loader": "^0.19.1",
+    "stylint": "^1.5.9",
+    "stylint-loader": "^1.0.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.10.1"
+  },
+  "name": "unicorn-runner",
+  "version": "2.0.0",
+  "description": "Tinkoff Fintech Game by enet",
+  "main": "source/index.js",
+  "repository": "git@github.com:Enet/unicorn-runner.git",
+  "author": "Stepan Zhevak <enet@protonmail.ch>",
+  "license": "GPL-3.0",
+  "private": false,
+  "scripts": {
+    "clean": "rm -rf ./output/bundles ./output/images",
+    "build": "yarn clean && yarn webpack -p --config webpack.config.js",
+    "watch": "yarn webpack --watch --config webpack.config.js",
+    "start": "yarn webpack-dev-server --config webpack.config.js"
+  }
+}

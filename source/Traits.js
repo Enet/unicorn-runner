@@ -1,4 +1,9 @@
-class Physics extends Trait {
+import {
+    Trait,
+    Sides
+} from 'Entity.js';
+
+export class Physics extends Trait {
     constructor() {
         super('physics');
     }
@@ -14,7 +19,7 @@ class Physics extends Trait {
     }
 }
 
-class Solid extends Trait {
+export class Solid extends Trait {
     constructor() {
         super('solid');
         this.obstructs = true;
@@ -41,7 +46,7 @@ class Solid extends Trait {
     }
 }
 
-class Run extends Trait {
+export class Run extends Trait {
     constructor() {
         super('run');
 
@@ -55,7 +60,7 @@ class Run extends Trait {
     }
 }
 
-class Jump extends Trait {
+export class Jump extends Trait {
     constructor() {
         super('jump');
 
@@ -108,7 +113,7 @@ class Jump extends Trait {
     }
 }
 
-class Killable extends Trait {
+export class Killable extends Trait {
     constructor() {
         super('killable');
         this.dead = false;
@@ -137,7 +142,7 @@ class Killable extends Trait {
     }
 }
 
-class Pickable extends Trait {
+export class Pickable extends Trait {
     constructor() {
         super('pickable');
         this.picked = false;
@@ -161,7 +166,7 @@ class Pickable extends Trait {
     }
 }
 
-class Picker extends Trait {
+export class Picker extends Trait {
     constructor() {
         super('picker');
         this.onPick = function() {

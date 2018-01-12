@@ -1,5 +1,22 @@
-const UNICORN = {
-    imageURL: 'img/unicorn_full.png',
+import {
+    loadSpriteSheet
+} from 'loaders.js';
+import {
+    Entity
+} from 'Entity.js';
+import {
+    Physics,
+    Solid,
+    Run,
+    Jump,
+    Picker,
+    Killable
+} from 'Traits.js';
+
+import unicornFullImage from 'images/unicorn_full.png';
+
+export const UNICORN = {
+    imageURL: unicornFullImage,
     frames: [
         {
             name: 'idle',
@@ -92,12 +109,12 @@ const UNICORN = {
     ]
 };
 
-function loadUnicorn() {
+export function loadUnicorn() {
     return loadSpriteSheet(UNICORN)
-    .then(createUnicornFactory);
+        .then(createUnicornFactory);
 }
 
-function createUnicornFactory(sprite) {
+export function createUnicornFactory(sprite) {
     const runAnim = sprite.animations.get('run');
     const deathAnim = sprite.animations.get('death');
 

@@ -1,5 +1,20 @@
-const RAINBOW = {
-    imageURL: 'img/rainbow_line.png',
+import {
+    Entity,
+    Trait
+} from 'Entity.js';
+import {
+    Physics,
+    Solid,
+    Pickable
+} from 'Traits.js';
+import {
+    loadSpriteSheet
+} from 'loaders.js';
+
+import rainbowLineImage from 'images/rainbow_line.png';
+
+export const RAINBOW = {
+    imageURL: rainbowLineImage,
     frames: [
         {
             name: 'spark-1',
@@ -42,12 +57,12 @@ const RAINBOW = {
     ]
 };
 
-function loadRainbow() {
+export function loadRainbow() {
     return loadSpriteSheet(RAINBOW)
-    .then(createRainbowFactory);
+        .then(createRainbowFactory);
 }
 
-class BehaviorRainbow extends Trait {
+export class BehaviorRainbow extends Trait {
     constructor() {
         super('behavior');
     }
@@ -64,7 +79,7 @@ class BehaviorRainbow extends Trait {
 }
 
 
-function createRainbowFactory(sprite) {
+export function createRainbowFactory(sprite) {
     const sparkAnim = sprite.animations.get('spark');
 
     function routeAnim(rainbow) {
