@@ -1,6 +1,6 @@
 import 'styles/index.styl';
 
-import Game from 'Game.js';
+import UnicornGame from 'UnicornGame.js';
 
 const CANVAS_ID = 'canvas';
 const canvasNode = document.getElementById(CANVAS_ID);
@@ -15,7 +15,7 @@ const SCORE_ID = 'score';
 const scoreNode = document.getElementById(SCORE_ID);
 const onScoreChange = (value) => scoreNode.innerHTML = value;
 
-new Game({
+new UnicornGame({
     canvas,
     onScoreChange
 });
