@@ -1,7 +1,5 @@
-import {
-    Trait,
-    Entity
-} from 'Entity.js';
+import Entity from 'Entity.js';
+import Trait from 'Trait.js';
 import {
     Physics,
     Solid,
@@ -52,18 +50,18 @@ export const ENEMY_BUG = {
     ]
 };
 
-export function loadEnemyBug() {
+export function loadEnemyBug () {
     return loadSpriteSheet(ENEMY_BUG)
         .then(createEnemyBugFactory);
 }
 
 
 export class BehaviorEnemyBug extends Trait {
-    constructor() {
+    constructor () {
         super('behavior');
     }
 
-    collides(us, them) {
+    collides (us, them) {
         if (us.killable.dead) {
             return;
         }
@@ -73,18 +71,18 @@ export class BehaviorEnemyBug extends Trait {
 }
 
 
-export function createEnemyBugFactory(sprite) {
+export function createEnemyBugFactory (sprite) {
     const standAnim = sprite.animations.get('anim');
 
-    function routeAnim(enemyBug) {
+    function routeAnim (enemyBug) {
         return standAnim(enemyBug.lifetime);
     }
 
-    function drawEnemyBug(context) {
+    function drawEnemyBug (context) {
         sprite.draw(routeAnim(this), context, 0, 0);
     }
 
-    return function createEnemyBug() {
+    return function createEnemyBug () {
         const enemyBug = new Entity();
         enemyBug.size.set(58, 45);
         enemyBug.offset.y = 20;

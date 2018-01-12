@@ -1,6 +1,6 @@
 import SpriteSheet from 'SpriteSheet.js';
 
-export function createAnim(frames, frameLen) {
+export function createAnim (frames, frameLen) {
     return function resolveFrame(distance) {
         const frameIndex = Math.floor(distance / frameLen) % frames.length;
         const frameName = frames[frameIndex];
@@ -8,8 +8,8 @@ export function createAnim(frames, frameLen) {
     };
 }
 
-export function loadImage(url) {
-    return new Promise(resolve => {
+export function loadImage (url) {
+    return new Promise((resolve) => {
         const image = new Image();
         image.addEventListener('load', () => {
             resolve(image);
@@ -18,11 +18,9 @@ export function loadImage(url) {
     });
 }
 
-export function loadSpriteSheet(name) {
-    return new Promise(resolve => {
-        resolve(name);
-    })
-        .then(sheetSpec => Promise.all([
+export function loadSpriteSheet (name) {
+    return new Promise((resolve) => resolve(name))
+        .then((sheetSpec) => Promise.all([
             sheetSpec,
             loadImage(sheetSpec.imageURL)
         ]))
@@ -33,13 +31,13 @@ export function loadSpriteSheet(name) {
                 sheetSpec.tileH);
 
             if (sheetSpec.frames) {
-                sheetSpec.frames.forEach(frameSpec => {
+                sheetSpec.frames.forEach((frameSpec) => {
                     sprites.define(frameSpec.name, ...frameSpec.rect);
                 });
             }
 
             if (sheetSpec.animations) {
-                sheetSpec.animations.forEach(animSpec => {
+                sheetSpec.animations.forEach((animSpec) => {
                     const animation = createAnim(animSpec.frames, animSpec.frameLen);
                     sprites.defineAnim(animSpec.name, animation);
                 });

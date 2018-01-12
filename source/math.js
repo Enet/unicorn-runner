@@ -1,31 +1,41 @@
 export class Matrix {
-    constructor() {
-        this.grid = [];
+    constructor (grid) {
+        this._grid = grid || [];
     }
 
-    get(x, y) {
-        const col = this.grid[x];
-        if (col) {
-            return col[y];
-        }
-        return undefined;
+    getColumn (x) {
+        return this._grid[x];
     }
 
-    set(x, y, value) {
-        if (!this.grid[x]) {
-            this.grid[x] = [];
-        }
+    setColumn (x, value) {
+        this._grid[x] = value;
+    }
 
-        this.grid[x][y] = value;
+    getElement (x, y) {
+        const column = this.getColumn(x);
+        if (!column) {
+            return undefined;
+        }
+        return column[y];
+    }
+
+    setElement (x, y, value) {
+        let column = this.getColumn(x);
+        if (!column) {
+            column = [];
+            this.setColumn(x, column);
+        }
+        column[y] = value;
     }
 }
 
 export class Vec2 {
-    constructor(x, y) {
-        this.set(x, y);
+    constructor (x, y) {
+        this.x = x;
+        this.y = y;
     }
 
-    set(x, y) {
+    set (x, y) {
         this.x = x;
         this.y = y;
     }

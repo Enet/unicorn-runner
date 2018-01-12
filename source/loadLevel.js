@@ -13,7 +13,7 @@ import Level from 'Level.js';
 
 import boardUpdateImage from 'images/board_update.png';
 
-export function setupCollision(levelSpec, level) {
+export function setupCollision (levelSpec, level) {
     const mergedTiles = levelSpec.layers.reduce((mergedTiles, layerSpec) => {
         return mergedTiles.concat(layerSpec.tiles);
     }, []);
@@ -21,7 +21,7 @@ export function setupCollision(levelSpec, level) {
     level.setCollisionGrid(collisionGrid);
 }
 
-export function setupBackgrounds(levelSpec, level, backgroundSprites) {
+export function setupBackgrounds (levelSpec, level, backgroundSprites) {
     levelSpec.layers.forEach(layer => {
         const backgroundGrid = createBackgroundGrid(layer.tiles, levelSpec.patterns);
         const backgroundLayer = createBackgroundLayer(level, backgroundGrid, backgroundSprites);
@@ -31,11 +31,11 @@ export function setupBackgrounds(levelSpec, level, backgroundSprites) {
     });
 }
 
-export function setupEntities(levelSpec, level, entityFactory) {
+export function setupEntities (levelSpec, level, entityFactory) {
     levelSpec.entities.forEach(({name, pos: [x, y]}) => {
         const createEntity = entityFactory[name];
         const entity = createEntity();
-        entity.pos.set(x, y);
+        entity.position.set(x, y);
         level.entities.add(entity);
     });
 
@@ -43,7 +43,7 @@ export function setupEntities(levelSpec, level, entityFactory) {
     level.comp.layers.push(spriteLayer);
 }
 
-export function createLevelLoader(entityFactory) {
+export function createLevelLoader (entityFactory) {
     return function loadLevel(name) {
         return new Promise(resolve => resolve(name))
             .then(levelSpec => Promise.all([
@@ -61,28 +61,28 @@ export function createLevelLoader(entityFactory) {
     }
 }
 
-export function createCollisionGrid(tiles, patterns) {
+export function createCollisionGrid (tiles, patterns) {
     const grid = new Matrix();
 
     for (const {tile, x, y} of expandTiles(tiles, patterns)) {
-        grid.set(x, y, {type: tile.type});
+        grid.setElement(x, y, {type: tile.type});
     }
 
     return grid;
 }
 
-export function createBackgroundGrid(tiles, patterns) {
+export function createBackgroundGrid (tiles, patterns) {
     const grid = new Matrix();
 
     for (const {tile, x, y} of expandTiles(tiles, patterns)) {
-        grid.set(x, y, {name: tile.name});
+        grid.setElement(x, y, {name: tile.name});
     }
 
     return grid;
 }
 
 
-export function* expandSpan(xStart, xLen, yStart, yLen) {
+export function* expandSpan (xStart, xLen, yStart, yLen) {
     const xEnd = xStart + xLen;
     const yEnd = yStart + yLen;
     for (let x = xStart; x < xEnd; ++x) {
@@ -92,7 +92,7 @@ export function* expandSpan(xStart, xLen, yStart, yLen) {
     }
 }
 
-export function expandRange(range) {
+export function expandRange (range) {
     if (range.length === 4) {
         const [xStart, xLen, yStart, yLen] = range;
         return expandSpan(xStart, xLen, yStart, yLen);
@@ -107,14 +107,14 @@ export function expandRange(range) {
     }
 }
 
-export function* expandRanges(ranges) {
+export function* expandRanges (ranges) {
     for (const range of ranges) {
         yield* expandRange(range);
     }
 }
 
-export function* expandTiles(tiles, patterns) {
-    function* walkTiles(tiles, offsetX, offsetY) {
+export function* expandTiles (tiles, patterns) {
+    function* walkTiles (tiles, offsetX, offsetY) {
         for (const tile of tiles) {
             for (const {x, y} of expandRanges(tile.ranges)) {
                 const derivedX = x + offsetX;

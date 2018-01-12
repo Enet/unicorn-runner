@@ -1,7 +1,5 @@
-import {
-    Entity,
-    Trait
-} from 'Entity.js';
+import Entity from 'Entity.js';
+import Trait from 'Trait.js';
 import {
     Physics,
     Solid,
@@ -57,17 +55,17 @@ export const RAINBOW = {
     ]
 };
 
-export function loadRainbow() {
+export function loadRainbow () {
     return loadSpriteSheet(RAINBOW)
         .then(createRainbowFactory);
 }
 
 export class BehaviorRainbow extends Trait {
-    constructor() {
+    constructor () {
         super('behavior');
     }
 
-    collides(us, them) {
+    collides (us, them) {
         if (us.pickable.picked) {
             return;
         }
@@ -79,18 +77,18 @@ export class BehaviorRainbow extends Trait {
 }
 
 
-export function createRainbowFactory(sprite) {
+export function createRainbowFactory (sprite) {
     const sparkAnim = sprite.animations.get('spark');
 
-    function routeAnim(rainbow) {
+    function routeAnim (rainbow) {
         return sparkAnim(rainbow.lifetime);
     }
 
-    function drawRainbow(context) {
+    function drawRainbow (context) {
         sprite.draw(routeAnim(this), context, 0, 0, this.vel.x < 0);
     }
 
-    return function createRainbow() {
+    return function createRainbow () {
         const rainbow = new Entity();
         rainbow.size.set(83, 93);
 

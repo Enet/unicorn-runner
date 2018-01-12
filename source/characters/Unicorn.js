@@ -1,9 +1,7 @@
 import {
     loadSpriteSheet
 } from 'loaders.js';
-import {
-    Entity
-} from 'Entity.js';
+import Entity from 'Entity.js';
 import {
     Physics,
     Solid,
@@ -109,16 +107,16 @@ export const UNICORN = {
     ]
 };
 
-export function loadUnicorn() {
+export function loadUnicorn () {
     return loadSpriteSheet(UNICORN)
         .then(createUnicornFactory);
 }
 
-export function createUnicornFactory(sprite) {
+export function createUnicornFactory (sprite) {
     const runAnim = sprite.animations.get('run');
     const deathAnim = sprite.animations.get('death');
 
-    function routeFrame(unicorn) {
+    function routeFrame (unicorn) {
         if (unicorn.killable.dead) {
             return deathAnim(unicorn.lifetime);
         }
@@ -134,11 +132,11 @@ export function createUnicornFactory(sprite) {
         return 'idle';
     }
 
-    function drawUnicorn(context) {
+    function drawUnicorn (context) {
         sprite.draw(routeFrame(this), context, 0, 0, this.run.heading < 0);
     }
 
-    return function createUnicorn() {
+    return function createUnicorn () {
         const unicorn = new Entity();
         unicorn.size.set(120, 119);
         unicorn.offset.x = 20;

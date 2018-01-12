@@ -3,8 +3,8 @@ import {
 } from 'math.js';
 
 export default class Camera {
-    constructor() {
-        this.pos = new Vec2(0, 0);
-        this.size = new Vec2(840, 660);
+    constructor (width, height, x, y) {
+        this.size = new Vec2(width, height);
+        this.position = new Vec2(x, y);
     }
 }

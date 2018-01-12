@@ -1,18 +1,18 @@
 import {
-    Trait,
     Sides
 } from 'Entity.js';
+import Trait from 'Trait.js';
 
 export class Physics extends Trait {
-    constructor() {
+    constructor () {
         super('physics');
     }
 
-    update(entity, deltaTime, level) {
-        entity.pos.x += entity.vel.x * deltaTime;
+    update (entity, deltaTime, level) {
+        entity.position.x += entity.vel.x * deltaTime;
         level.tileCollider.checkX(entity);
 
-        entity.pos.y += entity.vel.y * deltaTime;
+        entity.position.y += entity.vel.y * deltaTime;
         level.tileCollider.checkY(entity);
 
         entity.vel.y += level.gravity * deltaTime;
@@ -20,12 +20,12 @@ export class Physics extends Trait {
 }
 
 export class Solid extends Trait {
-    constructor() {
+    constructor () {
         super('solid');
         this.obstructs = true;
     }
 
-    obstruct(entity, side, match) {
+    obstruct (entity, side, match) {
         if (!this.obstructs) {
             return;
         }
@@ -47,21 +47,21 @@ export class Solid extends Trait {
 }
 
 export class Run extends Trait {
-    constructor() {
+    constructor () {
         super('run');
 
         this.speed = 13000;
         this.distance = 0;
     }
 
-    update(entity, deltaTime) {
+    update (entity, deltaTime) {
         entity.vel.x = this.speed * deltaTime;
         this.distance += Math.abs(entity.vel.x) * deltaTime;
     }
 }
 
 export class Jump extends Trait {
-    constructor() {
+    constructor () {
         super('jump');
 
         this.ready = 0;
@@ -73,20 +73,20 @@ export class Jump extends Trait {
         this.velocity = 200;
     }
 
-    get falling() {
+    get falling () {
         return this.ready < 0;
     }
 
-    start() {
+    start () {
         this.requestTime = this.gracePeriod;
     }
 
-    cancel() {
+    cancel () {
         this.engageTime = 0;
         this.requestTime = 0;
     }
 
-    obstruct(entity, side) {
+    obstruct (entity, side) {
         if (side === Sides.BOTTOM) {
             this.ready = 1;
         } else if (side === Sides.TOP) {
@@ -94,7 +94,7 @@ export class Jump extends Trait {
         }
     }
 
-    update(entity, deltaTime) {
+    update (entity, deltaTime) {
         if (this.requestTime > 0) {
             if (this.ready > 0) {
                 this.engageTime = this.duration;
@@ -114,23 +114,23 @@ export class Jump extends Trait {
 }
 
 export class Killable extends Trait {
-    constructor() {
+    constructor () {
         super('killable');
         this.dead = false;
         this.deadTime = 0;
         this.removeAfter = .3;
     }
 
-    kill() {
+    kill () {
         this.queue(() => this.dead = true);
     }
 
-    revive() {
+    revive () {
         this.dead = false;
         this.deadTime = 0;
     }
 
-    update(entity, deltaTime, level) {
+    update (entity, deltaTime, level) {
         if (this.dead) {
             this.deadTime += deltaTime;
             if (this.deadTime > this.removeAfter) {
@@ -143,18 +143,18 @@ export class Killable extends Trait {
 }
 
 export class Pickable extends Trait {
-    constructor() {
+    constructor () {
         super('pickable');
         this.picked = false;
         this.pickTime = 0;
         this.removeAfter = .3;
     }
 
-    pick() {
+    pick () {
         this.queue(() => this.picked = true);
     }
 
-    update(entity, deltaTime, level) {
+    update (entity, deltaTime, level) {
         if (this.picked) {
             this.pickTime += deltaTime;
             if (this.pickTime > this.removeAfter) {
@@ -167,13 +167,14 @@ export class Pickable extends Trait {
 }
 
 export class Picker extends Trait {
-    constructor() {
+    constructor () {
         super('picker');
-        this.onPick = function() {
-        }
+        this.onPick = function () {
+
+        };
     }
 
-    collides(us, them) {
+    collides (us, them) {
         if (!them.pickable || them.pickable.picked) {
             return;
         }

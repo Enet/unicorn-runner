@@ -1,5 +1,5 @@
 export default class SpriteSheet {
-    constructor(image, width, height) {
+    constructor (image, width, height) {
         this.image = image;
         this.width = width;
         this.height = height;
@@ -7,11 +7,11 @@ export default class SpriteSheet {
         this.animations = new Map();
     }
 
-    defineAnim(name, animation) {
+    defineAnim (name, animation) {
         this.animations.set(name, animation);
     }
 
-    define(name, x, y, width, height) {
+    define (name, x, y, width, height) {
         const buffers = [false, true].map(() => {
             const buffer = document.createElement('canvas');
             buffer.width = width;
@@ -36,12 +36,12 @@ export default class SpriteSheet {
         this.tiles.set(name, buffers);
     }
 
-    draw(name, context, x, y) {
+    draw (name, context, x, y) {
         const buffer = this.tiles.get(name)[0];
         context.drawImage(buffer, x, y);
     }
 
-    drawTile(name, context, x, y) {
+    drawTile (name, context, x, y) {
         this.draw(name, context, x * this.width, y * this.height);
     }
 }

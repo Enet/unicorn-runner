@@ -1,10 +1,10 @@
 export default class EntityCollider {
-    constructor(entities) {
+    constructor (entities) {
         this.entities = entities;
     }
 
-    check(subject) {
-        this.entities.forEach(candidate => {
+    check (subject) {
+        this.entities.forEach((candidate) => {
             if (subject === candidate) {
                 return;
             }
