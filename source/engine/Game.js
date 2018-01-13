@@ -1,4 +1,4 @@
-import ResourceManager from 'ResourceManager.js';
+import ResourceManager from './ResourceManager.js';
 
 const MAX_DELTA_TIME = 1000;
 const UPDATE_TIME = 17;
@@ -33,12 +33,10 @@ export default class Game {
         this._onAnimationFrame = this._onAnimationFrame.bind(this);
         this._onUpdate = this._onUpdate.bind(this);
 
-        this._canvas = canvas;
-        this._scene = {};
-
         window.addEventListener('keydown', this._onWindowKeyDown);
         window.addEventListener('keyup', this._onWindowKeyUp);
 
+        this._canvas = canvas;
         this._lastTime = 0;
         this._accumulatedTime = 0;
         requestAnimationFrame(this._onAnimationFrame);

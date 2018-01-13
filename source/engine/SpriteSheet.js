@@ -1,10 +1,28 @@
 export default class SpriteSheet {
-    constructor (image, width, height) {
+    constructor (image, sheetSpec) {
         this.image = image;
-        this.width = width;
-        this.height = height;
+        this.width = sheetSpec.tileW;
+        this.height = sheetSpec.tileH;
         this.tiles = new Map();
         this.animations = new Map();
+
+        if (sheetSpec.frames) {
+            sheetSpec.frames.forEach((frameSpec) => {
+                this.define(frameSpec.name, ...frameSpec.rect);
+            });
+        }
+
+        if (sheetSpec.animations) {
+            sheetSpec.animations.forEach((animSpec) => {
+                const {frames, frameLen} = animSpec;
+                const animation = function resolveFrame (distance) {
+                    const frameIndex = Math.floor(distance / frameLen) % frames.length;
+                    const frameName = frames[frameIndex];
+                    return frameName;
+                };
+                this.defineAnim(animSpec.name, animation);
+            });
+        }
     }
 
     defineAnim (name, animation) {
@@ -36,12 +54,12 @@ export default class SpriteSheet {
         this.tiles.set(name, buffers);
     }
 
-    draw (name, context, x, y) {
+    render (name, context, x, y) {
         const buffer = this.tiles.get(name)[0];
         context.drawImage(buffer, x, y);
     }
 
     drawTile (name, context, x, y) {
-        this.draw(name, context, x * this.width, y * this.height);
+        this.render(name, context, x * this.width, y * this.height);
     }
 }

@@ -1,7 +1,10 @@
 import TileResolver from 'TileResolver.js';
 import {
-    Sides
-} from 'Entity.js';
+    SIDE_TOP,
+    SIDE_BOTTOM,
+    SIDE_LEFT,
+    SIDE_RIGHT
+} from 'constants.js';
 
 export default class TileCollider {
     constructor (matrix) {
@@ -10,9 +13,9 @@ export default class TileCollider {
 
     checkX (entity) {
         let x;
-        if (entity.vel.x > 0) {
+        if (entity.velocity.x > 0) {
             x = entity.bounds.right;
-        } else if (entity.vel.x < 0) {
+        } else if (entity.velocity.x < 0) {
             x = entity.bounds.left;
         } else {
             return;
@@ -23,13 +26,13 @@ export default class TileCollider {
             entity.bounds.top, entity.bounds.bottom);
 
         matches.forEach((match) => {
-            if (entity.vel.x > 0) {
+            if (entity.velocity.x > 0) {
                 if (entity.bounds.right > match.x1) {
-                    entity.obstruct(Sides.RIGHT, match);
+                    entity.obstruct(SIDE_RIGHT, match);
                 }
-            } else if (entity.vel.x < 0) {
+            } else if (entity.velocity.x < 0) {
                 if (entity.bounds.left < match.x2) {
-                    entity.obstruct(Sides.LEFT, match);
+                    entity.obstruct(SIDE_LEFT, match);
                 }
             }
         });
@@ -37,9 +40,9 @@ export default class TileCollider {
 
     checkY (entity) {
         let y;
-        if (entity.vel.y > 0) {
+        if (entity.velocity.y > 0) {
             y = entity.bounds.bottom;
-        } else if (entity.vel.y < 0) {
+        } else if (entity.velocity.y < 0) {
             y = entity.bounds.top;
         } else {
             return;
@@ -53,13 +56,13 @@ export default class TileCollider {
         );
 
         matches.forEach((match) => {
-            if (entity.vel.y > 0) {
+            if (entity.velocity.y > 0) {
                 if (entity.bounds.bottom > match.y1) {
-                    entity.obstruct(Sides.BOTTOM, match);
+                    entity.obstruct(SIDE_BOTTOM, match);
                 }
-            } else if (entity.vel.y < 0) {
+            } else if (entity.velocity.y < 0) {
                 if (entity.bounds.top < match.y2) {
-                    entity.obstruct(Sides.TOP, match);
+                    entity.obstruct(SIDE_TOP, match);
                 }
             }
         });

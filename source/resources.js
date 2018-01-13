@@ -1,8 +1,8 @@
 const imageNames = [
+    'EnemyBug',
+    'Rainbow',
+    'Unicorn',
     'boardUpdate',
-    'bugLine',
-    'rainbowLine',
-    'unicornFull',
     'glassBack',
     'grass',
     'glassFront'
@@ -14,6 +14,12 @@ const soundNames = [
 
 const levelNames = [
     0
+];
+
+const entityNames = [
+    'EnemyBug',
+    'Rainbow',
+    'Unicorn'
 ];
 
 export const images = {};
@@ -28,4 +34,9 @@ soundNames.forEach((soundName) => {
 
 export const levels = levelNames.map((levelName) => {
     return require(`levels/${levelName}.js`).default;
+});
+
+export const entities = {};
+entityNames.forEach((entityName) => {
+    entities[entityName] = require(`entities/${entityName}.js`).default;
 });

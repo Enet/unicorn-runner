@@ -1,22 +1,17 @@
 import ClipBox from 'ClipBox.js';
 import {
-    Vec2
-} from 'math.js';
-
-export const Sides = {
-    TOP: Symbol('top'),
-    BOTTOM: Symbol('bottom'),
-    LEFT: Symbol('left'),
-    RIGHT: Symbol('right')
-};
-
+    Vec2,
+    Position,
+    Size
+} from 'engine/math.js';
 
 export default class Entity {
     constructor () {
-        this.position = new Vec2(0, 0);
-        this.vel = new Vec2(0, 0);
-        this.size = new Vec2(0, 0);
-        this.offset = new Vec2(0, 0);
+        this.position = new Position(0, 0);
+        this.size = new Size(0, 0);
+        this.area = new Size(0, 0);
+        this.offset = new Position(0, 0);
+        this.velocity = new Vec2(0, 0);
         this.bounds = new ClipBox(this.position, this.size, this.offset);
         this.lifetime = 0;
 
@@ -25,34 +20,35 @@ export default class Entity {
 
     addTrait (trait) {
         this.traits.push(trait);
-        this[trait.NAME] = trait;
+        this[trait.getName()] = trait;
+        trait.onMount(this);
     }
 
     collides (candidate) {
         this.traits.forEach((trait) => {
-            trait.collides(this, candidate);
+            trait.onCollision(this, candidate);
         });
     }
 
     obstruct (side, match) {
         this.traits.forEach((trait) => {
-            trait.obstruct(this, side, match);
+            trait.onObstacle(this, side, match);
         });
     }
 
-    draw () {
+    render (context, camera) {
 
     }
 
     finalize () {
         this.traits.forEach((trait) => {
-            trait.finalize();
+            trait.executeQueue();
         });
     }
 
-    update (deltaTime, level) {
+    onUpdate (deltaTime, level) {
         this.traits.forEach((trait) => {
-            trait.update(this, deltaTime, level);
+            trait.onUpdate(this, deltaTime, level);
         });
 
         this.lifetime += deltaTime;

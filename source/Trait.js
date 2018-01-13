@@ -1,27 +1,52 @@
 export default class Trait {
-    constructor (name) {
-        this.NAME = name;
-        this.tasks = [];
+    constructor () {
+        this._tasks = [];
+        this.onInit(...arguments);
     }
 
-    finalize () {
-        this.tasks.forEach((task) => task());
-        this.tasks.length = 0;
+    getName () {
+        return '';
     }
 
-    queue (task) {
-        this.tasks.push(task);
+    enqueueTask (task) {
+        this._tasks.push(task);
     }
 
-    collides (us, them) {
+    dequeueTask (task) {
+        const index = this._tasks.indexOf(task);
+        if (index === -1) {
+            return;
+        }
+        this._tasks.splice(index, 1);
+    }
+
+    clearQueue () {
+        this._tasks = [];
+    }
+
+    executeQueue () {
+        this._tasks.forEach((task) => task());
+        this.clearQueue();
+    }
+
+    onInit () {
 
     }
 
-    obstruct () {
+    onMount (selfEntity) {
 
     }
 
-    update () {
+    onUpdate () {
 
     }
+
+    onCollision (selfEntity, externalEntity) {
+
+    }
+
+    onObstacle () {
+
+    }
+
 }

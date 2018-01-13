@@ -1,17 +1,17 @@
-import {
-    loadSpriteSheet
-} from 'loaders.js';
 import Entity from 'Entity.js';
+import SpriteSheet from 'engine/SpriteSheet.js';
 import {
-    Physics,
-    Solid,
-    Run,
-    Jump,
-    Picker,
-    Killable
-} from 'Traits.js';
+    Size
+} from 'engine/math.js';
 
-export const UNICORN = {
+import Physics from 'traits/Physics.js';
+import Solid from 'traits/Solid.js';
+import Run from 'traits/Run.js';
+import Jump from 'traits/Jump.js';
+import Picker from 'traits/Picker.js';
+import Killable from 'traits/Killable.js';
+
+const UNICORN = {
     frames: [
         {
             name: 'idle',
@@ -104,51 +104,46 @@ export const UNICORN = {
     ]
 };
 
-export function loadUnicorn (manager) {
-    const sprite = loadSpriteSheet(UNICORN, manager.getImage('unicornFull'));
-    return createUnicornFactory(sprite);
-}
+export default class Unicorn extends Entity {
+    constructor (image) {
+        super();
 
-export function createUnicornFactory (sprite) {
-    const runAnim = sprite.animations.get('run');
-    const deathAnim = sprite.animations.get('death');
+        const sprite = new SpriteSheet(image, UNICORN);
+        this._sprite = sprite;
+        this.area.set(172, 119);
+        this.size.set(120, 119);
+        this.offset.x = 20;
 
-    function routeFrame (unicorn) {
-        if (unicorn.killable.dead) {
-            return deathAnim(unicorn.lifetime);
+        this.addTrait(new Physics());
+        this.addTrait(new Solid());
+        this.addTrait(new Run());
+        this.addTrait(new Jump());
+        this.addTrait(new Picker());
+        this.addTrait(new Killable());
+
+        this.killable.removeAfter = 1;
+    }
+
+    routeFrame (unicorn) {
+        const sprite = this._sprite;
+        if (this.killable.dead) {
+            const deathAnim = sprite.animations.get('death');
+            return deathAnim(this.lifetime);
         }
 
-        if (unicorn.jump.falling) {
+        if (this.jump.falling) {
             return 'jump';
         }
 
-        if (unicorn.run.distance > 0) {
-            return runAnim(unicorn.run.distance);
+        if (this.run.distance > 0) {
+            const runAnim = sprite.animations.get('run');
+            return runAnim(this.run.distance);
         }
 
         return 'idle';
     }
 
-    function drawUnicorn (context) {
-        sprite.draw(routeFrame(this), context, 0, 0, this.run.heading < 0);
-    }
-
-    return function createUnicorn () {
-        const unicorn = new Entity();
-        unicorn.size.set(120, 119);
-        unicorn.offset.x = 20;
-
-        unicorn.addTrait(new Physics());
-        unicorn.addTrait(new Solid());
-        unicorn.addTrait(new Run());
-        unicorn.addTrait(new Jump());
-        unicorn.addTrait(new Picker());
-        unicorn.addTrait(new Killable());
-
-        unicorn.killable.removeAfter = 1;
-
-        unicorn.draw = drawUnicorn;
-
-        return unicorn;
+    render (context) {
+        this._sprite.render(this.routeFrame(), context, 0, 0, this.run.heading < 0);
     }
 }

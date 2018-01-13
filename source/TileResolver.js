@@ -1,39 +1,38 @@
 export default class TileResolver {
-    constructor (matrix, tileSize = 60) {
-        this.matrix = matrix;
-        this.tileSize = tileSize;
+    constructor (matrix, size = 60) {
+        this._matrix = matrix;
+        this._size = size;
     }
 
-    toIndex (pos) {
-        return Math.floor(pos / this.tileSize);
+    toIndex (position) {
+        const size = this._size;
+        return Math.floor(position / size);
     }
 
-    toIndexRange (pos1, pos2) {
-        const pMax = Math.ceil(pos2 / this.tileSize) * this.tileSize;
+    toIndexRange (position1, position2) {
+        const size = this._size;
+        const pMax = Math.ceil(position2 / size) * size;
         const range = [];
-        let pos = pos1;
+        let pos = position1;
         do {
             range.push(this.toIndex(pos));
-            pos += this.tileSize;
+            pos += this._size;
         } while (pos < pMax);
         return range;
     }
 
-    getByIndex (indexX, indexY) {
-        const tile = this.matrix.getElement(indexX, indexY);
-        if (tile) {
-            const x1 = indexX * this.tileSize;
-            const x2 = x1 + this.tileSize;
-            const y1 = indexY * this.tileSize;
-            const y2 = y1 + this.tileSize;
-            return {
-                tile,
-                x1,
-                x2,
-                y1,
-                y2
-            };
+    getByIndex (xIndex, yIndex) {
+        const matrix = this._matrix;
+        const tile = matrix.getElement(xIndex, yIndex);
+        if (!tile) {
+            return;
         }
+        const size = this._size;
+        const x1 = xIndex * size;
+        const x2 = x1 + size;
+        const y1 = yIndex * size;
+        const y2 = y1 + size;
+        return {tile, x1, x2, y1, y2};
     }
 
     searchByPosition (posX, posY) {

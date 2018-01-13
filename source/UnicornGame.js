@@ -1,20 +1,15 @@
-import Game from 'Game.js';
+import Game from 'engine/Game.js';
+import Renderer from 'engine/Renderer.js';
+import Camera from 'engine/Camera.js';
+import Scene from 'engine/Scene.js';
 
-import Camera from 'Camera.js';
-import Entity from 'Entity.js';
+import Level from 'Level.js';
+import Player from 'entities/Player.js';
+import PlayerController from 'traits/PlayerController.js';
+
 import {
-    createLevelLoader
-} from 'loadLevel.js';
-import {
-    loadUnicorn
-} from 'characters/Unicorn.js';
-import {
-    loadRainbow
-} from 'characters/Rainbow.js';
-import {
-    loadEnemyBug
-} from 'characters/EnemyBug.js';
-import PlayerController from 'PlayerController.js';
+    KEY_SPACE
+} from 'constants.js';
 
 import {
     images,
@@ -27,50 +22,54 @@ export default class UnicornGame extends Game {
         return {images, sounds};
     }
 
-    _onManagerReady ({canvas, onScoreChange}) {
+    _updateLevel (deltaTime) {
+        const {level} = this._game;
+        level.onUpdate(deltaTime);
+    }
+
+    _centerCamera () {
+        const {camera, player} = this._game;
+        camera.position.x = Math.max(0, player.position.x - 100);
+    }
+
+    _onManagerReady ({canvasDescriptor, onScoreChange}) {
         super._onManagerReady(...arguments);
 
+        const {width, height} = canvasDescriptor;
         const manager = this._manager;
-        const characterFactory = {
-            unicorn: loadUnicorn(manager),
-            enemyBug: loadEnemyBug(manager),
-            rainbow: loadRainbow(manager)
-        };
-        const loadLevel = createLevelLoader(characterFactory);
-        const level = loadLevel(levels[0], manager);
-        const camera = new Camera(canvas.width, canvas.height, 0, 0);
-        const unicorn = characterFactory.unicorn();
+        const renderer = new Renderer(canvasDescriptor);
+        const camera = new Camera(width, height, 0, 0);
+        const scene = new Scene();
 
-        const playerEnv = new Entity();
-        const playerControl = new PlayerController(onScoreChange);
-        playerControl.checkpoint.set(64, 64);
-        playerControl.setPlayer(unicorn);
-        playerEnv.addTrait(playerControl);
-        level.entities.add(playerEnv);
+        scene.add(camera);
 
-        Object.assign(this._scene, {camera, unicorn, level});
+        const controller = new PlayerController(onScoreChange);
+        controller.checkpoint.set(64, 64);
+        const player = new Player(manager.getImage('Unicorn'), controller);
+        const level = new Level(levels[0], {manager, scene, player});
+
+        this._game = {renderer, scene, camera, level, player};
     }
 
     _onUpdate (deltaTime) {
-        const {context} = this._canvas;
-        const {level, camera, unicorn} = this._scene;
-        level.update(deltaTime / 1000);
-        camera.position.x = Math.max(0, unicorn.position.x - 100);
-        level.comp.draw(context, camera);
+        const {renderer, scene} = this._game;
+        this._updateLevel(deltaTime);
+        this._centerCamera();
+        renderer.render(scene);
     }
 
     _onWindowKeyDown (event) {
-        const {unicorn} = this._scene;
-        if (event.code === 'Space') {
-            unicorn.jump.start();
+        const {player} = this._game;
+        if (event.keyCode === KEY_SPACE) {
+            player.jump.start();
         } else {
-            unicorn.jump.cancel();
+            player.jump.cancel();
         }
     }
 
     _onWindowKeyUp (event) {
-        const {unicorn} = this._scene;
-        unicorn.jump.cancel();
+        const {player} = this._game;
+        player.jump.cancel();
     }
 }
 
