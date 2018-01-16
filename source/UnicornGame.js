@@ -5,7 +5,12 @@ import Scene from 'engine/Scene.js';
 
 import Level from 'Level.js';
 import Player from 'entities/Player.js';
-import PlayerController from 'traits/PlayerController.js';
+import Controller from 'traits/Controller.js';
+
+import {
+    Vec2
+} from 'engine/math.js';
+import Debugger from 'engine/Debugger.js';
 
 import {
     KEY_SPACE
@@ -29,25 +34,29 @@ export default class UnicornGame extends Game {
 
     _centerCamera () {
         const {camera, player} = this._game;
-        camera.position.x = Math.max(0, player.position.x - 100);
+        camera.position.x = Math.max(0, player.body.position.x - 200);
     }
 
-    _onManagerReady ({canvasDescriptor, onScoreChange}) {
+    _onManagerReady ({context, onScoreChange}) {
         super._onManagerReady(...arguments);
 
-        const {width, height} = canvasDescriptor;
+        const {width, height} = context.canvas;
         const manager = this._manager;
-        const renderer = new Renderer(canvasDescriptor);
+        const renderer = new Renderer(context);
         const camera = new Camera(width, height, 0, 0);
         const scene = new Scene();
 
         scene.add(camera);
 
-        const controller = new PlayerController(onScoreChange);
-        controller.checkpoint.set(64, 64);
-        const player = new Player(manager.getImage('Unicorn'), controller);
+        const controller = new Controller(onScoreChange);
+        const player = new Player({
+            image: manager.getImage('Unicorn'),
+            position: new Vec2(50, 0),
+            controller
+        });
         const level = new Level(levels[0], {manager, scene, player});
 
+        this._debugger = new Debugger(level._gameplay.world, camera, context);
         this._game = {renderer, scene, camera, level, player};
     }
 
@@ -56,6 +65,7 @@ export default class UnicornGame extends Game {
         this._updateLevel(deltaTime);
         this._centerCamera();
         renderer.render(scene);
+        this._debugger.render();
     }
 
     _onWindowKeyDown (event) {

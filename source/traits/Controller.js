@@ -1,15 +1,19 @@
-import Trait from 'Trait.js';
+import Trait from 'traits/Trait.js';
 import {
     Vec2
 } from 'engine/math.js';
 
-export default class PlayerController extends Trait {
+import {
+    TILE_SIZE
+} from 'constants.js';
+
+export default class Controller extends Trait {
     getName () {
-        return 'playerController';
+        return 'controller';
     }
 
     onInit (onChange) {
-        this.checkpoint = new Vec2(0, 0);
+        this.start = new Vec2(TILE_SIZE, TILE_SIZE);
         this.player = null;
         this.score = 0;
         this.onChange = onChange;
@@ -27,12 +31,9 @@ export default class PlayerController extends Trait {
     }
 
     onUpdate (entity, deltaTime, level) {
-        if (level.isGameOver ||
-            this.player.position.y > 1200 ||
-            this.player.position.x > 11400) {
-            this.player.killable.revive();
-            this.player.position.set(this.checkpoint.x, this.checkpoint.y);
-            level.isGameOver = false;
+        if (!level.isGameOver()) {
+            return;
         }
+        level.restartGame();
     }
 }

@@ -1,9 +1,8 @@
-import TileResolver from 'TileResolver.js';
 import SpriteSheet from 'engine/SpriteSheet.js';
+import getTileIndexByPosition from 'utils/getTileIndexByPosition.js';
 
 export default class TileBackground {
     constructor (image, tiles) {
-        const resolver = new TileResolver(tiles);
         const buffer = document.createElement('canvas');
         const sprites = new SpriteSheet(image, {
             tileW: 60,
@@ -19,15 +18,13 @@ export default class TileBackground {
         this._context = context;
         this._buffer = buffer;
         this._sprites = sprites;
-        this._resolver = resolver;
     }
 
     render (context, camera) {
-        const resolver = this._resolver;
         const buffer = this._buffer;
 
-        const drawWidth = resolver.toIndex(camera.size.width);
-        const drawFrom = resolver.toIndex(camera.position.x);
+        const drawWidth = getTileIndexByPosition(camera.size.width);
+        const drawFrom = getTileIndexByPosition(camera.position.x);
         const drawTo = drawFrom + drawWidth;
         this._redraw(drawFrom, drawTo);
         context.drawImage(

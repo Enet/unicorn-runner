@@ -1,15 +1,14 @@
-import Entity from 'Entity.js';
-import SpriteSheet from 'engine/SpriteSheet.js';
-import {
-    Size
-} from 'engine/math.js';
+import Entity from 'entities/Entity.js';
 
-import Physics from 'traits/Physics.js';
 import Solid from 'traits/Solid.js';
 import Run from 'traits/Run.js';
 import Jump from 'traits/Jump.js';
 import Picker from 'traits/Picker.js';
 import Killable from 'traits/Killable.js';
+
+import {
+    Size
+} from 'engine/math.js';
 
 const UNICORN = {
     frames: [
@@ -105,16 +104,19 @@ const UNICORN = {
 };
 
 export default class Unicorn extends Entity {
-    constructor (image) {
-        super();
+    get offset () {
+        const offset = super.offset.clone();
+        offset.x -= 20;
+        return offset;
+    }
 
-        const sprite = new SpriteSheet(image, UNICORN);
-        this._sprite = sprite;
-        this.area.set(172, 119);
-        this.size.set(120, 119);
-        this.offset.x = 20;
+    get area () {
+        return new Size(179, 119);
+    }
 
-        this.addTrait(new Physics());
+    constructor (options) {
+        options.description = UNICORN;
+        super(options);
         this.addTrait(new Solid());
         this.addTrait(new Run());
         this.addTrait(new Jump());
@@ -125,7 +127,7 @@ export default class Unicorn extends Entity {
     }
 
     routeFrame (unicorn) {
-        const sprite = this._sprite;
+        const {sprite} = this;
         if (this.killable.dead) {
             const deathAnim = sprite.animations.get('death');
             return deathAnim(this.lifetime);
@@ -144,6 +146,16 @@ export default class Unicorn extends Entity {
     }
 
     render (context) {
-        this._sprite.render(this.routeFrame(), context, 0, 0, this.run.heading < 0);
+        const {sprite} = this;
+        sprite.render(this.routeFrame(), context, 0, 0);
+    }
+
+    _getSize () {
+        return new Size(120, 119);
+    }
+
+    _createBody (options) {
+        options.stiffness = 1;
+        return super._createBody(options);
     }
 }

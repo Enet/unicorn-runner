@@ -1,5 +1,5 @@
 const imageNames = [
-    'EnemyBug',
+    'Bug',
     'Rainbow',
     'Unicorn',
     'boardUpdate',
@@ -17,7 +17,7 @@ const levelNames = [
 ];
 
 const entityNames = [
-    'EnemyBug',
+    'Bug',
     'Rainbow',
     'Unicorn'
 ];

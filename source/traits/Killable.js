@@ -1,4 +1,4 @@
-import Trait from 'Trait.js';
+import Trait from 'traits/Trait.js';
 
 export default class Killable extends Trait {
     getName () {
@@ -25,7 +25,7 @@ export default class Killable extends Trait {
             this.deadTime += deltaTime;
             if (this.deadTime > this.removeAfter) {
                 this.enqueueTask(() => {
-                    level.gameOver();
+                    level.finishGame();
                 });
             }
         }

@@ -1,136 +1,115 @@
 import StaticBackground from 'entities/StaticBackground.js';
 import TileBackground from 'entities/TileBackground.js';
-
-import EntityCollider from 'EntityCollider.js';
-import TileCollider from 'TileCollider.js';
-
-import {
-    Matrix
-} from 'engine/math.js';
 import {
     entities
 } from 'resources.js';
 
+import World from 'engine/World.js';
+import BoxBody from 'engine/BoxBody.js';
+import {
+    Vec2
+} from 'engine/math.js';
+
+import generateTileMatrix from 'utils/generateTileMatrix.js';
+import getTileRangeByBounds from 'utils/getTileRangeByBounds.js';
+import {
+    TILE_SIZE
+} from 'constants.js';
+
 export default class Level {
     constructor (data, {manager, scene, player}) {
-        this.gravity = 1500;
-        this.totalTime = 0;
-
-        this.scene = scene;
-
-        this.entityCollider = new EntityCollider(this.scene);
-        this.tileCollider = null;
-
-
-        // set collision matrix
-        const mergedTiles = data.layers.reduce((mergedTiles, layerSpec) => {
-            return mergedTiles.concat(layerSpec.tiles);
-        }, []);
-        const collisionMatrix = createTileMatrix(mergedTiles, data.patterns);
-        this.tileCollider = new TileCollider(collisionMatrix);
-
-
-        // set up backgrounds
-        data.layers.forEach((layer) => {
-            const backgroundMatrix = createTileMatrix(layer.tiles, data.patterns);
-            const backgroundLayer = new TileBackground(manager.getImage('boardUpdate'), backgroundMatrix);
-            const staticBackgroundLayer = new StaticBackground(manager);
-            this.scene.add(staticBackgroundLayer);
-            this.scene.add(backgroundLayer);
+        const world = new World({
+            top: -300,
+            left: -300,
+            bottom: 600
         });
 
-        // set up entities
+        const gameplay = {
+            isStopped: false,
+            ellapsedTime: 0,
+            player,
+            scene,
+            world
+        };
+
+        const tileBodies = [];
+        const tileMatrix = generateTileMatrix(data.tiles, data.patterns, (x, y) => {
+            const tileBody = new BoxBody({
+                statical: true,
+                x: x * TILE_SIZE,
+                y: y * TILE_SIZE,
+                width: TILE_SIZE,
+                height: TILE_SIZE
+            });
+            tileBody.index = new Vec2(x, y);
+            tileBodies.push(tileBody);
+            world.add(tileBody);
+            return tileBody;
+        });
+
+        Object.assign(gameplay, {tileBodies, tileMatrix});
+        this._gameplay = gameplay;
+
+        const staticBackground = new StaticBackground(manager);
+        const tileBackground = new TileBackground(manager.getImage('boardUpdate'), tileMatrix);
+        scene.add(staticBackground);
+        scene.add(tileBackground);
+
         data.entities.forEach(({name, position: [x, y]}) => {
-            const entity = new entities[name](manager.getImage(name));
-            entity.position.set(x, y);
-            this.scene.add(entity);
+            const image = manager.getImage(name);
+            const position = new Vec2(x, y);
+            const entity = new entities[name]({image, position});
+            scene.add(entity);
+            world.add(entity.body);
         });
+        scene.add(player);
+        world.add(player.body);
 
-        this.scene.add(player);
+        window.onmousedown = () => {
+            this.zzz = true;
+        };
+        window.onmouseup = () => {
+            this.zzz = false;
+        };
+    }
+
+    finishGame () {
+        this._gameplay.isStopped = true;
+    }
+
+    restartGame () {
+        const {player} = this._gameplay;
+        player.killable.revive();
+        player.body.position.set(player.controller.start.x, player.controller.start.y);
+        this._gameplay.isStopped = false;
+    }
+
+    isGameOver () {
+        const {isStopped, player} = this._gameplay;
+        return false ||
+            isStopped ||
+            player.body.position.y > 1200 ||
+            player.body.position.x > 11400;
     }
 
     onUpdate (deltaTime) {
-        deltaTime /= 1000;
+        const {scene, world, player} = this._gameplay;
+        if (this.zzz) {
+            player.body.points.forEach((point) => {
+                point.y = point.y - 1;
+            });
+        }
 
-        this.scene.forEach((entity) => {
+        world.update(deltaTime / 1000);
+
+        scene.forEach((entity) => {
             entity.onUpdate(deltaTime, this);
         });
 
-        this.scene.forEach((entity) => {
-            this.entityCollider.check(entity);
+        scene.forEach((entity) => {
+            entity.afterUpdate();
         });
 
-        this.scene.forEach((entity) => {
-            entity.finalize();
-        });
-
-        this.totalTime += deltaTime;
+        this._gameplay.ellapsedTime += deltaTime;
     }
-
-    gameOver () {
-        this.isGameOver = true;
-    }
-}
-
-function createTileMatrix (tiles, patterns) {
-    const matrix = new Matrix();
-    for (const {tile, x, y} of expandTiles(tiles, patterns)) {
-        matrix.setElement(x, y, {type: tile.type});
-    }
-    return matrix;
-}
-
-function* expandSpan (xStart, xLen, yStart, yLen) {
-    const xEnd = xStart + xLen;
-    const yEnd = yStart + yLen;
-    for (let x = xStart; x < xEnd; ++x) {
-        for (let y = yStart; y < yEnd; ++y) {
-            yield {x, y};
-        }
-    }
-}
-
-function expandRange (range) {
-    if (range.length === 4) {
-        const [xStart, xLen, yStart, yLen] = range;
-        return expandSpan(xStart, xLen, yStart, yLen);
-
-    } else if (range.length === 3) {
-        const [xStart, xLen, yStart] = range;
-        return expandSpan(xStart, xLen, yStart, 1);
-
-    } else if (range.length === 2) {
-        const [xStart, yStart] = range;
-        return expandSpan(xStart, 1, yStart, 1);
-    }
-}
-
-function* expandRanges (ranges) {
-    for (const range of ranges) {
-        yield* expandRange(range);
-    }
-}
-
-function* expandTiles (tiles, patterns) {
-    function* walkTiles (tiles, offsetX, offsetY) {
-        for (const tile of tiles) {
-            for (const {x, y} of expandRanges(tile.ranges)) {
-                const derivedX = x + offsetX;
-                const derivedY = y + offsetY;
-
-                if (tile.pattern) {
-                    const tiles = patterns[tile.pattern].tiles;
-                    yield* walkTiles(tiles, derivedX, derivedY);
-                } else {
-                    yield {
-                        tile,
-                        x: derivedX,
-                        y: derivedY
-                    };
-                }
-            }
-        }
-    }
-
-    yield* walkTiles(tiles, 0, 0);
 }

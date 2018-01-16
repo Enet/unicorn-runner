@@ -1,6 +1,6 @@
-import Trait from 'Trait.js';
+import Trait from 'traits/Trait.js';
 
-export default class EnemyBugBehaviour extends Trait {
+export default class BugBehaviour extends Trait {
     getName () {
         return 'behavior';
     }

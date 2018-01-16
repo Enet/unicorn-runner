@@ -1,15 +1,14 @@
-import Entity from 'Entity.js';
-import SpriteSheet from 'engine/SpriteSheet.js';
+import Entity from 'entities/Entity.js';
+
+import Solid from 'traits/Solid.js';
+import Killable from 'traits/Killable.js';
+import BugBehaviour from 'traits/BugBehaviour.js';
+
 import {
     Size
 } from 'engine/math.js';
 
-import Physics from 'traits/Physics.js';
-import Solid from 'traits/Solid.js';
-import Killable from 'traits/Killable.js';
-import EnemyBugBehaviour from 'traits/EnemyBugBehaviour.js';
-
-const ENEMY_BUG = {
+const BUG = {
     frames: [
         {
             name: 'frame-1',
@@ -47,30 +46,37 @@ const ENEMY_BUG = {
     ]
 };
 
-export default class EnemyBug extends Entity {
-    constructor (image) {
-        super();
+export default class Bug extends Entity {
+    get offset () {
+        const offset = super.offset.clone();
+        offset.y -= 20;
+        return offset;
+    }
 
-        const sprite = new SpriteSheet(image, ENEMY_BUG);
-        this._sprite = sprite;
+    get area () {
+        return new Size(58, 65);
+    }
 
-        this.size.set(58, 45);
-        this.area.set(58, 65);
-        this.offset.y = 20;
-
-        this.addTrait(new Physics());
+    constructor (options) {
+        options.description = BUG;
+        super(options);
         this.addTrait(new Solid());
-        this.addTrait(new EnemyBugBehaviour());
+        this.addTrait(new BugBehaviour());
         this.addTrait(new Killable());
     }
 
     routeAnim () {
-        const sprite = this._sprite;
+        const {sprite} = this;
         const standAnim = sprite.animations.get('anim');
         return standAnim(this.lifetime);
     }
 
     render (context) {
-        this._sprite.render(this.routeAnim(), context, 0, 0);
+        const {sprite} = this;
+        sprite.render(this.routeAnim(), context, 0, 0);
+    }
+
+    _getSize () {
+        return new Size(58, 45);
     }
 }

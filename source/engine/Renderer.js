@@ -1,12 +1,10 @@
 export default class Renderer {
-    constructor (canvasDescriptor) {
-        this._canvasDescriptor = canvasDescriptor;
+    constructor (context) {
+        this._context = context;
     }
 
-    render (scene, context) {
-        const canvasDescriptor = this._canvasDescriptor;
-        const {width, height} = canvasDescriptor;
-        context = context || canvasDescriptor.context;
+    render (scene, context = this._context) {
+        const {width, height} = context.canvas;
         context.clearRect(0, 0, width, height);
 
         const {camera} = scene;
@@ -14,17 +12,15 @@ export default class Renderer {
             if (typeof renderable.render !== 'function') {
                 return;
             }
-
-            const area = renderable.area || canvasDescriptor;
-            const position = renderable.position || camera.position;
+            const area = renderable.area || {width, height};
+            const offset = renderable.offset || camera.position;
             const bufferNode = document.createElement('canvas');
             bufferNode.width = area.width;
             bufferNode.height = area.height;
             const bufferContext = bufferNode.getContext('2d');
-
             renderable.render(bufferContext, camera);
-            const x = position.x - camera.position.x;
-            const y = position.y - camera.position.y;
+            const x = offset.x - camera.position.x;
+            const y = offset.y - camera.position.y;
             context.drawImage(bufferNode, x, y);
         }, true);
     }

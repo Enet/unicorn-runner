@@ -25,7 +25,7 @@ export default class Trait {
     }
 
     executeQueue () {
-        this._tasks.forEach((task) => task());
+        this._tasks.forEach((task) => task.call(this));
         this.clearQueue();
     }
 
@@ -37,7 +37,7 @@ export default class Trait {
 
     }
 
-    onUpdate () {
+    onUpdate (selfEntity, deltaTime, level) {
 
     }
 
@@ -45,7 +45,7 @@ export default class Trait {
 
     }
 
-    onObstacle () {
+    onObstacle (side, object) {
 
     }
 

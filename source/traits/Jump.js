@@ -1,8 +1,8 @@
-import Trait from 'Trait.js';
+import Trait from 'traits/Trait.js';
 import {
     SIDE_TOP,
     SIDE_BOTTOM
-} from 'constants.js';
+} from 'engine/constants.js';
 
 export default class Jump extends Trait {
     get falling () {
@@ -41,6 +41,8 @@ export default class Jump extends Trait {
     }
 
     onUpdate (entity, deltaTime) {
+        return;
+
         if (this.requestTime > 0) {
             if (this.ready > 0) {
                 this.engageTime = this.duration;

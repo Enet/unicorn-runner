@@ -1,10 +1,12 @@
-import Entity from 'Entity.js';
-import SpriteSheet from 'engine/SpriteSheet.js';
+import Entity from 'entities/Entity.js';
 
-import Physics from 'traits/Physics.js';
 import Solid from 'traits/Solid.js';
 import Pickable from 'traits/Pickable.js';
 import RainbowBehaviour from 'traits/RainbowBehaviour.js';
+
+import {
+    Size
+} from 'engine/math.js';
 
 const RAINBOW = {
     frames: [
@@ -50,28 +52,26 @@ const RAINBOW = {
 };
 
 export default class Rainbow extends Entity {
-    constructor (image) {
-        super();
-
-        const sprite = new SpriteSheet(image, RAINBOW);
-        this._sprite = sprite;
-
-        this.size.set(83, 93);
-        this.area.set(83, 93);
-
-        this.addTrait(new Physics());
+    constructor (options) {
+        options.description = RAINBOW;
+        super(options);
         this.addTrait(new Solid());
         this.addTrait(new Pickable());
         this.addTrait(new RainbowBehaviour());
     }
 
     routeAnim () {
-        const sprite = this._sprite;
+        const {sprite} = this;
         const sparkAnim = sprite.animations.get('spark');
         return sparkAnim(this.lifetime);
     }
 
     render (context) {
-        this._sprite.render(this.routeAnim(), context, 0, 0, this.velocity.x < 0);
+        const {sprite} = this;
+        sprite.render(this.routeAnim(), context, 0, 0);
+    }
+
+    _getSize () {
+        return new Size(83, 93);
     }
 }

@@ -1,4 +1,4 @@
-import Trait from 'Trait.js';
+import Trait from 'traits/Trait.js';
 
 export default class RainbowBehaviour extends Trait {
     getName () {
@@ -11,7 +11,7 @@ export default class RainbowBehaviour extends Trait {
         }
 
         selfEntity.pickable.pick();
-        selfEntity.velocity.set(30, -400);
-        selfEntity.solid.obstructs = false;
+        //selfEntity.velocity.set(30, -400);
+        selfEntity.solid.disable();
     }
 }
