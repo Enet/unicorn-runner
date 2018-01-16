@@ -6,12 +6,16 @@ import {
 } from 'engine/math.js';
 
 export default class Entity {
-    get offset () {
-        return this.body.center.subtract(this.size.length(0.5));
+    get position () {
+        return this.body.center.add(this.offset);
     }
 
-    get area () {
-        return this.size;
+    get offset () {
+        return this.size.length(-0.5);
+    }
+
+    get angle () {
+        return this.body.angle;
     }
 
     constructor (options) {
@@ -20,7 +24,7 @@ export default class Entity {
         this.sprite = this._createSprite(options);
         this.body = this._createBody(options);
         this.traits = this._getTraits(options);
-        this.lifetime = 0;
+        this._lifeTime = 0;
     }
 
     addTrait (trait) {
@@ -29,15 +33,16 @@ export default class Entity {
         trait.onMount(this);
     }
 
-    render (context, camera) {
-
+    render (context) {
+        const {sprite, offset} = this;
+        sprite.render(this._getAnimation(), context, offset.x, offset.y);
     }
 
     onUpdate (deltaTime, level) {
         this.traits.forEach((trait) => {
             trait.onUpdate(this, deltaTime, level);
         });
-        this.lifetime += deltaTime;
+        this._lifeTime += deltaTime;
     }
 
     onCollision (candidate) {
@@ -64,6 +69,12 @@ export default class Entity {
 
     _getTraits () {
         return [];
+    }
+
+    _getAnimation (name = 'default') {
+        const {sprite} = this;
+        const animation = sprite.animations.get(name);
+        return animation(this._lifeTime);
     }
 
     _createSprite ({image, description}) {

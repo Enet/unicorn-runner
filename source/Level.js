@@ -80,7 +80,7 @@ export default class Level {
     restartGame () {
         const {player} = this._gameplay;
         player.killable.revive();
-        player.body.position.set(player.controller.start.x, player.controller.start.y);
+        player.body.setPosition(player.controller.start);
         this._gameplay.isStopped = false;
     }
 
@@ -88,8 +88,8 @@ export default class Level {
         const {isStopped, player} = this._gameplay;
         return false ||
             isStopped ||
-            player.body.position.y > 1200 ||
-            player.body.position.x > 11400;
+            player.body.center.y > 1200 ||
+            player.body.center.x > 11400;
     }
 
     onUpdate (deltaTime) {

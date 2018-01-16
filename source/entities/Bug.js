@@ -33,7 +33,7 @@ const BUG = {
     ],
     animations: [
         {
-            name: 'anim',
+            name: 'stand',
             frameLen: 0.2,
             frames: [
                 'frame-1',
@@ -48,13 +48,9 @@ const BUG = {
 
 export default class Bug extends Entity {
     get offset () {
-        const offset = super.offset.clone();
+        const offset = super.offset;
         offset.y -= 20;
         return offset;
-    }
-
-    get area () {
-        return new Size(58, 65);
     }
 
     constructor (options) {
@@ -65,15 +61,8 @@ export default class Bug extends Entity {
         this.addTrait(new Killable());
     }
 
-    routeAnim () {
-        const {sprite} = this;
-        const standAnim = sprite.animations.get('anim');
-        return standAnim(this.lifetime);
-    }
-
-    render (context) {
-        const {sprite} = this;
-        sprite.render(this.routeAnim(), context, 0, 0);
+    _getAnimation () {
+        return super._getAnimation('stand');
     }
 
     _getSize () {

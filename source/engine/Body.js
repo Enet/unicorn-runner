@@ -3,14 +3,6 @@ import {
 } from './math.js';
 
 export default class Body {
-    get position () {
-        return this.center;
-    }
-
-    set position (position) {
-        debugger;
-    }
-
     constructor ({points, stiffness = 1, collidable = true, statical}) {
         statical = !!statical;
         Object.assign(this, {points, stiffness, collidable, statical});
@@ -26,6 +18,18 @@ export default class Body {
         this._updateCenterOfMass();
         this._updatePoints();
         this._updateAabb();
+    }
+
+    getDeltaAngle (delta, angle) {
+        return delta;
+    }
+
+    setPosition (absolutePosition) {
+        const relativePosition = this.center.subtract(absolutePosition);
+        this.points.forEach((point) => {
+            point.set(point.subtract(relativePosition));
+            point.cache.set(point.cache.subtract(relativePosition));
+        });
     }
 
     _updateCenterOfMass () {
@@ -46,6 +50,8 @@ export default class Body {
             const sin = currentDisplacement.y * previousDisplacement.x - currentDisplacement.x * previousDisplacement.y;
             return deltaAngle + Math.atan2(sin, cos);
         }, 0) / points.length;
+
+        deltaAngle = this.getDeltaAngle(deltaAngle, this.angle);
         this.angle += deltaAngle;
 
         const cos = Math.cos(deltaAngle);

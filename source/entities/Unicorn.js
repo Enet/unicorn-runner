@@ -7,7 +7,8 @@ import Picker from 'traits/Picker.js';
 import Killable from 'traits/Killable.js';
 
 import {
-    Size
+    Size,
+    Vec2
 } from 'engine/math.js';
 
 const UNICORN = {
@@ -105,13 +106,9 @@ const UNICORN = {
 
 export default class Unicorn extends Entity {
     get offset () {
-        const offset = super.offset.clone();
+        const offset = super.offset;
         offset.x -= 20;
         return offset;
-    }
-
-    get area () {
-        return new Size(179, 119);
     }
 
     constructor (options) {
@@ -126,36 +123,36 @@ export default class Unicorn extends Entity {
         this.killable.removeAfter = 1;
     }
 
-    routeFrame (unicorn) {
-        const {sprite} = this;
-        if (this.killable.dead) {
-            const deathAnim = sprite.animations.get('death');
-            return deathAnim(this.lifetime);
-        }
-
-        if (this.jump.falling) {
-            return 'jump';
-        }
-
-        if (this.run.distance > 0) {
-            const runAnim = sprite.animations.get('run');
-            return runAnim(this.run.distance);
-        }
-
-        return 'idle';
-    }
-
-    render (context) {
-        const {sprite} = this;
-        sprite.render(this.routeFrame(), context, 0, 0);
-    }
-
     _getSize () {
         return new Size(120, 119);
     }
 
+    _getAnimation () {
+        const {sprite} = this;
+
+        if (this.killable.dead) {
+            return super._getAnimation('death');
+        } else if (this.jump.falling) {
+            return 'jump';
+        } else if (this.run.distance > 0) {
+            const animation = sprite.animations.get('run');
+            return animation(this.run.distance);
+        } else {
+            return 'idle';
+        }
+    }
+
+    _getDeltaAngle (delta, angle) {
+        const maxAngle = Math.PI / 3;
+        delta = delta * (1 - Math.abs(angle) / maxAngle);
+        delta -= 0.001 * Math.abs(angle) * Math.sign(angle);
+        return delta;
+    }
+
     _createBody (options) {
         options.stiffness = 1;
-        return super._createBody(options);
+        const body = super._createBody(options);
+        body.getDeltaAngle = this._getDeltaAngle.bind(this);
+        return body;
     }
 }

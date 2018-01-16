@@ -1,6 +1,6 @@
 import ResourceManager from './ResourceManager.js';
 
-const MAX_DELTA_TIME = 1000;
+const MAX_DELTA_TIME = 50;
 const UPDATE_TIME = 17;
 
 export default class Game {
@@ -43,16 +43,13 @@ export default class Game {
     }
 
     _onAnimationFrame (currentTime) {
-        let deltaTime = currentTime - this._lastTime;
-        deltaTime = Math.min(deltaTime, MAX_DELTA_TIME);
-
+        let deltaTime = Math.min(currentTime - this._lastTime, MAX_DELTA_TIME);
         let accumulatedTime = this._accumulatedTime;
         accumulatedTime += deltaTime;
         while (accumulatedTime > UPDATE_TIME) {
             this._onUpdate(UPDATE_TIME);
             accumulatedTime -= UPDATE_TIME;
         }
-
         this._lastTime = currentTime;
         this._accumulatedTime = accumulatedTime;
         requestAnimationFrame(this._onAnimationFrame);

@@ -105,14 +105,16 @@ export default class Collision {
         const {edge, vector, contact} = collision;
         const [pointA, pointB] = edge;
 
-        const t = Math.abs(pointA.x - pointB.x) > Math.abs(pointA.y - pointB.y) ?
+        let t = Math.abs(pointA.x - pointB.x) > Math.abs(pointA.y - pointB.y) ?
             (contact.x - vector.x - pointA.x) / (pointB.x - pointA.x) :
             (contact.x - vector.y - pointA.y) / (pointB.y - pointA.y);
+
+        t = Math.min(2, t);
 
         const lambda = 1 / (t * t + (1 - t) * (1 - t));
         const cA = (1 - t) * 0.5 * lambda;
         const cB = t * 0.5 * lambda;
-        const cC = 0.75;
+        const cC = 0.5;
 
         pointA.set(pointA.subtract(vector.length(cA)));
         pointB.set(pointB.subtract(vector.length(cB)));

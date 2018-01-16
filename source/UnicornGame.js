@@ -34,7 +34,7 @@ export default class UnicornGame extends Game {
 
     _centerCamera () {
         const {camera, player} = this._game;
-        camera.position.x = Math.max(0, player.body.position.x - 200);
+        camera.position.x = Math.max(0, player.body.center.x - 200);
     }
 
     _onManagerReady ({context, onScoreChange}) {

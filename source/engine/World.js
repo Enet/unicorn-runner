@@ -37,7 +37,7 @@ export default class World {
         bodies.splice(index, 1);
     }
 
-    update (deltaTime, iterationCount = 20) {
+    update (deltaTime, iterationCount = 5) {
         this._updateBodies();
 
         while (iterationCount--) {

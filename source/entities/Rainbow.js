@@ -60,18 +60,11 @@ export default class Rainbow extends Entity {
         this.addTrait(new RainbowBehaviour());
     }
 
-    routeAnim () {
-        const {sprite} = this;
-        const sparkAnim = sprite.animations.get('spark');
-        return sparkAnim(this.lifetime);
-    }
-
-    render (context) {
-        const {sprite} = this;
-        sprite.render(this.routeAnim(), context, 0, 0);
-    }
-
     _getSize () {
         return new Size(83, 93);
+    }
+
+    _getAnimation () {
+        return super._getAnimation('spark');
     }
 }

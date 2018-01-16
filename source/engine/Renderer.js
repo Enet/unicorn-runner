@@ -1,3 +1,7 @@
+import {
+    Vec2
+} from './math.js';
+
 export default class Renderer {
     constructor (context) {
         this._context = context;
@@ -12,16 +16,26 @@ export default class Renderer {
             if (typeof renderable.render !== 'function') {
                 return;
             }
-            const area = renderable.area || {width, height};
-            const offset = renderable.offset || camera.position;
-            const bufferNode = document.createElement('canvas');
-            bufferNode.width = area.width;
-            bufferNode.height = area.height;
-            const bufferContext = bufferNode.getContext('2d');
-            renderable.render(bufferContext, camera);
-            const x = offset.x - camera.position.x;
-            const y = offset.y - camera.position.y;
-            context.drawImage(bufferNode, x, y);
+            const position = renderable.position || camera.position;
+            const angle = renderable.angle || 0;
+            const offset = renderable.offset || new Vec2(0, 0);
+            let x = position.x - camera.position.x;
+            let y = position.y - camera.position.y;
+            context.save();
+            context.translate(x, y);
+
+            context.save();
+            context.translate(-offset.x, -offset.y);
+            context.rotate(angle);
+
+            renderable.render(context, camera);
+
+            context.rotate(-angle);
+            context.translate(offset.x, offset.y);
+            context.restore();
+
+            context.translate(-x, -y);
+            context.restore();
         }, true);
     }
 }
