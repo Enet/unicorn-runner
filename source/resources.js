@@ -2,10 +2,10 @@ const imageNames = [
     'Bug',
     'Rainbow',
     'Unicorn',
-    'boardUpdate',
-    'glassBack',
-    'grass',
-    'glassFront'
+    'skyscraperBack',
+    'skyscraperFront',
+    'ground',
+    'tile'
 ];
 
 const soundNames = [

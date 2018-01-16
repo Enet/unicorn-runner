@@ -2,8 +2,8 @@ export default class StaticBackground {
     constructor (manager) {
         this._manager = manager;
         this._buffer = {
-            width: 840 + 60,
-            height: 660
+            width: 800 + 60,
+            height: 600
         };
     }
 
@@ -30,17 +30,17 @@ export default class StaticBackground {
         const buffer = this._buffer;
         const manager = this._manager;
 
-        let GrassImage = manager.getImage('grass');
-        let GlassBackImage = manager.getImage('glassBack');
-        let GlassFrontImage = manager.getImage('glassFront');
+        let groundImage = manager.getImage('ground');
+        let skyscraperBackImage = manager.getImage('skyscraperBack');
+        let skyscraperFrontImage = manager.getImage('skyscraperFront');
 
         let GrassCoordX = -camera.position.x / 0.8;
         let GlassCoordX = -camera.position.x / 1.2;
 
         for (let i = 0; i < 30; i++) {
-            context.drawImage(GlassBackImage, GlassCoordX + GrassImage.width * i + 600, buffer.height - GlassBackImage.height + 1);
-            context.drawImage(GrassImage, GrassCoordX + GrassImage.width * i, buffer.height - GrassImage.height + 1);
-            context.drawImage(GlassFrontImage, GlassCoordX + GrassImage.width * i + 100, buffer.height - GlassFrontImage.height + 1);
+            context.drawImage(skyscraperBackImage, GlassCoordX + groundImage.width * i + 600, buffer.height - skyscraperBackImage.height + 1);
+            context.drawImage(groundImage, GrassCoordX + groundImage.width * i, buffer.height - groundImage.height + 1);
+            context.drawImage(skyscraperFrontImage, GlassCoordX + groundImage.width * i + 100, buffer.height - skyscraperFrontImage.height + 1);
         }
     }
 }

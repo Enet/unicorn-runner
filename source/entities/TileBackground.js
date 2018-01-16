@@ -10,8 +10,8 @@ export default class TileBackground {
         });
         sprites.define('ground', 0, 0, 60, 60);
 
-        buffer.width = 840 + 60;
-        buffer.height = 660;
+        buffer.width = 800 + 60;
+        buffer.height = 600;
 
         const context = buffer.getContext('2d');
         this._tiles = tiles;

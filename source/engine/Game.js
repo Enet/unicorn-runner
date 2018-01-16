@@ -10,11 +10,21 @@ export default class Game {
             this._onManagerReady(options);
         });
         this._manager = manager;
+        this._isPaused = false;
     }
 
     destructor () {
         window.removeEventListener('keydown', this._onWindowKeyDown);
         window.removeEventListener('keyup', this._onWindowKeyUp);
+    }
+
+    pause () {
+        this._isPaused = true;
+    }
+
+    resume () {
+        this._isPaused = false;
+        requestAnimationFrame(this._onAnimationFrame);
     }
 
     getManager () {
@@ -43,6 +53,10 @@ export default class Game {
     }
 
     _onAnimationFrame (currentTime) {
+        if (this._isPaused) {
+            return;
+        }
+
         let deltaTime = Math.min(currentTime - this._lastTime, MAX_DELTA_TIME);
         let accumulatedTime = this._accumulatedTime;
         accumulatedTime += deltaTime;

@@ -35,9 +35,10 @@ export default class UnicornGame extends Game {
     _centerCamera () {
         const {camera, player} = this._game;
         camera.position.x = Math.max(0, player.body.center.x - 200);
+        camera.position.y = player.body.center.y - 300;
     }
 
-    _onManagerReady ({context, onScoreChange}) {
+    _onManagerReady ({context, step, settings, onScoreChange, onGameLose, onGameWin}) {
         super._onManagerReady(...arguments);
 
         const {width, height} = context.canvas;
@@ -54,7 +55,7 @@ export default class UnicornGame extends Game {
             position: new Vec2(50, 0),
             controller
         });
-        const level = new Level(levels[0], {manager, scene, player});
+        const level = new Level(levels[step], {manager, scene, player});
 
         this._debugger = new Debugger(level._gameplay.world, camera, context);
         this._game = {renderer, scene, camera, level, player};

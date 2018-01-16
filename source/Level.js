@@ -51,7 +51,7 @@ export default class Level {
         this._gameplay = gameplay;
 
         const staticBackground = new StaticBackground(manager);
-        const tileBackground = new TileBackground(manager.getImage('boardUpdate'), tileMatrix);
+        const tileBackground = new TileBackground(manager.getImage('tile'), tileMatrix);
         scene.add(staticBackground);
         scene.add(tileBackground);
 
