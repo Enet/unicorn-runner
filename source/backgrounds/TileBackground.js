@@ -2,7 +2,7 @@ import Sprite from 'engine/Sprite.js';
 import Background from 'backgrounds/Background.js';
 
 import getTileIndexByDistance from 'utils/getTileIndexByDistance.js';
-import spriteDescription from 'sprites/tile.js';
+import spriteDescription from 'sprites/Tile.js';
 import {
     TILE_SIZE
 } from 'constants.js';

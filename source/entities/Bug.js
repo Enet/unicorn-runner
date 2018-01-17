@@ -5,27 +5,28 @@ import {
 
 import Killable from 'traits/Killable.js';
 import BugBehaviour from 'traits/BugBehaviour.js';
-import spriteDescription from 'sprites/bug.js';
+import spriteDescription from 'sprites/Bug.js';
 
 export default class Bug extends Entity {
     get offset () {
         const offset = super.offset;
+        offset.x -= (58 - 29) / 2;
         offset.y -= 20;
         return offset;
     }
 
-    constructor (options) {
-        options.description = spriteDescription;
-        super(options);
-        this.addTrait(new BugBehaviour());
-        this.addTrait(new Killable());
-    }
-
-    _getAnimation () {
-        return super._getAnimation('stand');
+    _getSpriteDescription () {
+        return spriteDescription;
     }
 
     _getSize () {
-        return new Vector2(58, 45);
+        return new Vector2(29, 45);
+    }
+
+    _createTraits () {
+        return [
+            new BugBehaviour(),
+            new Killable()
+        ];
     }
 }

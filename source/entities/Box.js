@@ -1,0 +1,30 @@
+import Entity from 'entities/Entity.js';
+import {
+    Vector2
+} from 'engine/math.js';
+
+import Jumpable from 'traits/Jumpable.js';
+import {
+    TILE_SIZE
+} from 'constants.js';
+import spriteDescription from 'sprites/Box.js';
+
+export default class Box extends Entity {
+    _getSpriteDescription () {
+        return spriteDescription;
+    }
+
+    _getFrame () {
+        return 'box';
+    }
+
+    _getSize () {
+        return new Vector2(TILE_SIZE, TILE_SIZE);
+    }
+
+    _createTraits () {
+        return [
+            new Jumpable()
+        ];
+    }
+}

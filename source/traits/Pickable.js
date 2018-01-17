@@ -21,7 +21,7 @@ export default class Pickable extends Trait {
         }
         this._afterPickTime += deltaTime;
         if (this._afterPickTime > MAX_HIDING_TIME) {
-            level._gameplay.scene.remove(this.entity);
+            level.removeEntity(this.entity);
         }
     }
 
@@ -32,5 +32,9 @@ export default class Pickable extends Trait {
     pick () {
         this._isPicked = true;
         this._onPick();
+    }
+
+    getHidingProgress () {
+        return Math.min(1, this._afterPickTime / MAX_HIDING_TIME);
     }
 }

@@ -24,7 +24,7 @@ export default {
         rect: [415, 0, 83, 93]
     }],
     animations: [{
-        name: 'spark',
+        name: 'default',
         delay: 15,
         frames: [
             'spark-1',

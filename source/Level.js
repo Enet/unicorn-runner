@@ -17,20 +17,12 @@ import {
 } from 'constants.js';
 
 export default class Level {
-    constructor (data, {manager, scene, player}) {
+    constructor (data, {manager, scene, player, callbacks}) {
         const world = new World({
             top: -300,
             left: -300,
             bottom: 600
         });
-
-        const gameplay = {
-            isStopped: false,
-            ellapsedTime: 0,
-            player,
-            scene,
-            world
-        };
 
         const tileBodies = [];
         const tileMatrix = generateTileMatrix(data.tiles, data.patterns, (x, y) => {
@@ -41,50 +33,75 @@ export default class Level {
                 width: TILE_SIZE,
                 height: TILE_SIZE
             });
-            tileBody.entity = {};
-            tileBody.index = new Vector2(x, y);
+            tileBody.entity = {
+                jumpable: true
+            };
             tileBodies.push(tileBody);
             world.add(tileBody);
             return tileBody;
         });
 
-        Object.assign(gameplay, {tileBodies, tileMatrix});
+        const gameplay = {
+            isStopped: false,
+            ellapsedTime: 0,
+            player,
+            scene,
+            world,
+            tileBodies,
+            tileMatrix
+        };
         this._gameplay = gameplay;
 
         const staticBackground = new StaticBackground({
-            size: new Vector2(800, 600),
             images: {
-                ground: manager.getImage('ground'),
-                back: manager.getImage('skyscraperBack'),
-                front: manager.getImage('skyscraperFront')
+                ground: manager.getImage('Ground'),
+                back: manager.getImage('SkyscraperBack'),
+                front: manager.getImage('SkyscraperFront')
             }
         });
         const tileBackground = new TileBackground({
-            size: new Vector2(800, 600),
             images: {
-                tile: manager.getImage('tile')
+                tile: manager.getImage('Tile')
             },
             tiles: tileMatrix
         });
         scene.add(staticBackground);
         scene.add(tileBackground);
 
+        this.callbacks = callbacks;
+        this.entities = new Set();
         data.entities.forEach(({name, position: [x, y]}) => {
             const image = manager.getImage(name);
-            const position = new Vector2(x, y);
-            const entity = new entities[name]({image, position});
-            scene.add(entity);
-            world.add(entity.body);
+            const entity = new entities[name]({image, x, y});
+            this.addEntity(entity);
         });
-        scene.add(player);
-        world.add(player.body);
+        this.addEntity(player);
 
         this.placePlayer();
     }
 
-    finishGame () {
+    addEntity (entity) {
+        const {scene, world} = this._gameplay;
+        scene.add(entity);
+        world.add(entity.body);
+        this.entities.add(entity);
+    }
+
+    removeEntity (entity) {
+        const {scene, world} = this._gameplay;
+        this.entities.delete(entity);
+        world.remove(entity.body);
+        scene.remove(entity);
+    }
+
+    loseGame () {
         this._gameplay.isStopped = true;
-        this.placePlayer();
+        this.callbacks.onGameLose();
+    }
+
+    winGame () {
+        this._gameplay.isStopped = true;
+        this.callbacks.onGameWin();
     }
 
     restartGame () {
@@ -98,6 +115,11 @@ export default class Level {
         player.body.place(new Vector2(TILE_SIZE, TILE_SIZE));
     }
 
+    isStopped () {
+        const {isStopped} = this._gameplay;
+        return isStopped;
+    }
+
     isGameOver () {
         const {isStopped, player} = this._gameplay;
         return false ||
@@ -106,17 +128,18 @@ export default class Level {
             player.body.center.x > 11400;
     }
 
-    onUpdate (deltaTime) {
-        const {scene, world} = this._gameplay;
+    update (deltaTime) {
+        const {entities} = this;
+        const {world} = this._gameplay;
 
         world.update(deltaTime / 1000);
 
-        scene.forEach((entity) => {
-            entity.onUpdate(deltaTime, this);
+        entities.forEach((entity) => {
+            entity.entityWillUpdate(deltaTime, this);
         });
 
-        scene.forEach((entity) => {
-            entity.afterUpdate();
+        entities.forEach((entity) => {
+            entity.entityDidUpdate();
         });
 
         this._gameplay.ellapsedTime += deltaTime;

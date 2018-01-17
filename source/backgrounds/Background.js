@@ -1,10 +1,8 @@
-export default class Background {
-    constructor ({images, size}) {
-        this.images = images;
-        this.size = size;
-    }
+import Renderable from 'engine/Renderable.js';
 
-    isIterable () {
-        return false;
+export default class Background extends Renderable {
+    constructor ({images}) {
+        super();
+        this.images = images;
     }
 }

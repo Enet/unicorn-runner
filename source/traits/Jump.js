@@ -5,7 +5,8 @@ import Trait from 'traits/Trait.js';
 
 import {
     MAX_JUMPING_TIME,
-    JUMPING_BOOST
+    JUMPING_BOOST,
+    MAX_NO_COLLISION_TIME
 } from 'constants.js';
 
 export default class Jump extends Trait {
@@ -14,28 +15,45 @@ export default class Jump extends Trait {
     }
 
     traitWillMount () {
+        this._noCollisionTime = 0;
         this._isJumping = true;
+        this._isKeyPressed = false;
         this._jumpingTime = Infinity;
     }
 
     traitWillUpdate (deltaTime) {
-        if (!this._isJumping || this._jumpingTime > MAX_JUMPING_TIME) {
+        this._noCollisionTime += deltaTime;
+        if (!this._isJumping) {
+            if (this._noCollisionTime > MAX_NO_COLLISION_TIME) {
+                this._isJumping = true;
+                this._jumpingTime = Infinity;
+            }
+            return;
+        }
+        if (this._jumpingTime > MAX_JUMPING_TIME) {
             return;
         }
         this._jumpingTime += deltaTime;
-        this.entity.body.move(new Vector2(0, -JUMPING_BOOST));
+        this.entity.body.move(new Vector2(0.1 * JUMPING_BOOST, -JUMPING_BOOST));
     }
 
-    traitCollision (body) {
-        if (!this._isJumping || this._jumpingTime <= MAX_JUMPING_TIME) {
+    traitCollision (body, collision) {
+        if (!body.entity.jumpable) {
             return;
         }
-        if (!body.statical) {
+        if (body.center.y < this.entity.body.center.y + this.entity.size.height / 4) {
+            return;
+        }
+        this._noCollisionTime = 0;
+
+        if (!this._isJumping || this._jumpingTime <= MAX_JUMPING_TIME) {
             return;
         }
 
         this._isJumping = false;
-        this.cancel();
+        if (this._isKeyPressed) {
+            this.start();
+        }
     }
 
     isJumping () {
@@ -43,6 +61,7 @@ export default class Jump extends Trait {
     }
 
     start () {
+        this._isKeyPressed = true;
         if (this._isJumping) {
             return;
         }
@@ -51,6 +70,7 @@ export default class Jump extends Trait {
     }
 
     cancel () {
+        this._isKeyPressed = false;
         this._jumpingTime = Infinity;
     }
 }

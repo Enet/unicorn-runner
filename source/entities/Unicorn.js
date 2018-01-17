@@ -6,39 +6,32 @@ import {
 import Run from 'traits/Run.js';
 import Jump from 'traits/Jump.js';
 import Killable from 'traits/Killable.js';
-import spriteDescription from 'sprites/unicorn.js';
+import spriteDescription from 'sprites/Unicorn.js';
 
 export default class Unicorn extends Entity {
     get offset () {
         const offset = super.offset;
-        offset.x -= 20;
+        offset.x -= (172 - 120) / 2;
+        offset.y -= (119 - 109) / 2;
         return offset;
     }
 
-    constructor (options) {
-        options.description = spriteDescription;
-        super(options);
-        this.addTrait(new Run());
-        this.addTrait(new Jump());
-        this.addTrait(new Killable());
-
-        this.killable.removeAfter = 1;
+    _getSpriteDescription () {
+        return spriteDescription;
     }
 
     _getSize () {
-        return new Vector2(120, 119);
+        return new Vector2(120, 109);
     }
 
-    _getAnimation () {
-        const {sprite} = this;
-
-        if (this.killable.dead) {
-            return super._getAnimation('death');
-        } else if (this.jump.isJumping()) {
+    _getFrame () {
+        if (this.killable && this.killable.isDead()) {
+            return super._getFrame('death');
+        } else if (this.jump && this.jump.isJumping()) {
             return 'jump';
-        } else if (this.run.distance > 0) {
-            const animation = sprite.animations.get('run');
-            return animation(this.run.distance);
+        } else if (this.run && this.run.getDistance() > 0) {
+            this._lifeTime = this.run.getDistance();
+            return super._getFrame('run');
         } else {
             return 'idle';
         }
@@ -52,9 +45,16 @@ export default class Unicorn extends Entity {
     }
 
     _createBody (options) {
-        options.stiffness = 1;
         const body = super._createBody(options);
         body.getDeltaAngle = this._getDeltaAngle.bind(this);
         return body;
+    }
+
+    _createTraits () {
+        return [
+            new Run(),
+            new Jump(),
+            new Killable()
+        ];
     }
 }

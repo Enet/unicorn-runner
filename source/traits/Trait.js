@@ -49,4 +49,8 @@ export default class Trait {
     traitCollision (body) {
 
     }
+
+    traitWillUnmount () {
+
+    }
 }

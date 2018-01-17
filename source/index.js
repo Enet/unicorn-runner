@@ -15,6 +15,9 @@ const canvasContext = canvasNode.getContext('2d');
 const SCORE_ID = 'score';
 const scoreNode = document.getElementById(SCORE_ID);
 
+const HEALTH_ID = 'health';
+const healthNode = document.getElementById(HEALTH_ID);
+
 const inputNodes = {};
 const settings = {
     sound: true,
@@ -63,6 +66,7 @@ function startGame (step) {
         context: canvasContext,
         settings,
         onScoreChange,
+        onHealthChange,
         onGameLose,
         onGameWin
     });
@@ -89,11 +93,17 @@ function onScoreChange (value) {
     scoreNode.innerHTML = value;
 }
 
+function onHealthChange (value) {
+    healthNode.innerHTML = value;
+}
+
 function onGameLose () {
+    unicornGame.pause();
     setAppScreen('loser');
 }
 
 function onGameWin () {
+    unicornGame.pause();
     setAppScreen('winner');
 }
 

@@ -4,20 +4,24 @@ import {
 } from 'engine/math.js';
 
 import RainbowBehaviour from 'traits/RainbowBehaviour.js';
-import spriteDescription from 'sprites/rainbow.js';
+import spriteDescription from 'sprites/Rainbow.js';
 
 export default class Rainbow extends Entity {
-    constructor (options) {
-        options.description = spriteDescription;
-        super(options);
-        this.addTrait(new RainbowBehaviour());
+    get opacity () {
+        return 1 - this.pickable.getHidingProgress();
+    }
+
+    _getSpriteDescription () {
+        return spriteDescription;
     }
 
     _getSize () {
         return new Vector2(83, 93);
     }
 
-    _getAnimation () {
-        return super._getAnimation('spark');
+    _createTraits () {
+        return [
+            new RainbowBehaviour()
+        ];
     }
 }

@@ -11,7 +11,7 @@ export default class RainbowBehaviour extends Trait {
 
     traitDidMount () {
         const pickable = new Pickable(this._onPick.bind(this));
-        this.entity.addTrait(pickable);
+        this.entity.traits.add(pickable);
     }
 
     _onPick () {

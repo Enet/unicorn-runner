@@ -5,6 +5,10 @@ export default class BugBehaviour extends Trait {
         return 'behaviour';
     }
 
+    traitWillMount () {
+        this._isActive = true;
+    }
+
     traitCollision (body) {
         const {entity} = this;
         if (entity.killable && entity.killable.isDead()) {
@@ -13,6 +17,10 @@ export default class BugBehaviour extends Trait {
         if (!body.entity.killable) {
             return;
         }
+        if (!this._isActive) {
+            return;
+        }
+        this._isActive = false;
         body.entity.killable.kill();
     }
 }

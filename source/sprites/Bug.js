@@ -20,7 +20,7 @@ export default {
         rect: [232, 0, 58, 65]
     }],
     animations: [{
-        name: 'stand',
+        name: 'default',
         delay: 15,
         frames: [
             'frame-1',

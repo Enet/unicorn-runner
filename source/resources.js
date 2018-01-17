@@ -1,11 +1,12 @@
 const imageNames = [
+    'Box',
     'Bug',
     'Rainbow',
     'Unicorn',
-    'skyscraperBack',
-    'skyscraperFront',
-    'ground',
-    'tile'
+    'SkyscraperBack',
+    'SkyscraperFront',
+    'Ground',
+    'Tile'
 ];
 
 const soundNames = [
@@ -17,6 +18,7 @@ const levelNames = [
 ];
 
 const entityNames = [
+    'Box',
     'Bug',
     'Rainbow',
     'Unicorn'

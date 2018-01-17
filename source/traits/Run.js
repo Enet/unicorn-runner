@@ -22,8 +22,16 @@ export default class Run extends Trait {
 
     traitWillUpdate (deltaTime, level) {
         const {entity} = this;
+        if (entity.jump && entity.jump.isJumping()) {
+            deltaTime /= 2;
+        }
+
         entity.body.move(new Vector2(RUNNING_SPEED * deltaTime, 0));
         this._runningDistance += entity.body.center.x - this._prevBodyCenter.x;
         this._prevBodyCenter = entity.body.center;
+    }
+
+    getDistance () {
+        return this._runningDistance;
     }
 }

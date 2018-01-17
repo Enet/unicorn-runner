@@ -7,8 +7,4 @@ export default class Camera {
         this.size = new Vector2(width, height);
         this.position = new Vector2(x, y);
     }
-
-    isIterable () {
-        return false;
-    }
 }

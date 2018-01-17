@@ -1,4 +1,5 @@
 import Camera from './Camera.js';
+import Renderable from './Renderable.js';
 
 export default class Scene {
     get camera () {
@@ -6,26 +7,33 @@ export default class Scene {
     }
 
     set camera (camera) {
-        if (!this._storage.has(camera)) {
-            throw 'Camera must be added to scene!';
+        if (!this._cameras.has(camera)) {
+            throw 'Camera must be added to the scene!';
         }
         this._camera = camera;
     }
 
     constructor () {
-        this._camera = null;
-        this._storage = new Set();
+        this._cameras = new Set();
+        this._renderables = new Set();
     }
 
     add (object) {
-        this._storage.add(object);
         if (object instanceof Camera) {
-            this._camera = object;
+            this._cameras.add(object);
+            if (!this._camera) {
+                this._camera = object;
+            }
+        } else if (object instanceof Renderable) {
+            this._renderables.add(object);
+        } else {
+            throw 'Only camera or renderable object can be added to the scene!';
         }
     }
 
     remove (object) {
-        this._storage.delete(object);
+        this._renderables.delete(object);
+        this._cameras.delete(object);
         if (object === this._camera) {
             this._camera = null;
         }
@@ -34,15 +42,11 @@ export default class Scene {
 
     clear () {
         this._camera = null;
-        this._storage.clear();
+        this._cameras.clear();
+        this._renderables.clear();
     }
 
-    forEach (iterator, force) {
-        this._storage.forEach((renderable, r) => {
-            if (!force && renderable.isIterable && !renderable.isIterable()) {
-                return;
-            }
-            iterator(renderable, r);
-        });
+    forEach () {
+        return this._renderables.forEach(...arguments);
     }
 }

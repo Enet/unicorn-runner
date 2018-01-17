@@ -23,7 +23,7 @@ export default class UnicornGame extends Game {
 
     _updateLevel (deltaTime) {
         const {level} = this._game;
-        level.onUpdate(deltaTime);
+        level.update(deltaTime);
     }
 
     _centerCamera () {
@@ -43,7 +43,7 @@ export default class UnicornGame extends Game {
 
         scene.add(camera);
 
-        const controller = new Controller(callbacks.onScoreChange);
+        const controller = new Controller(callbacks);
         const player = new Player({
             image: manager.getImage('Unicorn'),
             controller
@@ -65,6 +65,10 @@ export default class UnicornGame extends Game {
     }
 
     _onWindowKeyDown (event) {
+        if (this._isPaused) {
+            return;
+        }
+
         const {player} = this._game;
         if (event.keyCode === KEY_SPACE) {
             player.jump.start();
@@ -74,6 +78,10 @@ export default class UnicornGame extends Game {
     }
 
     _onWindowKeyUp (event) {
+        if (this._isPaused) {
+            return;
+        }
+
         const {player} = this._game;
         player.jump.cancel();
     }

@@ -1,10 +1,13 @@
+import Renderable from 'engine/Renderable.js';
 import BoxBody from 'engine/BoxBody.js';
 import Sprite from 'engine/Sprite.js';
 import {
     Vector2
 } from 'engine/math.js';
 
-export default class Entity {
+import TraitManager from 'TraitManager.js';
+
+export default class Entity extends Renderable {
     get position () {
         return this.body.center.add(this.offset);
     }
@@ -18,51 +21,43 @@ export default class Entity {
     }
 
     constructor (options) {
-        options.position = options.position || new Vector2(0, 0);
+        super();
+
+        options.description = this._getSpriteDescription();
         this.size = this._getSize(options);
         this.sprite = this._createSprite(options);
         this.body = this._createBody(options);
-        this.traits = this._getTraits(options);
+        this.traits = new TraitManager(this);
         this._lifeTime = 0;
 
-        this.body.addListener('collision', this.onCollision.bind(this));
-    }
+        const traits = this._createTraits(options);
+        traits.forEach(trait => this.traits.add(trait));
 
-    addTrait (trait) {
-        this.traits.push(trait);
-        this[trait.getName()] = trait;
-        trait.entity = this;
-        trait.traitDidMount();
+        this.body.addListener('collision', this.entityCollision.bind(this));
     }
 
     render (context) {
         const {sprite, offset} = this;
-        sprite.render(this._getAnimation(), context, offset.x, offset.y);
+        sprite.render(this._getFrame(), context, offset.x, offset.y);
     }
 
-    onUpdate (deltaTime, level) {
+    entityWillUpdate (deltaTime, level) {
         this.traits.forEach((trait) => {
             trait.traitWillUpdate(deltaTime, level);
         });
         this._lifeTime += deltaTime;
     }
 
-    onCollision (body) {
-        this.traits.forEach((trait) => {
-            trait.traitCollision(body);
-        });
-    }
-
-    onObstacle (side, match) {
-        this.traits.forEach((trait) => {
-            trait.onObstacle(this, side, match);
-        });
-    }
-
-    afterUpdate () {
+    entityDidUpdate () {
         this.traits.forEach((trait) => {
             trait.executeQueue();
             trait.traitDidUpdate();
+        });
+    }
+
+    entityCollision (body, collision) {
+        this.traits.forEach((trait) => {
+            trait.traitCollision(body, collision);
         });
     }
 
@@ -70,24 +65,28 @@ export default class Entity {
         return new Vector2(0, 0);
     }
 
-    _getTraits () {
-        return [];
+    _getSpriteDescription () {
+        return {};
     }
 
-    _getAnimation (name = 'default') {
+    _getFrame (name='default') {
         const {sprite} = this;
         const animation = sprite.animations.get(name);
         return animation(this._lifeTime);
+    }
+
+    _createTraits () {
+        return [];
     }
 
     _createSprite ({image, description}) {
         return new Sprite(image, description);
     }
 
-    _createBody ({position, stiffness = 1}) {
+    _createBody ({x=0, y=0, stiffness=1}) {
         const {width, height} = this.size;
-        const x = position.x - width / 2;
-        const y = position.y - height / 2;
+        x -= width / 2;
+        y -= height / 2;
         const body = new BoxBody({x, y, width, height, stiffness});
         body.entity = this;
         return body;
