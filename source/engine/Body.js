@@ -37,6 +37,12 @@ export default class Body extends EventEmitter {
         });
     }
 
+    setGravity (gravity) {
+        this.points.forEach((point) => {
+            point.gravity = gravity;
+        });
+    }
+
     getDeltaAngle (delta, angle) {
         return delta;
     }

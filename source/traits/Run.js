@@ -22,7 +22,8 @@ export default class Run extends Trait {
 
     traitWillUpdate (deltaTime, level) {
         const {entity} = this;
-        if (entity.jump && entity.jump.isJumping()) {
+        if ((entity.jump && entity.jump.isJumping()) ||
+            (entity.fly && entity.fly.isFlying())) {
             deltaTime /= 2;
         }
 

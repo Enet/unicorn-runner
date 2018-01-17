@@ -65,6 +65,9 @@ export default class Jump extends Trait {
         if (this._isJumping) {
             return;
         }
+        if (this.entity.fly && this.entity.fly.isFlying()) {
+            return;
+        }
         this._isJumping = true;
         this._jumpingTime = 0;
     }

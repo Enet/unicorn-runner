@@ -72,8 +72,10 @@ export default class UnicornGame extends Game {
         const {player} = this._game;
         if (event.keyCode === KEY_SPACE) {
             player.jump.start();
+            player.fly.up();
         } else {
             player.jump.cancel();
+            player.fly.down();
         }
     }
 
@@ -84,6 +86,7 @@ export default class UnicornGame extends Game {
 
         const {player} = this._game;
         player.jump.cancel();
+        player.fly.down();
     }
 }
 

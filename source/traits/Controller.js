@@ -7,14 +7,8 @@ export default class Controller extends Trait {
     }
 
     traitWillMount ({onScoreChange, onHealthChange}) {
-        this._score = 0;
         this._onScoreChange = onScoreChange;
         this._onHealthChange = onHealthChange;
-    }
-
-    traitDidMount () {
-        const picker = new Picker(this._onPick.bind(this));
-        this.entity.traits.add(picker);
     }
 
     traitWillUpdate (deltaTime, level) {
@@ -29,8 +23,7 @@ export default class Controller extends Trait {
         level.loseGame();
     }
 
-    _onPick (body) {
-        this._score += 50;
-        this._onScoreChange(this._score);
+    traitScore (score) {
+        this._onScoreChange(score);
     }
 }

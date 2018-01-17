@@ -3,7 +3,9 @@ import Point from './Point.js';
 export default class DynamicPoint extends Point {
     integrate (deltaTime, world) {
         const {x, y, cache} = this;
-        const {gravity, friction} = world;
+        let {gravity, friction} = this;
+        gravity = gravity || world.gravity;
+        friction = friction || world.friction;
 
         const vx = x - cache.x;
         const vy = y - cache.y;

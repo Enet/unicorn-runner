@@ -1,8 +1,4 @@
-import {
-    Vector2
-} from 'engine/math.js';
 import Trait from 'traits/Trait.js';
-import Pickable from 'traits/Pickable.js';
 
 export default class MedicineBehaviour extends Trait {
     getName () {
