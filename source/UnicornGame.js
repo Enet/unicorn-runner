@@ -2,20 +2,14 @@ import Game from 'engine/Game.js';
 import Renderer from 'engine/Renderer.js';
 import Camera from 'engine/Camera.js';
 import Scene from 'engine/Scene.js';
+import Debugger from 'engine/Debugger.js';
 
 import Level from 'Level.js';
 import Player from 'entities/Player.js';
 import Controller from 'traits/Controller.js';
-
-import {
-    Vec2
-} from 'engine/math.js';
-import Debugger from 'engine/Debugger.js';
-
 import {
     KEY_SPACE
 } from 'constants.js';
-
 import {
     images,
     sounds,
@@ -38,24 +32,25 @@ export default class UnicornGame extends Game {
         camera.position.y = player.body.center.y - 300;
     }
 
-    _onManagerReady ({context, step, settings, onScoreChange, onGameLose, onGameWin}) {
+    _onManagerReady ({context, step, settings, ...callbacks}) {
         super._onManagerReady(...arguments);
 
         const {width, height} = context.canvas;
         const manager = this._manager;
         const renderer = new Renderer(context);
-        const camera = new Camera(width, height, 0, 0);
+        const camera = new Camera({width, height});
         const scene = new Scene();
 
         scene.add(camera);
 
-        const controller = new Controller(onScoreChange);
+        const controller = new Controller(callbacks.onScoreChange);
         const player = new Player({
             image: manager.getImage('Unicorn'),
-            position: new Vec2(50, 0),
             controller
         });
-        const level = new Level(levels[step], {manager, scene, player});
+        const level = new Level(levels[step], {
+            manager, scene, player, callbacks
+        });
 
         this._debugger = new Debugger(level._gameplay.world, camera, context);
         this._game = {renderer, scene, camera, level, player};

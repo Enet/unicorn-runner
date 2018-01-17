@@ -1,8 +1,7 @@
 import BoxBody from 'engine/BoxBody.js';
-import SpriteSheet from 'engine/SpriteSheet.js';
+import Sprite from 'engine/Sprite.js';
 import {
-    Vec2,
-    Size
+    Vector2
 } from 'engine/math.js';
 
 export default class Entity {
@@ -19,18 +18,21 @@ export default class Entity {
     }
 
     constructor (options) {
-        options.position = options.position || new Vec2(0, 0);
+        options.position = options.position || new Vector2(0, 0);
         this.size = this._getSize(options);
         this.sprite = this._createSprite(options);
         this.body = this._createBody(options);
         this.traits = this._getTraits(options);
         this._lifeTime = 0;
+
+        this.body.addListener('collision', this.onCollision.bind(this));
     }
 
     addTrait (trait) {
         this.traits.push(trait);
         this[trait.getName()] = trait;
-        trait.onMount(this);
+        trait.entity = this;
+        trait.traitDidMount();
     }
 
     render (context) {
@@ -40,14 +42,14 @@ export default class Entity {
 
     onUpdate (deltaTime, level) {
         this.traits.forEach((trait) => {
-            trait.onUpdate(this, deltaTime, level);
+            trait.traitWillUpdate(deltaTime, level);
         });
         this._lifeTime += deltaTime;
     }
 
-    onCollision (candidate) {
+    onCollision (body) {
         this.traits.forEach((trait) => {
-            trait.onCollision(this, candidate);
+            trait.traitCollision(body);
         });
     }
 
@@ -60,11 +62,12 @@ export default class Entity {
     afterUpdate () {
         this.traits.forEach((trait) => {
             trait.executeQueue();
+            trait.traitDidUpdate();
         });
     }
 
     _getSize () {
-        return new Size(0, 0);
+        return new Vector2(0, 0);
     }
 
     _getTraits () {
@@ -78,13 +81,15 @@ export default class Entity {
     }
 
     _createSprite ({image, description}) {
-        return new SpriteSheet(image, description);
+        return new Sprite(image, description);
     }
 
     _createBody ({position, stiffness = 1}) {
         const {width, height} = this.size;
         const x = position.x - width / 2;
         const y = position.y - height / 2;
-        return new BoxBody({x, y, width, height, stiffness});
+        const body = new BoxBody({x, y, width, height, stiffness});
+        body.entity = this;
+        return body;
     }
 }

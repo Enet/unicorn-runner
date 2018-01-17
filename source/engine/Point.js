@@ -1,11 +1,11 @@
 import {
-    Vec2
+    Vector2
 } from './math.js';
 
-export default class Point extends Vec2 {
+export default class Point extends Vector2 {
     constructor (x, y) {
         super(x, y);
-        this.cache = new Vec2(x, y);
+        this.cache = new Vector2(x, y);
     }
 
     integrate () {

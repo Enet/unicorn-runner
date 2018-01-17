@@ -1,24 +1,29 @@
+import {
+    Vector2
+} from 'engine/math.js';
 import Trait from 'traits/Trait.js';
+
+import {
+    RUNNING_SPEED
+} from 'constants.js';
 
 export default class Run extends Trait {
     getName () {
         return 'run';
     }
 
-    onInit () {
-        this.speed = 0.01;
-        this.distance = 0;
+    traitWillMount () {
+        this._runningDistance = 0;
     }
 
-    onMount (entity) {
-        this._lastBodyCenter = entity.body.center;
+    traitDidMount () {
+        this._prevBodyCenter = this.entity.body.center;
     }
 
-    onUpdate (entity, deltaTime) {
-        entity.body.points.forEach((point) => {
-            point.x += 0.01 * deltaTime;
-        });
-        this.distance += entity.body.center.x - this._lastBodyCenter.x;
-        this._lastBodyCenter = entity.body.center;
+    traitWillUpdate (deltaTime, level) {
+        const {entity} = this;
+        entity.body.move(new Vector2(RUNNING_SPEED * deltaTime, 0));
+        this._runningDistance += entity.body.center.x - this._prevBodyCenter.x;
+        this._prevBodyCenter = entity.body.center;
     }
 }

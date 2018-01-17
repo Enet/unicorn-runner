@@ -1,17 +1,22 @@
+import {
+    Vector2
+} from 'engine/math.js';
 import Trait from 'traits/Trait.js';
+import Pickable from 'traits/Pickable.js';
 
 export default class RainbowBehaviour extends Trait {
     getName () {
-        return 'behavior';
+        return 'behaviour';
     }
 
-    onCollision (selfEntity, externalEntity) {
-        if (selfEntity.pickable.picked) {
-            return;
-        }
+    traitDidMount () {
+        const pickable = new Pickable(this._onPick.bind(this));
+        this.entity.addTrait(pickable);
+    }
 
-        selfEntity.pickable.pick();
-        //selfEntity.velocity.set(30, -400);
-        selfEntity.solid.disable();
+    _onPick () {
+        const {entity} = this;
+        entity.body.move(new Vector2(3, -3));
+        entity.body.collidable = false;
     }
 }

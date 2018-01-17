@@ -37,7 +37,7 @@ export default class Game {
         return {images, sounds};
     }
 
-    _onManagerReady ({canvas, onScoreChange}) {
+    _onManagerReady ({canvas}) {
         this._onWindowKeyDown = this._onWindowKeyDown.bind(this);
         this._onWindowKeyUp = this._onWindowKeyUp.bind(this);
         this._onAnimationFrame = this._onAnimationFrame.bind(this);

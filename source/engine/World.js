@@ -1,6 +1,6 @@
 import Collision from './Collision.js';
 import {
-    Vec2
+    Vector2
 } from './math.js';
 
 export default class World {
@@ -9,8 +9,8 @@ export default class World {
         this.bodies = [];
         this.bounds = {top, left, bottom, right};
 
-        this.gravity = gravity || new Vec2(0, 981);
-        this.friction = friction || new Vec2(0.98, 0.98);
+        this.gravity = gravity || new Vector2(0, 981);
+        this.friction = friction || new Vector2(0.98, 0.98);
     }
 
     add (body) {

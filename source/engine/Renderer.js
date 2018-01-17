@@ -1,5 +1,5 @@
 import {
-    Vec2
+    Vector2
 } from './math.js';
 
 export default class Renderer {
@@ -18,7 +18,7 @@ export default class Renderer {
             }
             const position = renderable.position || camera.position;
             const angle = renderable.angle || 0;
-            const offset = renderable.offset || new Vec2(0, 0);
+            const offset = renderable.offset || new Vector2(0, 0);
             let x = position.x - camera.position.x;
             let y = position.y - camera.position.y;
             context.save();

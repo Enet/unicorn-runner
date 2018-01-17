@@ -1,9 +1,12 @@
+import EventEmitter from 'events';
 import {
-    Vec2
+    Vector2
 } from './math.js';
 
-export default class Body {
+export default class Body extends EventEmitter {
     constructor ({points, stiffness = 1, collidable = true, statical}) {
+        super();
+
         statical = !!statical;
         Object.assign(this, {points, stiffness, collidable, statical});
         this._updateCenterOfMass();
@@ -20,11 +23,7 @@ export default class Body {
         this._updateAabb();
     }
 
-    getDeltaAngle (delta, angle) {
-        return delta;
-    }
-
-    setPosition (absolutePosition) {
+    place (absolutePosition) {
         const relativePosition = this.center.subtract(absolutePosition);
         this.points.forEach((point) => {
             point.set(point.subtract(relativePosition));
@@ -32,9 +31,19 @@ export default class Body {
         });
     }
 
+    move (offset) {
+        this.points.forEach((point) => {
+            point.set(point.add(offset));
+        });
+    }
+
+    getDeltaAngle (delta, angle) {
+        return delta;
+    }
+
     _updateCenterOfMass () {
         const {points} = this;
-        const zero = new Vec2(0, 0);
+        const zero = new Vector2(0, 0);
         const center = points
             .reduce((accumulator, point) => accumulator.add(point), zero)
             .length(1 / points.length);
@@ -44,7 +53,7 @@ export default class Body {
     _updatePoints () {
         const {points, center} = this;
         let deltaAngle = points.reduce((deltaAngle, point, p) => {
-            const currentDisplacement = new Vec2(point.x - center.x, point.y - center.y);
+            const currentDisplacement = new Vector2(point.x - center.x, point.y - center.y);
             const previousDisplacement = this._relativePoints[p];
             const cos = currentDisplacement.x * previousDisplacement.x + currentDisplacement.y * previousDisplacement.y;
             const sin = currentDisplacement.y * previousDisplacement.x - currentDisplacement.x * previousDisplacement.y;
@@ -58,7 +67,7 @@ export default class Body {
         const sin = Math.sin(deltaAngle);
         points.forEach((point, p) => {
             const displacement = this._relativePoints[p];
-            const next = new Vec2(
+            const next = new Vector2(
                 cos * displacement.x - sin * displacement.y,
                 sin * displacement.x + cos * displacement.y
             );

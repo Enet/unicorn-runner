@@ -1,12 +1,11 @@
 import {
-    Vec2,
-    Size
+    Vector2
 } from './math.js';
 
 export default class Camera {
-    constructor (width, height, x, y) {
-        this.size = new Size(width, height);
-        this.position = new Vec2(x, y);
+    constructor ({width, height, x=0, y=0}) {
+        this.size = new Vector2(width, height);
+        this.position = new Vector2(x, y);
     }
 
     isIterable () {

@@ -2,13 +2,17 @@ import Trait from 'traits/Trait.js';
 
 export default class BugBehaviour extends Trait {
     getName () {
-        return 'behavior';
+        return 'behaviour';
     }
 
-    onCollision (selfEntity, externalEntity) {
-        if (selfEntity.killable.dead) {
+    traitCollision (body) {
+        const {entity} = this;
+        if (entity.killable && entity.killable.isDead()) {
             return;
         }
-        externalEntity.killable.kill();
+        if (!body.entity.killable) {
+            return;
+        }
+        body.entity.killable.kill();
     }
 }

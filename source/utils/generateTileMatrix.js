@@ -4,23 +4,23 @@ import {
 
 export default function generateTileMatrix (tiles, patterns = [], iterator) {
     const matrix = new Matrix();
-    for (const {x, y} of unzipTiles(tiles, patterns, 0, 0)) {
-        matrix.setElement(x, y, iterator(x, y));
+    for (const {xIndex, yIndex} of unzipTiles(tiles, patterns, 0, 0)) {
+        matrix.setElement(xIndex, yIndex, iterator(xIndex, yIndex));
     }
     return matrix;
 }
 
 function* unzipTiles (tiles, patterns, xOffset, yOffset) {
     for (const tile of tiles) {
-        for (let {x, y} of unzipRanges(tile.ranges)) {
-            x += xOffset;
-            y += yOffset;
+        for (let {xIndex, yIndex} of unzipRanges(tile.ranges)) {
+            xIndex += xOffset;
+            yIndex += yOffset;
 
             if (tile.pattern) {
                 const tiles = patterns[tile.pattern].tiles;
-                yield* unzipTiles(tiles, patterns, x, y);
+                yield* unzipTiles(tiles, patterns, xIndex, yIndex);
             } else {
-                yield {x, y};
+                yield {xIndex, yIndex};
             }
         }
     }
@@ -29,9 +29,9 @@ function* unzipTiles (tiles, patterns, xOffset, yOffset) {
 function* unzipRanges (ranges) {
     for (const range of ranges) {
         const [xFrom, xTo, yFrom, yTo] = range;
-        for (let x = xFrom; x < xTo; ++x) {
-            for (let y = yFrom; y < yTo; ++y) {
-                yield {x, y};
+        for (let xIndex = xFrom; xIndex < xTo; ++xIndex) {
+            for (let yIndex = yFrom; yIndex < yTo; ++yIndex) {
+                yield {xIndex, yIndex};
             }
         }
     }

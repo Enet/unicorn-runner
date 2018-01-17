@@ -1,7 +1,7 @@
 export default class Trait {
     constructor () {
         this._tasks = [];
-        this.onInit(...arguments);
+        this.traitWillMount(...arguments);
     }
 
     getName () {
@@ -17,6 +17,7 @@ export default class Trait {
         if (index === -1) {
             return;
         }
+        task.call(this);
         this._tasks.splice(index, 1);
     }
 
@@ -29,24 +30,23 @@ export default class Trait {
         this.clearQueue();
     }
 
-    onInit () {
+    traitWillMount () {
 
     }
 
-    onMount (selfEntity) {
+    traitDidMount () {
 
     }
 
-    onUpdate (selfEntity, deltaTime, level) {
+    traitWillUpdate (deltaTime, level) {
 
     }
 
-    onCollision (selfEntity, externalEntity) {
+    traitDidUpdate () {
 
     }
 
-    onObstacle (side, object) {
+    traitCollision (body) {
 
     }
-
 }

@@ -29,55 +29,7 @@ export class Matrix {
     }
 }
 
-export class Vec2 {
-    constructor (x, y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    clone () {
-        const {x, y} = this;
-        return new Vec2(x, y);
-    }
-
-    set (vector) {
-        this.x = vector.x;
-        this.y = vector.y;
-    }
-
-    add (vector) {
-        const {x, y} = this;
-        return new Vec2(x + vector.x, y + vector.y);
-    }
-
-    subtract (vector) {
-        const {x, y} = this;
-        return new Vec2(x - vector.x, y - vector.y);
-    }
-
-    length (scale) {
-        if (typeof scale !== 'number') {
-            return Math.sqrt(this.dot(this));
-        }
-        const {x, y} = this;
-        return new Vec2(x * scale, y * scale);
-    }
-
-    normalize () {
-        const length = this.length();
-        return this.length(1 / length);
-    }
-
-    inverse () {
-        return this.length(-1);
-    }
-
-    dot (vector) {
-        return this.x * vector.x + this.y * vector.y;
-    }
-}
-
-export class Size extends Vec2 {
+export class Vector2 {
     get width () {
         return this.x;
     }
@@ -92,5 +44,51 @@ export class Size extends Vec2 {
 
     set height (height) {
         this.y = height;
+    }
+
+    constructor (x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    clone () {
+        const {x, y} = this;
+        return new Vector2(x, y);
+    }
+
+    set (vector) {
+        this.x = vector.x;
+        this.y = vector.y;
+    }
+
+    add (vector) {
+        const {x, y} = this;
+        return new Vector2(x + vector.x, y + vector.y);
+    }
+
+    subtract (vector) {
+        const {x, y} = this;
+        return new Vector2(x - vector.x, y - vector.y);
+    }
+
+    length (scale) {
+        if (typeof scale !== 'number') {
+            return Math.sqrt(this.dot(this));
+        }
+        const {x, y} = this;
+        return new Vector2(x * scale, y * scale);
+    }
+
+    normalize () {
+        const length = this.length();
+        return this.length(1 / length);
+    }
+
+    inverse () {
+        return this.length(-1);
+    }
+
+    dot (vector) {
+        return this.x * vector.x + this.y * vector.y;
     }
 }

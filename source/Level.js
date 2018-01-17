@@ -1,5 +1,5 @@
-import StaticBackground from 'entities/StaticBackground.js';
-import TileBackground from 'entities/TileBackground.js';
+import StaticBackground from 'backgrounds/StaticBackground.js';
+import TileBackground from 'backgrounds/TileBackground.js';
 import {
     entities
 } from 'resources.js';
@@ -7,7 +7,7 @@ import {
 import World from 'engine/World.js';
 import BoxBody from 'engine/BoxBody.js';
 import {
-    Vec2
+    Vector2
 } from 'engine/math.js';
 
 import generateTileMatrix from 'utils/generateTileMatrix.js';
@@ -41,7 +41,8 @@ export default class Level {
                 width: TILE_SIZE,
                 height: TILE_SIZE
             });
-            tileBody.index = new Vec2(x, y);
+            tileBody.entity = {};
+            tileBody.index = new Vector2(x, y);
             tileBodies.push(tileBody);
             world.add(tileBody);
             return tileBody;
@@ -50,14 +51,27 @@ export default class Level {
         Object.assign(gameplay, {tileBodies, tileMatrix});
         this._gameplay = gameplay;
 
-        const staticBackground = new StaticBackground(manager);
-        const tileBackground = new TileBackground(manager.getImage('tile'), tileMatrix);
+        const staticBackground = new StaticBackground({
+            size: new Vector2(800, 600),
+            images: {
+                ground: manager.getImage('ground'),
+                back: manager.getImage('skyscraperBack'),
+                front: manager.getImage('skyscraperFront')
+            }
+        });
+        const tileBackground = new TileBackground({
+            size: new Vector2(800, 600),
+            images: {
+                tile: manager.getImage('tile')
+            },
+            tiles: tileMatrix
+        });
         scene.add(staticBackground);
         scene.add(tileBackground);
 
         data.entities.forEach(({name, position: [x, y]}) => {
             const image = manager.getImage(name);
-            const position = new Vec2(x, y);
+            const position = new Vector2(x, y);
             const entity = new entities[name]({image, position});
             scene.add(entity);
             world.add(entity.body);
@@ -65,23 +79,23 @@ export default class Level {
         scene.add(player);
         world.add(player.body);
 
-        window.onmousedown = () => {
-            this.zzz = true;
-        };
-        window.onmouseup = () => {
-            this.zzz = false;
-        };
+        this.placePlayer();
     }
 
     finishGame () {
         this._gameplay.isStopped = true;
+        this.placePlayer();
     }
 
     restartGame () {
         const {player} = this._gameplay;
         player.killable.revive();
-        player.body.setPosition(player.controller.start);
         this._gameplay.isStopped = false;
+    }
+
+    placePlayer () {
+        const {player} = this._gameplay;
+        player.body.place(new Vector2(TILE_SIZE, TILE_SIZE));
     }
 
     isGameOver () {
@@ -93,12 +107,7 @@ export default class Level {
     }
 
     onUpdate (deltaTime) {
-        const {scene, world, player} = this._gameplay;
-        if (this.zzz) {
-            player.body.points.forEach((point) => {
-                point.y = point.y - 1;
-            });
-        }
+        const {scene, world} = this._gameplay;
 
         world.update(deltaTime / 1000);
 

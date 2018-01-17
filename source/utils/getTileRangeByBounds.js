@@ -1,4 +1,4 @@
-import getTileIndexByPosition from 'utils/getTileIndexByPosition.js';
+import getTileIndexByDistance from 'utils/getTileIndexByDistance.js';
 import {
     TILE_SIZE
 } from 'constants.js';
@@ -17,13 +17,13 @@ export default function getTileRangeByBounds (tileMatrix, {top, left, bottom, ri
     return tiles;
 }
 
-function* generateTileRange (fromPosition, toPosition) {
-    const maxPosition = Math.ceil(toPosition / TILE_SIZE) * TILE_SIZE;
-    let position = fromPosition;
+function* generateTileRange (from, to) {
+    const maxDistance = Math.ceil(to / TILE_SIZE) * TILE_SIZE;
+    let distance = from;
     do {
-        yield getTileIndexByPosition(position);
-        position += TILE_SIZE;
-    } while (position < maxPosition);
+        yield getTileIndexByDistance(distance);
+        distance += TILE_SIZE;
+    } while (distance < maxDistance);
 }
 
 function getTileByIndex (tileMatrix, xIndex, yIndex) {

@@ -1,34 +1,40 @@
 import Trait from 'traits/Trait.js';
 
+import {
+    MAX_HIDING_TIME
+} from 'constants.js';
+
 export default class Killable extends Trait {
     getName () {
         return 'killable';
     }
 
-    onInit () {
-        this.dead = false;
-        this.deadTime = 0;
-        this.removeAfter = .3;
+    traitWillMount () {
+        this._isDead = false;
+        this._afterDeathTime = 0;
+    }
+
+    traitWillUpdate (deltaTime, level) {
+        if (!this._isDead) {
+            return;
+        }
+        this._afterDeathTime += deltaTime;
+        if (this._afterDeathTime > MAX_HIDING_TIME) {
+            level.finishGame();
+        }
+    }
+
+    isDead () {
+        return this._isDead;
     }
 
     kill () {
-        this.enqueueTask(() => this.dead = true);
+        this._isDead = true;
     }
 
     revive () {
-        this.dead = false;
-        this.deadTime = 0;
-    }
-
-    onUpdate (entity, deltaTime, level) {
-        if (this.dead) {
-            this.deadTime += deltaTime;
-            if (this.deadTime > this.removeAfter) {
-                this.enqueueTask(() => {
-                    level.finishGame();
-                });
-            }
-        }
+        this._isDead = false;
+        this._afterDeathTime = 0;
     }
 }
 

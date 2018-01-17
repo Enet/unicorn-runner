@@ -1,5 +1,5 @@
 import {
-    Vec2
+    Vector2
 } from './math.js';
 
 function areBodiesOverlapped (body1, body2) {
@@ -55,7 +55,7 @@ export default class Collision {
 
             const pointA = points[a];
             const pointB = points[b];
-            const axis = new Vec2(
+            const axis = new Vector2(
                 pointA.y - pointB.y,
                 pointB.x - pointA.x
             ).normalize();
@@ -93,7 +93,7 @@ export default class Collision {
             }
         });
 
-        this._collision = {edge, vector, contact};
+        this._collision = {body1, body2, edge, vector, contact};
     }
 
     resolve () {
@@ -102,7 +102,7 @@ export default class Collision {
             return;
         }
 
-        const {edge, vector, contact} = collision;
+        const {body1, body2, edge, vector, contact} = collision;
         const [pointA, pointB] = edge;
 
         let t = Math.abs(pointA.x - pointB.x) > Math.abs(pointA.y - pointB.y) ?
@@ -119,5 +119,8 @@ export default class Collision {
         pointA.set(pointA.subtract(vector.length(cA)));
         pointB.set(pointB.subtract(vector.length(cB)));
         contact.set(contact.add(vector.length(cC)));
+
+        !body1.statical && body1.emit('collision', body2);
+        !body2.statical && body2.emit('collision', body1);
     }
 }

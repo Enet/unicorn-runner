@@ -1,5 +1,5 @@
 import {
-    Vec2
+    Vector2
 } from './math.js';
 
 export default class Debugger {
@@ -25,10 +25,10 @@ export default class Debugger {
 
         const {width, height} = context.canvas;
         const {top, left, bottom, right} = this._world.bounds;
-        this._renderLine(context, new Vec2(camera.position.x, top), new Vec2(camera.position.x + width, top), 'red');
-        this._renderLine(context, new Vec2(camera.position.x, bottom), new Vec2(camera.position.x + width, bottom), 'red');
-        this._renderLine(context, new Vec2(left, camera.position.y), new Vec2(left, camera.position.y + height), 'red');
-        this._renderLine(context, new Vec2(right, camera.position.y), new Vec2(right, camera.position.y + height), 'red');
+        this._renderLine(context, new Vector2(camera.position.x, top), new Vector2(camera.position.x + width, top), 'red');
+        this._renderLine(context, new Vector2(camera.position.x, bottom), new Vector2(camera.position.x + width, bottom), 'red');
+        this._renderLine(context, new Vector2(left, camera.position.y), new Vector2(left, camera.position.y + height), 'red');
+        this._renderLine(context, new Vector2(right, camera.position.y), new Vector2(right, camera.position.y + height), 'red');
 
         context.translate(camera.position.x, camera.position.y);
         context.restore();

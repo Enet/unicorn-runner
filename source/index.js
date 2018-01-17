@@ -148,3 +148,5 @@ loadSettings();
 document.addEventListener('click', onDocumentClick);
 document.addEventListener('keydown', onDocumentKeyDown);
 document.addEventListener('change', onDocumentChange);
+
+setAppScreen('map');
