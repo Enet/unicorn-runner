@@ -28,6 +28,9 @@ export default {
         name: 'Rainbow',
         position: [408, 0]
     }, {
+        name: 'Rainbow',
+        position: [408, 60]
+    }, {
         name: 'Bug',
         position: [780, 0]
     }, {

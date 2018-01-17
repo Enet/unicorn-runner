@@ -1,4 +1,6 @@
 const imageNames = [
+    'SlowMotion',
+    'FastMotion',
     'Medicine',
     'Box',
     'Bug',
@@ -19,6 +21,8 @@ const levelNames = [
 ];
 
 const entityNames = [
+    'SlowMotion',
+    'FastMotion',
     'Medicine',
     'Box',
     'Bug',

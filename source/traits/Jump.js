@@ -15,6 +15,7 @@ export default class Jump extends Trait {
     }
 
     traitWillMount () {
+        this._speedFactor = 1;
         this._noCollisionTime = 0;
         this._isJumping = true;
         this._isKeyPressed = false;
@@ -34,7 +35,10 @@ export default class Jump extends Trait {
             return;
         }
         this._jumpingTime += deltaTime;
-        this.entity.body.move(new Vector2(0.1 * JUMPING_BOOST, -JUMPING_BOOST));
+        this.entity.body.move(new Vector2(
+            0.1 * JUMPING_BOOST * this._speedFactor,
+            -JUMPING_BOOST
+        ));
     }
 
     traitCollision (body, collision) {
@@ -58,6 +62,10 @@ export default class Jump extends Trait {
 
     isJumping () {
         return this._isJumping;
+    }
+
+    setSpeedFactor (factor) {
+        this._speedFactor = factor;
     }
 
     start () {

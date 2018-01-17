@@ -13,6 +13,7 @@ export default class Run extends Trait {
     }
 
     traitWillMount () {
+        this._speedFactor = 1;
         this._runningDistance = 0;
     }
 
@@ -27,12 +28,16 @@ export default class Run extends Trait {
             deltaTime /= 2;
         }
 
-        entity.body.move(new Vector2(RUNNING_SPEED * deltaTime, 0));
+        entity.body.move(new Vector2(RUNNING_SPEED * this._speedFactor * deltaTime, 0));
         this._runningDistance += entity.body.center.x - this._prevBodyCenter.x;
         this._prevBodyCenter = entity.body.center;
     }
 
     getDistance () {
         return this._runningDistance;
+    }
+
+    setSpeedFactor (factor) {
+        this._speedFactor = factor;
     }
 }

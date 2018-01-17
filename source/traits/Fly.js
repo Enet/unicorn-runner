@@ -13,6 +13,8 @@ export default class Fly extends Trait {
     }
 
     traitWillMount () {
+        this._prevDirection = null;
+        this._speedFactor = 1;
         this._isFlying = false;
         this._remainingTime = 0;
     }
@@ -32,24 +34,31 @@ export default class Fly extends Trait {
         return this._isFlying;
     }
 
+    setSpeedFactor (factor) {
+        this._speedFactor = factor;
+        if (this._isFlying) {
+            this._setGravity();
+        }
+    }
+
     up () {
         if (!this._isFlying) {
             return;
         }
-        this.entity.body.setGravity(new Vector2(FLYING_BOOST, -FLYING_BOOST));
+        this._setGravity(-1);
     }
 
     down () {
         if (!this._isFlying) {
             return;
         }
-        this.entity.body.setGravity(new Vector2(FLYING_BOOST, FLYING_BOOST));
+        this._setGravity(1);
     }
 
     start (flyTime) {
         this._isFlying = true;
         this._remainingTime += flyTime;
-        this.entity.body.setGravity(new Vector2(FLYING_BOOST, FLYING_BOOST));
+        this._setGravity(1);
         this.entity.jump && this.entity.jump.cancel();
     }
 
@@ -57,5 +66,14 @@ export default class Fly extends Trait {
         this._isFlying = false;
         this._remainingTime = 0;
         this.entity.body.setGravity(null);
+    }
+
+    _setGravity (direction=this._prevDirection) {
+        this._prevDirection = direction;
+        const speedFactor = this._speedFactor;
+        this.entity.body.setGravity(new Vector2(
+            FLYING_BOOST * speedFactor,
+            FLYING_BOOST * speedFactor * direction
+        ));
     }
 }
