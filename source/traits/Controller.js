@@ -1,5 +1,4 @@
 import Trait from 'traits/Trait.js';
-import Picker from 'traits/Picker.js';
 
 export default class Controller extends Trait {
     getName () {

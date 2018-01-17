@@ -25,6 +25,15 @@ export default {
         ]
     }],
     entities: [{
+        name: 'Dollar10',
+        position: [500, 0]
+    }, {
+        name: 'Dollar50',
+        position: [500, 60]
+    }, {
+        name: 'Dollar100',
+        position: [600, 0]
+    }, {
         name: 'Rainbow',
         position: [408, 0]
     }, {

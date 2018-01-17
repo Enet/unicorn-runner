@@ -17,8 +17,11 @@ export default class Player extends Unicorn {
         ];
     }
 
-    _onPick (body) {
-        this._score += 50;
+    _onPick (entity) {
+        if (!entity.score) {
+            return;
+        }
+        this._score += entity.score.getNominal();
         this.controller.traitScore(this._score);
     }
 }
