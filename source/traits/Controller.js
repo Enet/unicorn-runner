@@ -21,7 +21,7 @@ export default class Controller extends Trait {
         level.isGameOver() && !level.isStopped() && level.winGame();
     }
 
-    traitInjure (health) {
+    traitHealth (health) {
         this._onHealthChange(health);
     }
 

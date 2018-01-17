@@ -3,11 +3,11 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import RainbowBehaviour from 'traits/RainbowBehaviour.js';
+import MedicineBehaviour from 'traits/MedicineBehaviour.js';
 import Pickable from 'traits/Pickable.js';
-import spriteDescription from 'sprites/Rainbow.js';
+import spriteDescription from 'sprites/Medicine.js';
 
-export default class Rainbow extends Entity {
+export default class Medicine extends Entity {
     get opacity () {
         return 1 - this.pickable.getHidingProgress();
     }
@@ -22,7 +22,7 @@ export default class Rainbow extends Entity {
 
     _createTraits () {
         return [
-            new RainbowBehaviour(),
+            new MedicineBehaviour(),
             new Pickable()
         ];
     }

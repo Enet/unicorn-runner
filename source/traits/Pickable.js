@@ -1,3 +1,6 @@
+import {
+    Vector2
+} from 'engine/math.js';
 import Trait from 'traits/Trait.js';
 
 import {
@@ -9,7 +12,7 @@ export default class Pickable extends Trait {
         return 'pickable';
     }
 
-    traitWillMount (onPick) {
+    traitWillMount (onPick=this._onPick) {
         this._isPicked = false;
         this._afterPickTime = 0;
         this._onPick = onPick;
@@ -36,5 +39,11 @@ export default class Pickable extends Trait {
 
     getHidingProgress () {
         return Math.min(1, this._afterPickTime / MAX_HIDING_TIME);
+    }
+
+    _onPick () {
+        const {entity} = this;
+        entity.body.move(new Vector2(3, -3));
+        entity.body.collidable = false;
     }
 }

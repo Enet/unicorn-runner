@@ -28,13 +28,13 @@ export default {
         name: 'Rainbow',
         position: [408, 0]
     }, {
-        name: 'Box',
+        name: 'Bug',
         position: [780, 0]
     }, {
         name: 'Box',
         position: [800, 60]
     }, {
-        name: 'Rainbow',
+        name: 'Medicine',
         position: [1608, 0]
     }, {
         name: 'Bug',

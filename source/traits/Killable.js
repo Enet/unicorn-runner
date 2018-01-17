@@ -34,11 +34,17 @@ export default class Killable extends Trait {
         return this._isDead;
     }
 
+    health (deltaHealth) {
+        const {entity} = this;
+        this._health = Math.min(100, this._health + deltaHealth);
+        entity.controller && entity.controller.traitHealth(this._health);
+    }
+
     kill () {
         const {entity} = this;
         this._health = Math.max(0, this._health - 40);
         if (this._health) {
-            entity.controller && entity.controller.traitInjure(this._health);
+            entity.controller && entity.controller.traitHealth(this._health);
         } else {
             this._isDead = true;
         }
