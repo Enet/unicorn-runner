@@ -120,7 +120,7 @@ export default class Collision {
         pointB.set(pointB.subtract(vector.length(cB)));
         contact.set(contact.add(vector.length(cC)));
 
-        !body1.statical && body1.emit('collision', body2, collision);
-        !body2.statical && body2.emit('collision', body1, collision);
+        body1.emit('collision', body2, collision);
+        body2.emit('collision', body1, collision);
     }
 }

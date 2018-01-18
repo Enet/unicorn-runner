@@ -1,5 +1,5 @@
 import World from 'engine/World.js';
-import BoxBody from 'engine/BoxBody.js';
+import StaticBoxBody from 'engine/StaticBoxBody.js';
 import {
     Vector2
 } from 'engine/math.js';
@@ -111,6 +111,11 @@ export default class Level {
         }
 
         const {world, entities} = this;
+        const candidates = Array.from(entities.values()).map(entity => entity.body);
+        entities.forEach((entity) => {
+            const tiles = getTileRangeByBounds(this._tileMatrix, entity.body);
+            entity.body.candidates = tiles.concat(candidates);
+        });
 
         world.update(deltaTime / 1000);
 
@@ -153,7 +158,7 @@ export default class Level {
         const matrix = generateTileMatrix(data.tiles, data.patterns, (xIndex, yIndex) => {
             const x = xIndex * width;
             const y = yIndex * height;
-            const tile = new BoxBody({x, y, width, height, statical: true});
+            const tile = new StaticBoxBody({x, y, width, height});
             tile.entity = {obstacle: true};
             tiles.push(tile);
             world.add(tile);

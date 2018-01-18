@@ -3,10 +3,10 @@ import {
     TILE_SIZE
 } from 'constants.js';
 
-export default function getTileRangeByBounds (tileMatrix, {top, left, bottom, right}) {
+export default function getTileRangeByBounds (tileMatrix, {min, max}) {
     const tiles = [];
-    for (const xIndex of generateTileRange(left, right)) {
-        for (const yIndex of generateTileRange(top, bottom)) {
+    for (const xIndex of generateTileRange(min.x, max.x)) {
+        for (const yIndex of generateTileRange(min.y, max.y)) {
             const tile = getTileByIndex(tileMatrix, xIndex, yIndex);
             if (!tile) {
                 continue;

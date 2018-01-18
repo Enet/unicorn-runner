@@ -5,36 +5,45 @@ import {
 
 export default class World {
     constructor ({top=-Infinity, left=-Infinity, bottom=Infinity, right=Infinity, gravity, friction}) {
-        this.points = new Set();
-        this.bodies = [];
         this.bounds = {top, left, bottom, right};
-
         this.gravity = gravity || new Vector2(0, 981);
         this.friction = friction || new Vector2(0.98, 0.98);
+
+        this.bodies = {
+            all: [],
+            static: [],
+            dynamic: []
+        };
     }
 
     add (body) {
         const {bodies} = this;
-        const index = bodies.indexOf(body);
+        const index = bodies.all.indexOf(body);
         if (index !== -1) {
             return;
         }
-        bodies.push(body);
-        body.points.forEach((point) => {
-            this.points.add(point);
-        });
+        bodies.all.push(body);
+        if (body.static) {
+            bodies.static.push(body);
+        } else {
+            bodies.dynamic.push(body);
+        }
     }
 
     remove (body) {
         const {bodies} = this;
-        const index = bodies.indexOf(body);
+        const index = bodies.all.indexOf(body);
         if (index === -1) {
             return;
         }
-        body.points.forEach((point) => {
-            this.points.delete(point);
-        });
-        bodies.splice(index, 1);
+        bodies.all.splice(index, 1);
+        if (body.static) {
+            const index = bodies.static.indexOf(body);
+            index !== -1 && bodies.static.splice(index, 1);
+        } else {
+            const index = bodies.dynamic.indexOf(body);
+            index !== -1 && bodies.dynamic.splice(index, 1);
+        }
     }
 
     update (deltaTime, iterationCount=5) {
@@ -50,34 +59,30 @@ export default class World {
     }
 
     _updateBodies () {
-        this.bodies.forEach(body => !body.statical && body.update());
+        this.bodies.all.forEach(body => body.update());
     }
 
     _restrictBodies () {
-        const {points} = this;
-        points.forEach((point) => {
-            const {x, y} = point;
-            const {top, left, bottom, right} = this.bounds;
-            point.x = Math.min(right, Math.max(left, x));
-            point.y = Math.min(bottom, Math.max(top, y));
+        const {bodies} = this;
+        bodies.all.forEach((body) => {
+            body.points.forEach((point) => {
+                const {x, y} = point;
+                const {top, left, bottom, right} = this.bounds;
+                point.x = Math.min(right, Math.max(left, x));
+                point.y = Math.min(bottom, Math.max(top, y));
+            });
         });
     }
 
     _collideBodies () {
         const {bodies} = this;
-        const bl = bodies.length;
-        bodies.sort((body1, body2) => {
-            return body1.min.x > body2.min.x ? 1 : -1;
-        });
-
-        for (let b = 0; b < bl; b++) {
-            const body1 = bodies[b];
-            for (let a = b + 1; a < bl; a++) {
-                const body2 = bodies[a];
-                if (!body1.collidable || !body2.collidable) {
+        for (let body1 of bodies.dynamic) {
+            const candidates = body1.candidates || bodies.all;
+            for (let body2 of candidates) {
+                if (body1 === body2) {
                     continue;
                 }
-                if (body1.static && body2.static) {
+                if (!body1.collidable || !body2.collidable) {
                     continue;
                 }
                 const collision = new Collision(body1, body2);
@@ -87,7 +92,14 @@ export default class World {
     }
 
     _integratePoints (deltaTime) {
-        const {points} = this;
-        points.forEach(point => point.integrate(deltaTime, this));
+        const {bodies} = this;
+        bodies.all.forEach((body) => {
+            const {points} = body;
+            points.forEach(point => point.integrate(deltaTime, this));
+        });
+    }
+
+    _sortBodies (body1, body2) {
+        return body1.min.x > body2.min.x ? 1 : -1;
     }
 }

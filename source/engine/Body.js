@@ -4,11 +4,10 @@ import {
 } from './math.js';
 
 export default class Body extends EventEmitter {
-    constructor ({points, stiffness=1, collidable=true, statical}) {
+    constructor ({points, stiffness=1, collidable=true}) {
         super();
 
-        statical = !!statical;
-        Object.assign(this, {points, stiffness, collidable, statical});
+        Object.assign(this, {points, stiffness, collidable});
         this._updateCenterOfMass();
         this._updateAabb();
 

@@ -15,7 +15,7 @@ export default class Debugger {
         context.translate(-camera.position.x, -camera.position.y);
 
         const {bodies} = this._world;
-        bodies.forEach((body) => {
+        bodies.all.forEach((body) => {
             if (body.collidable) {
                 this._renderPolygon(context, body.points);
             } else {
