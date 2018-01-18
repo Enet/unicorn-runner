@@ -9,13 +9,10 @@ export default class Killable extends Trait {
         return 'killable';
     }
 
-    traitWillMount (callbacks={}) {
-        this._health = 100;
+    traitWillMount (callbacks={}, health=100) {
+        this._callbacks = callbacks;
+        this._health = health;
         this._afterDeathTime = 0;
-
-        const {onChange, onKill} = callbacks;
-        this._onChange = onChange || this._onChange;
-        this._onKill = onKill || this._onKill;
     }
 
     traitWillUpdate (deltaTime) {
@@ -25,8 +22,9 @@ export default class Killable extends Trait {
         this._afterDeathTime += deltaTime;
         if (this._afterDeathTime > MAX_HIDING_TIME) {
             const {entity} = this;
+            const {onRemove} = this._callbacks;
             this.level.removeEntity(entity);
-            this._onKill();
+            onRemove && onRemove();
         }
     }
 
@@ -34,13 +32,27 @@ export default class Killable extends Trait {
         return this._health;
     }
 
+    getHidingProgress () {
+        return Math.min(1, this._afterDeathTime / MAX_HIDING_TIME);
+    }
+
     isDead () {
         return this._health === 0;
     }
 
     changeHealth (delta) {
+        if (this.isDead()) {
+            return;
+        }
+
         this._health = Math.max(0, Math.min(100, this._health + delta));
-        this._onChange(this._health, delta);
+
+        const {onChange, onKill} = this._callbacks;
+        onChange && onChange(this._health);
+        if (this.isDead()) {
+            this._onKill();
+            onKill && onKill();
+        }
     }
 
     reviveFully () {
@@ -48,12 +60,10 @@ export default class Killable extends Trait {
         this._afterDeathTime = 0;
     }
 
-    _onChange () {
-
-    }
-
     _onKill () {
-
+        Object.defineProperty(this.entity, 'opacity', {
+            get: () => 1 - this.getHidingProgress()
+        });
     }
 }
 

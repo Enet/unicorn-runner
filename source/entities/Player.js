@@ -3,6 +3,7 @@ import Picker from 'traits/Picker.js';
 import Run from 'traits/Run.js';
 import Jump from 'traits/Jump.js';
 import Fly from 'traits/Fly.js';
+import Fight from 'traits/Fight.js';
 
 export default class Player extends Unicorn {
     _getFrame () {
@@ -10,6 +11,8 @@ export default class Player extends Unicorn {
             return super._getFrame('death');
         } else if (this.jump.isJumping()) {
             return 'jump';
+        } else if (this.fight.isFighting()) {
+            return super._getFrame('fight');
         } else if (this.run.getDistance() > 0) {
             this._lifeTime = this.run.getDistance();
             return super._getFrame('default');
@@ -24,6 +27,7 @@ export default class Player extends Unicorn {
             new Run(),
             new Jump(),
             new Fly(),
+            new Fight(),
             new Picker({
                 onPick: this._onPick.bind(this)
             })
@@ -41,7 +45,7 @@ export default class Player extends Unicorn {
         return this.level.setHealth(health);
     }
 
-    _onKill () {
+    _onRemove () {
         return this.level.loseGame();
     }
 }

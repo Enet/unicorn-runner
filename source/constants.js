@@ -10,3 +10,4 @@ export const SPEED_EFFECT_TIME = 5000;
 
 export const KEY_SPACE = 32;
 export const KEY_ESCAPE = 27;
+export const KEY_F = 70;

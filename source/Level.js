@@ -81,7 +81,7 @@ export default class Level {
 
     restartGame () {
         const {player} = this;
-        player.killable.revive();
+        player.killable.reviveFully();
         this.placePlayer();
         this._isStopped = false;
     }
@@ -97,7 +97,7 @@ export default class Level {
 
     changeScore (delta) {
         this._score += delta;
-        this.callbacks.onScoreChange(this._score);
+        this.callbacks.onScoreChange(Math.floor(this._score));
     }
 
     setHealth (health) {

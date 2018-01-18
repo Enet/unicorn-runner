@@ -22,6 +22,7 @@ export default class Fly extends Trait {
             return;
         }
 
+        this.level.changeScore(0.5);
         this._remainingTime -= deltaTime;
         if (this._remainingTime <= 0) {
             this.cancel();

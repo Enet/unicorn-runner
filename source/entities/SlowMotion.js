@@ -6,8 +6,15 @@ import {
 import SpeedEffect from 'traits/SpeedEffect.js';
 import Pickable from 'traits/Pickable.js';
 import spriteDescription from 'sprites/SlowMotion.js';
+import {
+    SPEED_EFFECT_TIME
+} from 'constants.js';
 
 export default class SlowMotion extends Entity {
+    getHidingTime () {
+        return SPEED_EFFECT_TIME;
+    }
+
     _getSpriteDescription () {
         return spriteDescription;
     }

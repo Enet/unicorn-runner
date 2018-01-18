@@ -4,17 +4,24 @@ import {
     SPEED_EFFECT_TIME
 } from 'constants.js';
 
+const factorMap = {
+    fast: 2,
+    slow: 0.5
+};
+
 export default class SpeedEffect extends Trait {
     getName () {
         return 'speed';
     }
 
     traitWillMount (effect, time=SPEED_EFFECT_TIME) {
-        if (effect !== 'slow' && effect !== 'fast') {
+        let factor = factorMap[effect];
+        if (!factor) {
             effect = 'slow';
+            factor = factorMap[effect];
         }
         this._effect = effect;
-        this._remainingTime = time;
+        this._remainingTime = time * factor;
         this._isActive = true;
     }
 

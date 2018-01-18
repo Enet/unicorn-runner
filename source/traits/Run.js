@@ -25,6 +25,8 @@ export default class Run extends Trait {
         if ((entity.jump && entity.jump.isJumping()) ||
             (entity.fly && entity.fly.isFlying())) {
             deltaTime /= 2;
+        } else {
+            this.level.changeScore(0.2);
         }
 
         entity.body.move(new Vector2(RUNNING_SPEED * deltaTime, 0));

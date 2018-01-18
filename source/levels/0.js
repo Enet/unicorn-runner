@@ -37,7 +37,7 @@ export default {
         name: 'SlowMotion',
         position: [408, 0]
     }, {
-        name: 'Rainbow',
+        name: 'Box',
         position: [408, 60]
     }, {
         name: 'Bug',

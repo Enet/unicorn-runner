@@ -10,7 +10,7 @@ export default class Unicorn extends Entity {
     get offset () {
         const offset = super.offset;
         offset.x -= (172 - 120) / 2;
-        offset.y -= (119 - 109) / 2;
+        offset.y -= (119 - 90) / 2;
         return offset;
     }
 
@@ -19,7 +19,7 @@ export default class Unicorn extends Entity {
     }
 
     _getSize () {
-        return new Vector2(120, 109);
+        return new Vector2(120, 90);
     }
 
     _getDeltaAngle (delta, angle) {
@@ -39,7 +39,7 @@ export default class Unicorn extends Entity {
         return [
             new Killable({
                 onChange: this._onHealthChange.bind(this),
-                onKill: this._onKill.bind(this)
+                onRemove: this._onRemove.bind(this)
             })
         ];
     }
@@ -48,7 +48,7 @@ export default class Unicorn extends Entity {
 
     }
 
-    _onKill () {
+    _onRemove () {
 
     }
 }

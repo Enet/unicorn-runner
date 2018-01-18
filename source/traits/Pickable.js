@@ -13,17 +13,15 @@ export default class Pickable extends Trait {
     }
 
     traitWillMount (callbacks={}) {
+        this._callbacks = callbacks;
         this._isPicked = false;
         this._afterPickTime = 0;
-
-        const {onPick} = callbacks;
-        this._onPick = onPick || this._onPick;
     }
 
     traitDidMount () {
-        Object.defineProperty(this.entity, 'opacity', {
-            get: () => 1 - this.getHidingProgress()
-        });
+        this._hidingTime = this.entity.getHidingTime ?
+            this.entity.getHidingTime() :
+            MAX_HIDING_TIME;
     }
 
     traitWillUpdate (deltaTime) {
@@ -31,7 +29,7 @@ export default class Pickable extends Trait {
             return;
         }
         this._afterPickTime += deltaTime;
-        if (this._afterPickTime > MAX_HIDING_TIME) {
+        if (this._afterPickTime > this._hidingTime) {
             this.level.removeEntity(this.entity);
         }
     }
@@ -43,6 +41,9 @@ export default class Pickable extends Trait {
     pick () {
         this._isPicked = true;
         this._onPick();
+
+        const {onPick} = this._callbacks;
+        onPick && onPick();
     }
 
     getHidingProgress () {
@@ -50,6 +51,10 @@ export default class Pickable extends Trait {
     }
 
     _onPick () {
+        Object.defineProperty(this.entity, 'opacity', {
+            get: () => 1 - this.getHidingProgress()
+        });
+
         const {entity} = this;
         entity.body.move(new Vector2(3, -3));
         entity.body.collidable = false;

@@ -26,7 +26,13 @@ export default class Bug extends Entity {
     _createTraits () {
         return [
             new BugBehaviour(),
-            new Killable()
+            new Killable({
+                onKill: this._onKill.bind(this)
+            })
         ];
+    }
+
+    _onKill () {
+        this.level.changeScore(100);
     }
 }

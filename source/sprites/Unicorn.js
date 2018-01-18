@@ -47,6 +47,18 @@ export default {
     }, {
         name: 'death-9',
         rect: [1382, 120, 172, 119]
+    }, {
+        name: 'fight-1',
+        rect: [863, 0, 172, 119]
+    }, {
+        name: 'fight-2',
+        rect: [1036, 0, 172, 119]
+    }, {
+        name: 'fight-3',
+        rect: [1209, 0, 172, 119]
+    }, {
+        name: 'fight-4',
+        rect: [1382, 0, 172, 119]
     }],
     animations: [{
         name: 'default',
@@ -66,6 +78,15 @@ export default {
             'death-7',
             'death-8',
             'death-9'
+        ]
+    }, {
+        name: 'fight',
+        delay: 15,
+        frames: [
+            'fight-1',
+            'fight-2',
+            'fight-3',
+            'fight-4'
         ]
     }]
 };

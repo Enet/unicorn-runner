@@ -6,7 +6,8 @@ import Debugger from 'engine/Debugger.js';
 
 import Level from 'Level.js';
 import {
-    KEY_SPACE
+    KEY_SPACE,
+    KEY_F
 } from 'constants.js';
 import {
     images,
@@ -63,6 +64,10 @@ export default class UnicornGame extends Game {
         }
 
         const {player} = this._game.level;
+        if (event.keyCode === KEY_F) {
+            player.fight.start();
+        }
+
         if (event.keyCode === KEY_SPACE) {
             player.jump.start();
             player.fly.up();
@@ -78,6 +83,10 @@ export default class UnicornGame extends Game {
         }
 
         const {player} = this._game.level;
+        if (event.keyCode === KEY_F) {
+            player.fight.cancel();
+        }
+
         player.jump.cancel();
         player.fly.down();
     }
