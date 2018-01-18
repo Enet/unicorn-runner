@@ -29,10 +29,10 @@ export default class StaticBackground extends Background {
         const layerX = -camera.position.x / 1.2;
         const layerY = -camera.position.y / 20 + 15;
 
-        for (let i = 0; i < 30; i++) {
-            context.drawImage(back, layerX + ground.width * i + 600, layerY + height - back.height + 1);
-            context.drawImage(ground, groundX + ground.width * i, layerY + height - ground.height + 1);
-            context.drawImage(front, layerX + ground.width * i + 100, layerY + height - front.height + 1);
+        for (let i = 0; i < 2; i++) {
+            context.drawImage(back, layerX % ground.width + i * ground.width + 600, layerY + height - back.height + 1);
+            context.drawImage(ground, groundX % ground.width + i * ground.width, layerY + height - ground.height + 1);
+            context.drawImage(front, layerX % ground.width + i * ground.width + 100, layerY + height - front.height + 1);
         }
     }
 }

@@ -35,6 +35,9 @@ export default class Fight extends Trait {
         if (!body.entity.killable || body.entity.killable.isDead()) {
             return;
         }
+        if (body.center.y >= this.entity.body.center.y - this.entity.offset.y) {
+            return;
+        }
         body.entity.killable.changeHealth(-1);
     }
 }
