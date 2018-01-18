@@ -12,12 +12,13 @@ import {
 import {
     images,
     sounds,
-    levels
+    levels,
+    aliases
 } from 'resources.js';
 
 export default class UnicornGame extends Game {
     _getResources () {
-        return {images, sounds};
+        return {images, sounds, aliases};
     }
 
     _updateLevel (deltaTime) {

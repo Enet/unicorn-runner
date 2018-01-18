@@ -1,4 +1,7 @@
 const imageNames = [
+    'Bush',
+    'Explosion',
+    'Mushroom',
     'Dollar10',
     'Dollar50',
     'Dollar100',
@@ -24,6 +27,10 @@ const levelNames = [
 ];
 
 const entityNames = [
+    'Bush',
+    'Explosion',
+    'TopMushroom',
+    'LeftMushroom',
     'Dollar10',
     'Dollar50',
     'Dollar100',
@@ -54,3 +61,8 @@ export const entities = {};
 entityNames.forEach((entityName) => {
     entities[entityName] = require(`entities/${entityName}.js`).default;
 });
+
+export const aliases = {
+    TopMushroom: 'Mushroom',
+    LeftMushroom: 'Mushroom'
+};

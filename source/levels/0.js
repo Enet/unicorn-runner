@@ -25,6 +25,12 @@ export default {
         ]
     }],
     entities: [{
+        name: 'Bug',
+        position: [780, 100]
+    }, {
+        name: 'LeftMushroom',
+        position: [740, 300]
+    }] || [{
         name: 'Dollar10',
         position: [500, 0]
     }, {
@@ -34,7 +40,10 @@ export default {
         name: 'Dollar100',
         position: [600, 0]
     }, {
-        name: 'SlowMotion',
+        name: 'Bush',
+        position: [500, 330]
+    }, {
+        name: 'TopMushroom',
         position: [408, 0]
     }, {
         name: 'Box',

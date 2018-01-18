@@ -22,10 +22,11 @@ export default class ResourceManager {
         this._onError = this._onError.bind(this);
     }
 
-    fetchResources ({images = {}, sounds = {}}) {
+    fetchResources ({images={}, sounds ={}, aliases={}}) {
         return Promise.all([
             fetchImages(images),
-            fetchSounds(sounds)
+            fetchSounds(sounds),
+            Promise.resolve(aliases)
         ])
             .then(this._onReady)
             .catch(this._onError);
@@ -47,9 +48,12 @@ export default class ResourceManager {
         Object.assign(cache, items);
     }
 
-    _onReady ([imageNodes, soundNodes]) {
+    _onReady ([imageNodes, soundNodes, aliases]) {
         this._cacheNodes(imageNodes, this._images);
         this._cacheNodes(soundNodes, this._sounds);
+        for (let a in aliases) {
+            this._images[a] = this._images[aliases[a]];
+        }
     }
 
     _onError (error) {

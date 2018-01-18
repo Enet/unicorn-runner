@@ -21,7 +21,7 @@ export default class Rainbow extends Entity {
     }
 
     _getSize () {
-        return new Vector2(100, 59);
+        return new Vector2(60, 60);
     }
 
     _getNominal () {
