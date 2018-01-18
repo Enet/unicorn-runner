@@ -5,8 +5,6 @@ import Scene from 'engine/Scene.js';
 import Debugger from 'engine/Debugger.js';
 
 import Level from 'Level.js';
-import Player from 'entities/Player.js';
-import Controller from 'traits/Controller.js';
 import {
     KEY_SPACE
 } from 'constants.js';
@@ -27,7 +25,8 @@ export default class UnicornGame extends Game {
     }
 
     _centerCamera () {
-        const {camera, player} = this._game;
+        const {camera, level} = this._game;
+        const {player} = level;
         camera.position.x = Math.max(0, player.body.center.x - 200);
         camera.position.y = player.body.center.y - 300;
     }
@@ -40,26 +39,20 @@ export default class UnicornGame extends Game {
         const renderer = new Renderer(context);
         const camera = new Camera({width, height});
         const scene = new Scene();
+        const level = new Level(levels[step], {
+            manager, scene, callbacks
+        });
 
         scene.add(camera);
-
-        const controller = new Controller(callbacks);
-        const player = new Player({
-            image: manager.getImage('Unicorn'),
-            controller
-        });
-        const level = new Level(levels[step], {
-            manager, scene, player, callbacks
-        });
-
-        this._debugger = new Debugger(level._gameplay.world, camera, context);
-        this._game = {renderer, scene, camera, level, player};
+        this._debugger = new Debugger(level.world, camera, context);
+        this._game = {renderer, scene, camera, level};
     }
 
     _onUpdate (deltaTime) {
-        const {renderer, scene} = this._game;
         this._updateLevel(deltaTime);
         this._centerCamera();
+
+        const {renderer, scene} = this._game;
         renderer.render(scene);
         this._debugger.render();
     }
@@ -69,7 +62,7 @@ export default class UnicornGame extends Game {
             return;
         }
 
-        const {player} = this._game;
+        const {player} = this._game.level;
         if (event.keyCode === KEY_SPACE) {
             player.jump.start();
             player.fly.up();
@@ -84,7 +77,7 @@ export default class UnicornGame extends Game {
             return;
         }
 
-        const {player} = this._game;
+        const {player} = this._game.level;
         player.jump.cancel();
         player.fly.down();
     }

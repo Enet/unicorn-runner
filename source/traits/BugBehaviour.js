@@ -21,6 +21,6 @@ export default class BugBehaviour extends Trait {
             return;
         }
         this._isActive = false;
-        body.entity.killable.kill();
+        body.entity.killable.changeHealth(-40);
     }
 }

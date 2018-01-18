@@ -49,7 +49,7 @@ export default {
         rect: [1382, 120, 172, 119]
     }],
     animations: [{
-        name: 'run',
+        name: 'default',
         delay: 15,
         frames: [
             'run-1',

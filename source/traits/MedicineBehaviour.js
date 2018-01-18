@@ -18,6 +18,6 @@ export default class MedicineBehaviour extends Trait {
             return;
         }
         this._isActive = false;
-        entity.killable.health(30);
+        entity.killable.changeHealth(30);
     }
 }

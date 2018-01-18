@@ -8,10 +8,6 @@ import Pickable from 'traits/Pickable.js';
 import spriteDescription from 'sprites/Medicine.js';
 
 export default class Medicine extends Entity {
-    get opacity () {
-        return 1 - this.pickable.getHidingProgress();
-    }
-
     _getSpriteDescription () {
         return spriteDescription;
     }

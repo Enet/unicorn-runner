@@ -21,7 +21,7 @@ export default class Run extends Trait {
         this._prevBodyCenter = this.entity.body.center;
     }
 
-    traitWillUpdate (deltaTime, level) {
+    traitWillUpdate (deltaTime) {
         const {entity} = this;
         if ((entity.jump && entity.jump.isJumping()) ||
             (entity.fly && entity.fly.isFlying())) {

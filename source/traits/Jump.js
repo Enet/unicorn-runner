@@ -42,7 +42,7 @@ export default class Jump extends Trait {
     }
 
     traitCollision (body, collision) {
-        if (!body.entity.jumpable) {
+        if (!body.entity.obstacle) {
             return;
         }
         if (body.center.y < this.entity.body.center.y + this.entity.size.height / 4) {

@@ -9,20 +9,24 @@ export default class Killable extends Trait {
         return 'killable';
     }
 
-    traitWillMount () {
+    traitWillMount (callbacks={}) {
         this._health = 100;
-        this._isDead = false;
         this._afterDeathTime = 0;
+
+        const {onChange, onKill} = callbacks;
+        this._onChange = onChange || this._onChange;
+        this._onKill = onKill || this._onKill;
     }
 
-    traitWillUpdate (deltaTime, level) {
-        if (!this._isDead) {
+    traitWillUpdate (deltaTime) {
+        if (!this.isDead()) {
             return;
         }
         this._afterDeathTime += deltaTime;
         if (this._afterDeathTime > MAX_HIDING_TIME) {
             const {entity} = this;
-            entity.controller && entity.controller.traitKill(level);
+            this.level.removeEntity(entity);
+            this._onKill();
         }
     }
 
@@ -31,29 +35,25 @@ export default class Killable extends Trait {
     }
 
     isDead () {
-        return this._isDead;
+        return this._health === 0;
     }
 
-    health (deltaHealth) {
-        const {entity} = this;
-        this._health = Math.min(100, this._health + deltaHealth);
-        entity.controller && entity.controller.traitHealth(this._health);
+    changeHealth (delta) {
+        this._health = Math.max(0, Math.min(100, this._health + delta));
+        this._onChange(this._health, delta);
     }
 
-    kill () {
-        const {entity} = this;
-        this._health = Math.max(0, this._health - 40);
-        if (this._health) {
-            entity.controller && entity.controller.traitHealth(this._health);
-        } else {
-            this._isDead = true;
-        }
-    }
-
-    revive () {
+    reviveFully () {
         this._health = 100;
-        this._isDead = false;
         this._afterDeathTime = 0;
+    }
+
+    _onChange () {
+
+    }
+
+    _onKill () {
+
     }
 }
 

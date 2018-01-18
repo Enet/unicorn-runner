@@ -1,19 +1,32 @@
 import Unicorn from 'entities/Unicorn.js';
 import Picker from 'traits/Picker.js';
+import Run from 'traits/Run.js';
+import Jump from 'traits/Jump.js';
 import Fly from 'traits/Fly.js';
 
 export default class Player extends Unicorn {
-    constructor () {
-        super(...arguments);
-        this._score = 0;
+    _getFrame () {
+        if (this.killable.isDead()) {
+            return super._getFrame('death');
+        } else if (this.jump.isJumping()) {
+            return 'jump';
+        } else if (this.run.getDistance() > 0) {
+            this._lifeTime = this.run.getDistance();
+            return super._getFrame('default');
+        } else {
+            return 'idle';
+        }
     }
 
-    _createTraits (options) {
+    _createTraits () {
         return [
             ...super._createTraits(...arguments),
-            new Picker(this._onPick.bind(this)),
+            new Run(),
+            new Jump(),
             new Fly(),
-            options.controller
+            new Picker({
+                onPick: this._onPick.bind(this)
+            })
         ];
     }
 
@@ -21,7 +34,14 @@ export default class Player extends Unicorn {
         if (!entity.score) {
             return;
         }
-        this._score += entity.score.getNominal();
-        this.controller.traitScore(this._score);
+        this.level.changeScore(entity.score.getNominal());
+    }
+
+    _onHealthChange (health) {
+        return this.level.setHealth(health);
+    }
+
+    _onKill () {
+        return this.level.loseGame();
     }
 }

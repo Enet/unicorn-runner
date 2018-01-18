@@ -98,12 +98,12 @@ function onHealthChange (value) {
 }
 
 function onGameLose () {
-    unicornGame.pause();
+    exitGame();
     setAppScreen('loser');
 }
 
 function onGameWin () {
-    unicornGame.pause();
+    exitGame();
     setAppScreen('winner');
 }
 

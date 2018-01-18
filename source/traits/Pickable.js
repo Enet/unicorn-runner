@@ -12,19 +12,27 @@ export default class Pickable extends Trait {
         return 'pickable';
     }
 
-    traitWillMount (onPick=this._onPick) {
+    traitWillMount (callbacks={}) {
         this._isPicked = false;
         this._afterPickTime = 0;
-        this._onPick = onPick;
+
+        const {onPick} = callbacks;
+        this._onPick = onPick || this._onPick;
     }
 
-    traitWillUpdate (deltaTime, level) {
+    traitDidMount () {
+        Object.defineProperty(this.entity, 'opacity', {
+            get: () => 1 - this.getHidingProgress()
+        });
+    }
+
+    traitWillUpdate (deltaTime) {
         if (!this._isPicked) {
             return;
         }
         this._afterPickTime += deltaTime;
         if (this._afterPickTime > MAX_HIDING_TIME) {
-            level.removeEntity(this.entity);
+            this.level.removeEntity(this.entity);
         }
     }
 

@@ -8,10 +8,6 @@ import Pickable from 'traits/Pickable.js';
 import spriteDescription from 'sprites/SlowMotion.js';
 
 export default class SlowMotion extends Entity {
-    get opacity () {
-        return 1 - this.pickable.getHidingProgress();
-    }
-
     _getSpriteDescription () {
         return spriteDescription;
     }

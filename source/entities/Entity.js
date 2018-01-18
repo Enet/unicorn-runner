@@ -24,6 +24,7 @@ export default class Entity extends Renderable {
         super();
 
         options.description = this._getSpriteDescription();
+        this.level = options.level;
         this.size = this._getSize(options);
         this.sprite = this._createSprite(options);
         this.body = this._createBody(options);
@@ -33,7 +34,12 @@ export default class Entity extends Renderable {
         const traits = this._createTraits(options);
         traits.forEach(trait => this.traits.add(trait));
 
-        this.body.addListener('collision', this.entityCollision.bind(this));
+        this.entityCollision = this.entityCollision.bind(this);
+        this.body.addListener('collision', this.entityCollision);
+    }
+
+    destructor () {
+        this.body.removeListener('collision', this.entityCollision);
     }
 
     render (context) {
@@ -41,9 +47,9 @@ export default class Entity extends Renderable {
         sprite.render(this._getFrame(), context, offset.x, offset.y);
     }
 
-    entityWillUpdate (deltaTime, level) {
+    entityWillUpdate (deltaTime) {
         this.traits.forEach((trait) => {
-            trait.traitWillUpdate(deltaTime, level);
+            trait.traitWillUpdate(deltaTime);
         });
         this._lifeTime += deltaTime;
     }

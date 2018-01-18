@@ -1,136 +1,90 @@
-import StaticBackground from 'backgrounds/StaticBackground.js';
-import TileBackground from 'backgrounds/TileBackground.js';
-import {
-    entities
-} from 'resources.js';
-
 import World from 'engine/World.js';
 import BoxBody from 'engine/BoxBody.js';
 import {
     Vector2
 } from 'engine/math.js';
 
-import generateTileMatrix from 'utils/generateTileMatrix.js';
-import getTileRangeByBounds from 'utils/getTileRangeByBounds.js';
+import StaticBackground from 'backgrounds/StaticBackground.js';
+import TileBackground from 'backgrounds/TileBackground.js';
+import Player from 'entities/Player.js';
+import {
+    entities
+} from 'resources.js';
 import {
     TILE_SIZE
 } from 'constants.js';
+import generateTileMatrix from 'utils/generateTileMatrix.js';
+import getTileRangeByBounds from 'utils/getTileRangeByBounds.js';
 
 export default class Level {
-    constructor (data, {manager, scene, player, callbacks}) {
-        const world = new World({
-            top: -300,
-            left: -300,
-            bottom: 600
-        });
-
-        const tileBodies = [];
-        const tileMatrix = generateTileMatrix(data.tiles, data.patterns, (x, y) => {
-            const tileBody = new BoxBody({
-                statical: true,
-                x: x * TILE_SIZE,
-                y: y * TILE_SIZE,
-                width: TILE_SIZE,
-                height: TILE_SIZE
-            });
-            tileBody.entity = {
-                jumpable: true
-            };
-            tileBodies.push(tileBody);
-            world.add(tileBody);
-            return tileBody;
-        });
-
-        const gameplay = {
-            isStopped: false,
-            ellapsedTime: 0,
-            player,
-            scene,
-            world,
-            tileBodies,
-            tileMatrix
-        };
-        this._gameplay = gameplay;
-
-        const staticBackground = new StaticBackground({
-            images: {
-                ground: manager.getImage('Ground'),
-                back: manager.getImage('SkyscraperBack'),
-                front: manager.getImage('SkyscraperFront')
-            }
-        });
-        const tileBackground = new TileBackground({
-            images: {
-                tile: manager.getImage('Tile')
-            },
-            tiles: tileMatrix
-        });
-        scene.add(staticBackground);
-        scene.add(tileBackground);
-
+    constructor (data, {manager, scene, callbacks}) {
+        this.manager = manager;
+        this.scene = scene;
         this.callbacks = callbacks;
         this.entities = new Set();
-        data.entities.forEach(({name, position: [x, y]}) => {
-            const image = manager.getImage(name);
-            const entity = new entities[name]({image, x, y});
-            this.addEntity(entity);
-        });
-        this.addEntity(player);
 
-        this.placePlayer();
+        this._initWorld(...arguments);
+        this._initTiles(...arguments);
+        this._initStaticBackground();
+        this._initTileBackground();
+        this._initEntities(...arguments);
+        this._initPlayer(...arguments);
+
+        this._score = 0;
+        this._isStopped = false;
     }
 
     addEntity (entity) {
-        const {scene, world} = this._gameplay;
+        const {scene, world} = this;
         scene.add(entity);
         world.add(entity.body);
         this.entities.add(entity);
     }
 
     removeEntity (entity) {
-        const {scene, world} = this._gameplay;
+        const {scene, world} = this;
         this.entities.delete(entity);
         world.remove(entity.body);
         scene.remove(entity);
     }
 
     loseGame () {
-        this._gameplay.isStopped = true;
+        this._isStopped = true;
         this.callbacks.onGameLose();
     }
 
     winGame () {
-        this._gameplay.isStopped = true;
+        this._isStopped = true;
         this.callbacks.onGameWin();
     }
 
     restartGame () {
-        const {player} = this._gameplay;
+        const {player} = this;
         player.killable.revive();
-        this._gameplay.isStopped = false;
+        this.placePlayer();
+        this._isStopped = false;
     }
 
     placePlayer () {
-        const {player} = this._gameplay;
+        const {player} = this;
         player.body.place(new Vector2(TILE_SIZE, TILE_SIZE));
     }
 
     isStopped () {
-        const {isStopped} = this._gameplay;
-        return isStopped;
+        return this._isStopped;
     }
 
-    isGameOver () {
-        const {isStopped, player} = this._gameplay;
-        return false ||
-            isStopped ||
-            player.body.center.y > 1200 ||
-            player.body.center.x > 11400;
+    changeScore (delta) {
+        this._score += delta;
+        this.callbacks.onScoreChange(this._score);
+    }
+
+    setHealth (health) {
+        this.callbacks.onHealthChange(health);
     }
 
     update (deltaTime) {
-        const {entities} = this;
-        const {world} = this._gameplay;
+        const {world, entities} = this;
 
         world.update(deltaTime / 1000);
 
@@ -142,6 +96,88 @@ export default class Level {
             entity.entityDidUpdate();
         });
 
-        this._gameplay.ellapsedTime += deltaTime;
+        this._play();
+    }
+
+    _play () {
+        const {player} = this;
+        if (player.body.center.y > 1200 || player.body.center.x > 11400) {
+            this.winGame();
+        }
+    }
+
+    _initWorld () {
+        const world = new World({
+            top: -300,
+            left: -300,
+            bottom: 600
+        });
+        return this.world = world;
+    }
+
+    _initTiles (data) {
+        const {world} = this;
+        const tiles = [];
+        const width = TILE_SIZE;
+        const height = TILE_SIZE;
+        const matrix = generateTileMatrix(data.tiles, data.patterns, (xIndex, yIndex) => {
+            const x = xIndex * width;
+            const y = yIndex * height;
+            const tile = new BoxBody({x, y, width, height, statical: true});
+            tile.entity = {obstacle: true};
+            tiles.push(tile);
+            world.add(tile);
+            return tile;
+        });
+
+        this._tileBodies = tiles;
+        return this._tileMatrix = matrix;
+    }
+
+    _initStaticBackground () {
+        const {scene, manager} = this;
+        const background = new StaticBackground({
+            images: {
+                ground: manager.getImage('Ground'),
+                back: manager.getImage('SkyscraperBack'),
+                front: manager.getImage('SkyscraperFront')
+            }
+        });
+        scene.add(background);
+        return background;
+    }
+
+    _initTileBackground () {
+        const {scene, manager} = this;
+        const background = new TileBackground({
+            images: {
+                tile: manager.getImage('Tile')
+            },
+            tiles: this._tileMatrix
+        });
+        scene.add(background);
+        return background;
+    }
+
+    _initEntities (data) {
+        const {manager} = this;
+        const level = this;
+        data.entities.forEach(({name, position: [x, y]}) => {
+            const image = manager.getImage(name);
+            const entity = new entities[name]({level, image, x, y});
+            this.addEntity(entity);
+        });
+        return this.entities;
+    }
+
+    _initPlayer (data, {callbacks}) {
+        const {manager} = this;
+        const level = this;
+        const image = manager.getImage('Unicorn');
+        const player = new Player({level, image});
+        this.player = player;
+        this.addEntity(player);
+        this.placePlayer();
+        return player;
     }
 }

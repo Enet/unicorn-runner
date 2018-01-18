@@ -12,10 +12,6 @@ export default class Rainbow extends Entity {
         return this._lifeTime * this._getNominal() / 10000;
     }
 
-    get opacity () {
-        return 1 - this.pickable.getHidingProgress();
-    }
-
     _getSpriteDescription () {
         return spriteDescription;
     }

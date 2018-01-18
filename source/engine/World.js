@@ -4,7 +4,7 @@ import {
 } from './math.js';
 
 export default class World {
-    constructor ({top = -Infinity, left = -Infinity, bottom = Infinity, right = Infinity, gravity, friction}) {
+    constructor ({top=-Infinity, left=-Infinity, bottom=Infinity, right=Infinity, gravity, friction}) {
         this.points = new Set();
         this.bodies = [];
         this.bounds = {top, left, bottom, right};
@@ -37,7 +37,7 @@ export default class World {
         bodies.splice(index, 1);
     }
 
-    update (deltaTime, iterationCount = 5) {
+    update (deltaTime, iterationCount=5) {
         this._updateBodies();
 
         while (iterationCount--) {

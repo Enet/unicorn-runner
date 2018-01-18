@@ -38,7 +38,7 @@ export default class Trait {
 
     }
 
-    traitWillUpdate (deltaTime, level) {
+    traitWillUpdate (deltaTime) {
 
     }
 

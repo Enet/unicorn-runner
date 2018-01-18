@@ -9,7 +9,9 @@ export default class TraitManager {
 
         const {entity} = this;
         entity[trait.getName()] = trait;
+
         trait.entity = entity;
+        trait.level = entity.level;
         trait.traitDidMount();
     }
 

@@ -5,12 +5,16 @@ export default class Picker extends Trait {
         return 'picker';
     }
 
-    traitWillMount (onPick) {
-        this._onPick = onPick;
+    traitWillMount (callbacks={}) {
+        const {onPick} = callbacks;
+        this._onPick = onPick || this._onPick;
     }
 
     traitCollision (body) {
-        if (!body.entity.pickable || body.entity.pickable.isPicked()) {
+        if (!body.entity.pickable) {
+            return;
+        }
+        if (body.entity.pickable.isPicked()) {
             return;
         }
         body.entity.pickable.pick();

@@ -3,7 +3,7 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import Jumpable from 'traits/Jumpable.js';
+import Obstacle from 'traits/Obstacle.js';
 import {
     TILE_SIZE
 } from 'constants.js';
@@ -24,7 +24,7 @@ export default class Box extends Entity {
 
     _createTraits () {
         return [
-            new Jumpable()
+            new Obstacle()
         ];
     }
 }

@@ -19,7 +19,7 @@ export default class Fly extends Trait {
         this._remainingTime = 0;
     }
 
-    traitWillUpdate (deltaTime, level) {
+    traitWillUpdate (deltaTime) {
         if (!this._isFlying) {
             return;
         }

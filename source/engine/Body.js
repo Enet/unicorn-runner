@@ -4,7 +4,7 @@ import {
 } from './math.js';
 
 export default class Body extends EventEmitter {
-    constructor ({points, stiffness = 1, collidable = true, statical}) {
+    constructor ({points, stiffness=1, collidable=true, statical}) {
         super();
 
         statical = !!statical;
