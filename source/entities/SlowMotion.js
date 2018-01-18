@@ -3,7 +3,7 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import SpeedFactor from 'traits/SpeedFactor.js';
+import SpeedEffect from 'traits/SpeedEffect.js';
 import Pickable from 'traits/Pickable.js';
 import spriteDescription from 'sprites/SlowMotion.js';
 
@@ -16,13 +16,13 @@ export default class SlowMotion extends Entity {
         return new Vector2(83, 93);
     }
 
-    _getSpeedFactor () {
-        return 0.5;
+    _getSpeedEffect () {
+        return 'slow';
     }
 
     _createTraits () {
         return [
-            new SpeedFactor(this._getSpeedFactor()),
+            new SpeedEffect(this._getSpeedEffect()),
             new Pickable()
         ];
     }

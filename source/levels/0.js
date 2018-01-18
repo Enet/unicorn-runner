@@ -34,7 +34,7 @@ export default {
         name: 'Dollar100',
         position: [600, 0]
     }, {
-        name: 'Rainbow',
+        name: 'SlowMotion',
         position: [408, 0]
     }, {
         name: 'Rainbow',

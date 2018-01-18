@@ -7,7 +7,7 @@ export default class FastMotion extends SlowMotion {
         return spriteDescription;
     }
 
-    _getSpeedFactor () {
-        return 2;
+    _getSpeedEffect () {
+        return 'fast';
     }
 }

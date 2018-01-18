@@ -6,7 +6,7 @@ export const MAX_NO_COLLISION_TIME = 50;
 export const MAX_HIDING_TIME = 500;
 export const FLYING_BOOST = 300;
 export const FLYING_TIME = 5000;
-export const SPEED_FACTOR_TIME = 5000;
+export const SPEED_EFFECT_TIME = 5000;
 
 export const KEY_SPACE = 32;
 export const KEY_ESCAPE = 27;

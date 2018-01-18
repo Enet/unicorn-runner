@@ -18,6 +18,9 @@ const scoreNode = document.getElementById(SCORE_ID);
 const HEALTH_ID = 'health';
 const healthNode = document.getElementById(HEALTH_ID);
 
+const EFFECTS_ID = 'effects';
+const effectsNode = document.getElementById(EFFECTS_ID);
+
 const inputNodes = {};
 const settings = {
     sound: true,
@@ -67,6 +70,7 @@ function startGame (step) {
         settings,
         onScoreChange,
         onHealthChange,
+        onEffectChange,
         onGameLose,
         onGameWin
     });
@@ -95,6 +99,10 @@ function onScoreChange (value) {
 
 function onHealthChange (value) {
     healthNode.innerHTML = value;
+}
+
+function onEffectChange (effects) {
+    effectsNode.innerHTML = Array.from(effects.values()).join();
 }
 
 function onGameLose () {

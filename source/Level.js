@@ -22,6 +22,7 @@ export default class Level {
         this.scene = scene;
         this.callbacks = callbacks;
         this.entities = new Set();
+        this.effects = new Set();
 
         this._initWorld(...arguments);
         this._initTiles(...arguments);
@@ -31,6 +32,8 @@ export default class Level {
         this._initPlayer(...arguments);
 
         this._score = 0;
+        this._slowFactor = 0;
+        this._fastFactor = 0;
         this._isStopped = false;
     }
 
@@ -46,6 +49,24 @@ export default class Level {
         this.entities.delete(entity);
         world.remove(entity.body);
         scene.remove(entity);
+    }
+
+    addEffect (name) {
+        const {effects} = this;
+        if ((name === 'slow' && effects.has('fast')) ||
+            (name === 'fast' && effects.has('slow'))) {
+            effects.delete('slow');
+            effects.delete('fast');
+        } else {
+            effects.add(name);
+        }
+        this.callbacks.onEffectChange(effects);
+    }
+
+    removeEffect (name) {
+        const {effects} = this;
+        effects.delete(name);
+        this.callbacks.onEffectChange(effects);
     }
 
     loseGame () {
@@ -84,6 +105,11 @@ export default class Level {
     }
 
     update (deltaTime) {
+        const {effects} = this;
+        if (effects.has('slow') && ++this._slowFactor % 2) {
+            return;
+        }
+
         const {world, entities} = this;
 
         world.update(deltaTime / 1000);
@@ -97,6 +123,10 @@ export default class Level {
         });
 
         this._play();
+
+        if (effects.has('fast') && ++this._fastFactor % 2) {
+            return this.update(deltaTime);
+        }
     }
 
     _play () {
