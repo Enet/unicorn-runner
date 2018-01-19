@@ -13,3 +13,5 @@ export default class VerLaser extends HorLaser {
         ];
     }
 }
+
+VerLaser.images = HorLaser.images;

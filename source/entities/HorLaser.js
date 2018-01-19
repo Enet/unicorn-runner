@@ -37,9 +37,15 @@ export default class HorLaser extends StaticEntity {
         return new Vector2(60, 60);
     }
 
+    _createSprite () {
+
+    }
+
     _createTraits () {
         return [
             new Laser('y')
         ];
     }
 }
+
+HorLaser.images = {};

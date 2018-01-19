@@ -7,7 +7,7 @@ import Score from 'traits/Score.js';
 import Pickable from 'traits/Pickable.js';
 import spriteDescription from 'sprites/Dollar.js';
 
-export default class Rainbow extends Entity {
+export default class Dollar extends Entity {
     get angle () {
         return this._lifeTime * this._getNominal() / 10000;
     }
@@ -35,3 +35,5 @@ export default class Rainbow extends Entity {
         ];
     }
 }
+
+Dollar.images = {};

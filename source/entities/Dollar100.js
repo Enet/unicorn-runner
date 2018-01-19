@@ -5,3 +5,7 @@ export default class Dollar100 extends Dollar {
         return 100;
     }
 }
+
+Dollar100.images = {
+    default: 'Dollar100'
+};

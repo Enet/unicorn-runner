@@ -23,3 +23,7 @@ export default class Rainbow extends Entity {
         ];
     }
 }
+
+Rainbow.images = {
+    default: 'Rainbow'
+};

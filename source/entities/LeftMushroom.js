@@ -14,3 +14,5 @@ export default class LeftMushroom extends TopMushroom {
         return body;
     }
 }
+
+LeftMushroom.images = TopMushroom.images;

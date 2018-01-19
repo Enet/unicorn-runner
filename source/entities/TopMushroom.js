@@ -33,10 +33,14 @@ export default class TopMushroom extends Entity {
 
     _onBoom () {
         const {level} = this;
-        const {manager} = level;
-        const image = manager.getImage('Explosion');
+        const images = {default: this.images.explosion};
         const {x, y} = this.body.center;
-        const explosion = new Explosion({level, image, x, y});
+        const explosion = new Explosion({level, images, x, y});
         level.addEntity(explosion);
     }
 }
+
+TopMushroom.images = {
+    default: 'Mushroom',
+    explosion: Explosion.images.default
+};

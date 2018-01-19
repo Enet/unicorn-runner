@@ -24,3 +24,7 @@ export default class Explosion extends StaticEntity {
         return new Vector2(180, 180);
     }
 }
+
+Explosion.images = {
+    default: 'Explosion'
+};

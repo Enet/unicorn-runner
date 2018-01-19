@@ -23,3 +23,7 @@ export default class Medicine extends Entity {
         ];
     }
 }
+
+Medicine.images = {
+    default: 'Medicine'
+};

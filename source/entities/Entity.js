@@ -25,6 +25,7 @@ export default class Entity extends Renderable {
 
         options.description = this._getSpriteDescription();
         this.level = options.level;
+        this.images = options.images;
         this.size = this._getSize(options);
         this.sprite = this._createSprite(options);
         this.body = this._createBody(options);
@@ -85,8 +86,8 @@ export default class Entity extends Renderable {
         return [];
     }
 
-    _createSprite ({image, description}) {
-        return new Sprite(image, description);
+    _createSprite ({images, description}) {
+        return new Sprite(images.default, description);
     }
 
     _createBody ({x=0, y=0, stiffness=1}, Body=BoxBody) {
@@ -98,3 +99,5 @@ export default class Entity extends Renderable {
         return body;
     }
 }
+
+Entity.images = {};

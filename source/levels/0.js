@@ -1,8 +1,12 @@
 export default {
+    meta: {
+        background: 'City'
+    },
     tiles: [{
         ranges: [
+            [0, 400, 3, 4],
             [0, 1, 3, 7],
-            [1, 10, 6, 7],
+            [1, 11, 6, 7],
             [14, 20, 6, 7],
             [24, 34, 6, 7],
             [38, 48, 4, 5],
@@ -26,10 +30,10 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Bug',
+        name: 'FastMotion',
         position: [780, 0]
     }, {
-        name: 'VerLaser',
+        name: 'TopMushroom',
         position: [630, 330]
     }, {
         name: 'HorLaser',

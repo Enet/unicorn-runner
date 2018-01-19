@@ -28,3 +28,7 @@ export default class Box extends Entity {
         ];
     }
 }
+
+Box.images = {
+    default: 'Box'
+};

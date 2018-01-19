@@ -49,3 +49,5 @@ export default class Player extends Unicorn {
         return this.level.loseGame();
     }
 }
+
+Player.images = Unicorn.images;

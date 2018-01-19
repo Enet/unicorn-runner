@@ -12,13 +12,12 @@ import {
 import {
     images,
     sounds,
-    levels,
-    aliases
+    levels
 } from 'resources.js';
 
 export default class UnicornGame extends Game {
     _getResources () {
-        return {images, sounds, aliases};
+        return {images, sounds};
     }
 
     _updateLevel (deltaTime) {
@@ -35,6 +34,8 @@ export default class UnicornGame extends Game {
 
     _onManagerReady ({context, step, settings, ...callbacks}) {
         super._onManagerReady(...arguments);
+        const scale = `scale(${settings.mirror ? -1 : 1}, 1)`;
+        context.canvas.style.transform = scale;
 
         const {width, height} = context.canvas;
         const manager = this._manager;

@@ -12,7 +12,7 @@ import {
 
 export default class SlowMotion extends Entity {
     getHidingTime () {
-        return SPEED_EFFECT_TIME;
+        return SPEED_EFFECT_TIME * 2;
     }
 
     _getSpriteDescription () {
@@ -34,3 +34,7 @@ export default class SlowMotion extends Entity {
         ];
     }
 }
+
+SlowMotion.images = {
+    default: 'SlowMotion'
+};

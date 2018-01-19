@@ -4,11 +4,11 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import StaticBackground from 'backgrounds/StaticBackground.js';
-import TileBackground from 'backgrounds/TileBackground.js';
+import Tile from 'backgrounds/Tile.js';
 import Player from 'entities/Player.js';
 import {
-    entities
+    entities,
+    backgrounds
 } from 'resources.js';
 import {
     TILE_SIZE
@@ -26,8 +26,8 @@ export default class Level {
 
         this._initWorld(...arguments);
         this._initTiles(...arguments);
-        this._initStaticBackground();
-        this._initTileBackground();
+        this._initStaticBackground(...arguments);
+        this._initTileBackground(...arguments);
         this._initEntities(...arguments);
         this._initPlayer(...arguments);
 
@@ -105,6 +105,10 @@ export default class Level {
     }
 
     update (deltaTime) {
+        if (this._isStopped) {
+            return;
+        }
+
         const {effects} = this;
         if (effects.has('slow') && ++this._slowFactor % 2) {
             return;
@@ -141,6 +145,15 @@ export default class Level {
         }
     }
 
+    _getImageNodes (images) {
+        const nodes = {};
+        const {manager} = this;
+        for (let i in images) {
+            nodes[i] = manager.getImage(images[i]);
+        }
+        return nodes;
+    }
+
     _initWorld () {
         const world = new World({
             top: -300,
@@ -169,22 +182,21 @@ export default class Level {
         return this._tileMatrix = matrix;
     }
 
-    _initStaticBackground () {
-        const {scene, manager} = this;
-        const background = new StaticBackground({
-            images: {
-                ground: manager.getImage('Ground'),
-                back: manager.getImage('SkyscraperBack'),
-                front: manager.getImage('SkyscraperFront')
-            }
-        });
+    _initStaticBackground ({meta}) {
+        const {scene} = this;
+        const Background = backgrounds[meta.background];
+        if (!Background) {
+            return;
+        }
+        const images = this._getImageNodes(Background.images);
+        const background = new Background({images});
         scene.add(background);
         return background;
     }
 
     _initTileBackground () {
         const {scene, manager} = this;
-        const background = new TileBackground({
+        const background = new Tile({
             images: {
                 tile: manager.getImage('Tile')
             },
@@ -195,21 +207,20 @@ export default class Level {
     }
 
     _initEntities (data) {
-        const {manager} = this;
         const level = this;
         data.entities.forEach(({name, position: [x, y]}) => {
-            const image = manager.getImage(name);
-            const entity = new entities[name]({level, image, x, y});
+            const Entity = entities[name];
+            const images = this._getImageNodes(Entity.images);
+            const entity = new Entity({level, images, x, y});
             this.addEntity(entity);
         });
         return this.entities;
     }
 
     _initPlayer (data, {callbacks}) {
-        const {manager} = this;
         const level = this;
-        const image = manager.getImage('Unicorn');
-        const player = new Player({level, image});
+        const images = this._getImageNodes(Player.images);
+        const player = new Player({level, images});
         this.player = player;
         this.addEntity(player);
         this.placePlayer();

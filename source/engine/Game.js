@@ -34,8 +34,7 @@ export default class Game {
     _getResources () {
         const images = {};
         const sounds = {};
-        const aliases = {};
-        return {images, sounds, aliases};
+        return {images, sounds};
     }
 
     _onManagerReady ({canvas}) {

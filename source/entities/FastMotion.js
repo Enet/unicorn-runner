@@ -11,3 +11,7 @@ export default class FastMotion extends SlowMotion {
         return 'fast';
     }
 }
+
+FastMotion.images = {
+    default: 'FastMotion'
+};

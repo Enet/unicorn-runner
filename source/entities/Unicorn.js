@@ -9,8 +9,8 @@ import spriteDescription from 'sprites/Unicorn.js';
 export default class Unicorn extends Entity {
     get offset () {
         const offset = super.offset;
-        offset.x -= (172 - 120) / 2;
-        offset.y -= (119 - 90) / 2;
+        offset.x -= (172 - 100) / 2;
+        offset.y -= (119 - 100) / 2;
         return offset;
     }
 
@@ -19,13 +19,14 @@ export default class Unicorn extends Entity {
     }
 
     _getSize () {
-        return new Vector2(120, 90);
+        return new Vector2(100, 100);
     }
 
     _getDeltaAngle (delta, angle) {
         const maxAngle = Math.PI / 3;
         delta = delta * (1 - Math.abs(angle) / maxAngle);
         delta -= 0.001 * Math.abs(angle) * Math.sign(angle);
+        delta *= delta < 0 ? 1.01 : 1;
         return delta;
     }
 
@@ -52,3 +53,7 @@ export default class Unicorn extends Entity {
 
     }
 }
+
+Unicorn.images = {
+    default: 'Unicorn'
+};

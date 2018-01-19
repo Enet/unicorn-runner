@@ -11,3 +11,5 @@ export default class StaticEntity extends Entity {
         return body;
     }
 }
+
+StaticEntity.images = {};

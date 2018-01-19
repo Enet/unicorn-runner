@@ -18,3 +18,7 @@ export default class Bush extends StaticEntity {
         return new Vector2(180, 60);
     }
 }
+
+Bush.images = {
+    default: 'Bush'
+};

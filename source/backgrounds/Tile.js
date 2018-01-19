@@ -7,7 +7,7 @@ import {
     TILE_SIZE
 } from 'constants.js';
 
-export default class TileBackground extends Background {
+export default class Tile extends Background {
     constructor (options) {
         super(options);
 

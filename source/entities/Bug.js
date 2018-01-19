@@ -36,3 +36,7 @@ export default class Bug extends Entity {
         this.level.changeScore(100);
     }
 }
+
+Bug.images = {
+    default: 'Bug'
+};

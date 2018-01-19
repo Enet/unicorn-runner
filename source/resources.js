@@ -1,5 +1,17 @@
 const imageNames = [
-    'Empty',
+    'Mountains0',
+    'Mountains1',
+    'Mountains2',
+    'Forest0',
+    'Forest1',
+    'Forest2',
+    'Night0',
+    'Night1',
+    'Night2',
+    'CitySky',
+    'City1',
+    'City2',
+    'City3',
     'Bush',
     'Explosion',
     'Mushroom',
@@ -13,9 +25,6 @@ const imageNames = [
     'Bug',
     'Rainbow',
     'Unicorn',
-    'SkyscraperBack',
-    'SkyscraperFront',
-    'Ground',
     'Tile'
 ];
 
@@ -46,6 +55,13 @@ const entityNames = [
     'Unicorn'
 ];
 
+const backgroundNames = [
+    'City',
+    'Night',
+    'Forest',
+    'Mountains'
+];
+
 export const images = {};
 imageNames.forEach((imageName) => {
     images[imageName] = require(`images/${imageName}.png`);
@@ -65,9 +81,7 @@ entityNames.forEach((entityName) => {
     entities[entityName] = require(`entities/${entityName}.js`).default;
 });
 
-export const aliases = {
-    TopMushroom: 'Mushroom',
-    LeftMushroom: 'Mushroom',
-    VerLaser: 'Empty',
-    HorLaser: 'Empty'
-};
+export const backgrounds = {};
+backgroundNames.forEach((backgroundName) => {
+    backgrounds[backgroundName] = require(`backgrounds/${backgroundName}.js`).default;
+});
