@@ -10,10 +10,7 @@ export default class Renderer {
         const {camera} = scene;
         scene.forEach((renderable) => {
             const position = renderable.position || camera.position;
-            const angle = renderable.angle;
-            const offset = renderable.offset;
-            const scale = renderable.scale;
-            const opacity = renderable.opacity;
+            const {angle, offset, scale, opacity, mode} = renderable;
             let x = position.x - camera.position.x;
             let y = position.y - camera.position.y;
 
@@ -26,7 +23,11 @@ export default class Renderer {
             context.scale(scale.x, scale.y);
 
             context.globalAlpha = opacity;
+            context.globalCompositeOperation = mode;
+
             renderable.render(context, camera);
+
+            context.globalCompositeOperation = 'source-over';
             context.globalAlpha = 1;
 
             context.rotate(-angle);

@@ -8,6 +8,12 @@ import Obstacle from 'traits/Obstacle.js';
 import spriteDescription from 'sprites/Mushroom.js';
 
 export default class TopMushroom extends Entity {
+    get offset () {
+        const offset = super.offset;
+        offset.y -= 10;
+        return offset;
+    }
+
     _getSpriteDescription () {
         return spriteDescription;
     }
@@ -18,7 +24,7 @@ export default class TopMushroom extends Entity {
     }
 
     _getSize () {
-        return new Vector2(40, 30);
+        return new Vector2(40, 20);
     }
 
     _createTraits () {

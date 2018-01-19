@@ -8,6 +8,17 @@ export default class LeftMushroom extends TopMushroom {
         return super.angle - Math.PI / 2;
     }
 
+    get offset () {
+        const offset = super.offset;
+        offset.y += 10;
+        offset.x -= 10;
+        return offset;
+    }
+
+    _getSize () {
+        return new Vector2(20, 40);
+    }
+
     _createBody () {
         const body = super._createBody(...arguments);
         body.setGravity(new Vector2(0, 0));

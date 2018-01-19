@@ -26,6 +26,10 @@ export default class Walker extends Trait {
 
     traitWillUpdate (deltaTime) {
         const direction = this.getDirection();
+        if (Math.abs(this.entity.body.angle % (2 * Math.PI)) > Math.PI / 12) {
+            return;
+        }
+
         this.entity.body.move(new Vector2(0.05 * direction, 0));
         if (this.entity.body.center.x >= this._to) {
             this._direction = -1;

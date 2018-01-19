@@ -23,6 +23,10 @@ export default class Renderable {
         return 1;
     }
 
+    get mode () {
+        return 'source-over';
+    }
+
     constructor () {
 
     }

@@ -1,3 +1,6 @@
+import {
+    Vector2
+} from 'engine/math.js';
 import Trait from 'traits/Trait.js';
 
 export default class Fight extends Trait {
@@ -32,10 +35,11 @@ export default class Fight extends Trait {
         if (!this.isFighting()) {
             return;
         }
-        if (!body.entity.killable || body.entity.killable.isDead()) {
+        if (body.center.y >= this.entity.body.center.y - this.entity.offset.y) {
             return;
         }
-        if (body.center.y >= this.entity.body.center.y - this.entity.offset.y) {
+        body.move(new Vector2(0.1, 0));
+        if (!body.entity.killable || body.entity.killable.isDead()) {
             return;
         }
         body.entity.killable.changeHealth(-1);
