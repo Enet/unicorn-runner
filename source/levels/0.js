@@ -1,6 +1,6 @@
 export default {
     meta: {
-        background: 'Mountains',
+        background: 'City',
         bounds: [-300, 3000, 700, -300]
     },
     tiles: [{
@@ -31,23 +31,12 @@ export default {
     }],
     entities: [{
         name: 'Platform',
-        position: [200, 300],
-        to: [700, 200]
+        position: [250, 400],
+        to: [550, 100]
     }, {
-        name: 'Platform',
-        position: [260, 300],
-        to: [760, 200]
-    }, {
-        name: 'Stone',
-        position: [630, -200],
-        trigger: 700,
-        gravity: [-100, 981]
-    }, {
-        name: 'LeftGasMushroom',
-        position: [400, 330]
-    }, {
-        name: 'TopGasMushroom',
-        position: [450, 330]
+        name: 'Box',
+        position: [450, 330],
+        range: [450, 550]
     }, {
         name: 'Box',
         position: [550, 330],

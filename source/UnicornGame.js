@@ -7,7 +7,14 @@ import Debugger from 'engine/Debugger.js';
 import Level from 'Level.js';
 import {
     KEY_SPACE,
-    KEY_F
+    KEY_UP,
+    KEY_DOWN,
+    KEY_LEFT,
+    KEY_RIGHT,
+    KEY_W,
+    KEY_S,
+    KEY_A,
+    KEY_D
 } from 'constants.js';
 import {
     images,
@@ -32,6 +39,41 @@ export default class UnicornGame extends Game {
         camera.position.y = player.body.center.y - 300;
     }
 
+    _controlPlayer () {
+        const keyboard = this._keyboard;
+        const {player} = this._game.level;
+
+        if (keyboard.isPressed(KEY_DOWN, KEY_S)) {
+            player.fight.start();
+            player.fly.down(true);
+        } else {
+            player.fight.cancel();
+            player.fly.down(false);
+        }
+
+        if (keyboard.isPressed(KEY_UP, KEY_W, KEY_SPACE)) {
+            player.jump.start();
+            player.fly.up(true);
+        } else {
+            player.jump.cancel();
+            player.fly.up(false);
+        }
+
+        if (keyboard.isPressed(KEY_LEFT, KEY_A)) {
+            player.run.left();
+            player.fly.left(true);
+        } else {
+            player.fly.left(false);
+        }
+
+        if (keyboard.isPressed(KEY_RIGHT, KEY_D)) {
+            player.run.right();
+            player.fly.right(true);
+        } else {
+            player.fly.right(false);
+        }
+    }
+
     _onManagerReady ({context, step, settings, ...callbacks}) {
         super._onManagerReady(...arguments);
         const scale = `scale(${settings.mirror ? -1 : 1}, 1)`;
@@ -52,45 +94,13 @@ export default class UnicornGame extends Game {
     }
 
     _onUpdate (deltaTime) {
+        this._controlPlayer();
         this._updateLevel(deltaTime);
         this._centerCamera();
 
         const {renderer, scene} = this._game;
         renderer.render(scene);
         this._debugger.render();
-    }
-
-    _onWindowKeyDown (event) {
-        if (this._isPaused) {
-            return;
-        }
-
-        const {player} = this._game.level;
-        if (event.keyCode === KEY_F) {
-            player.fight.start();
-        }
-
-        if (event.keyCode === KEY_SPACE) {
-            player.jump.start();
-            player.fly.up();
-        } else {
-            player.jump.cancel();
-            player.fly.down();
-        }
-    }
-
-    _onWindowKeyUp (event) {
-        if (this._isPaused) {
-            return;
-        }
-
-        const {player} = this._game.level;
-        if (event.keyCode === KEY_F) {
-            player.fight.cancel();
-        }
-
-        player.jump.cancel();
-        player.fly.down();
     }
 }
 

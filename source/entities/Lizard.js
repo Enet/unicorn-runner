@@ -63,7 +63,7 @@ export default class Lizard extends Entity {
 
     _onAttack (preventAttack) {
         const {player} = this.level;
-        if (this.body.center.y >= player.body.center.y - player.offset.y) {
+        if (this.body.center.y >= player.body.center.y + player.size.height / 2) {
             preventAttack();
         }
     }

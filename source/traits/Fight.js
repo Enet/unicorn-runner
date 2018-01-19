@@ -5,10 +5,16 @@ import Trait from 'traits/Trait.js';
 
 export default class Fight extends Trait {
     start () {
+        if (this._isFighting) {
+            return;
+        }
         this._isFighting = true;
     }
 
     cancel () {
+        if (!this._isFighting) {
+            return;
+        }
         this._isFighting = false;
     }
 
@@ -35,13 +41,13 @@ export default class Fight extends Trait {
         if (!this.isFighting()) {
             return;
         }
-        if (body.center.y >= this.entity.body.center.y - this.entity.offset.y) {
+        if (body.center.y >= this.entity.body.center.y + this.entity.size.height / 2) {
             return;
         }
         body.move(new Vector2(0.1, 0));
         if (!body.entity.killable || body.entity.killable.isDead()) {
             return;
         }
-        body.entity.killable.changeHealth(-1);
+        body.entity.killable.changeHealth(-10);
     }
 }

@@ -21,12 +21,26 @@ export default class Lift extends Trait {
     traitWillUpdate (deltaTime) {
         const direction = this.getDirection();
 
-        const shift = this._to.subtract(this._from).normalize().length(5 * direction);
+        const shift = this._to.subtract(this._from).normalize().length(2 * direction);
         this.entity.body.place(this.entity.body.center.add(shift));
-        if (this.entity.body.center.subtract(this._to).length() < 10) {
+        if (this.entity.body.center.subtract(this._to).length() < 20) {
             this._direction = -1;
-        } else if (this.entity.body.center.subtract(this._from).length() < 10) {
+        } else if (this.entity.body.center.subtract(this._from).length() < 20) {
             this._direction = 1;
         }
+    }
+
+    traitCollision (body) {
+        if (body !== this.level.player.body) {
+            return;
+        }
+        const {entity} = this;
+        if (body.center.y + body.entity.size.height / 2 > entity.body.center.y - entity.size.height / 4) {
+            return;
+        }
+        body.move(new Vector2(
+            entity.body.points[0].cache.x - entity.body.points[0].x,
+            entity.body.points[0].cache.y - entity.body.points[0].y
+        ));
     }
 }

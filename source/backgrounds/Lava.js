@@ -6,6 +6,10 @@ const WAVE_2 = 16;
 const STEP = 64;
 
 export default class Lava extends Background {
+    get mode () {
+        return 'exclusion';
+    }
+
     get index () {
         return 1000;
     }

@@ -140,11 +140,11 @@ export default class Level {
 
     _play () {
         const {player, bounds} = this;
-        if (player.body.center.y - player.offset.y >= bounds.bottom - 100 &&
+        if (player.body.center.y + player.size.height / 2 >= bounds.bottom - 100 &&
             !player.killable.isDead()) {
             player.killable.changeHealth(-100);
         }
-        if (player.body.center.x - player.offset.x >= bounds.right - 100) {
+        if (player.body.center.x + player.size.width / 2 >= bounds.right - 100) {
             this.winGame();
         }
     }
@@ -182,7 +182,7 @@ export default class Level {
             const x = xIndex * width;
             const y = yIndex * height;
             const tile = new StaticBoxBody({x, y, width, height});
-            tile.entity = {obstacle: true};
+            tile.entity = {obstacle: true, size: {width, height}};
             tiles.push(tile);
             world.add(tile);
             return tile;

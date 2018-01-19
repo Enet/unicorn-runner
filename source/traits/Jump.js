@@ -35,7 +35,7 @@ export default class Jump extends Trait {
         }
         this._jumpingTime += deltaTime;
         this.entity.body.move(new Vector2(
-            0.1 * JUMPING_BOOST,
+            0,
             -JUMPING_BOOST
         ));
     }
@@ -44,7 +44,10 @@ export default class Jump extends Trait {
         if (!body.entity.obstacle) {
             return;
         }
-        if (body.center.y < this.entity.body.center.y + this.entity.size.height / 4) {
+        if (body.center.y < this.entity.body.center.y + this.entity.size.height / 8) {
+            return;
+        }
+        if (Math.abs(body.center.x - this.entity.body.center.x) > body.entity.size.width) {
             return;
         }
         this._noCollisionTime = 0;

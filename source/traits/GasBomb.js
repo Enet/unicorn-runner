@@ -56,6 +56,7 @@ export default class GasBomb extends Trait {
         }
 
         this._isActivated = true;
+        this.entity.body.setGravity(null);
 
         const {level} = this;
         const {manager} = level;

@@ -9,6 +9,13 @@ export const FLYING_TIME = 5000;
 export const SPEED_EFFECT_TIME = 5000;
 export const GAS_CLOUD_TIME = 5000;
 
-export const KEY_SPACE = 32;
 export const KEY_ESCAPE = 27;
-export const KEY_F = 70;
+export const KEY_SPACE = 32;
+export const KEY_LEFT = 37;
+export const KEY_UP = 38;
+export const KEY_RIGHT = 39;
+export const KEY_DOWN = 40;
+export const KEY_W = 87;
+export const KEY_S = 83;
+export const KEY_A = 65;
+export const KEY_D = 68;
