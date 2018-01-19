@@ -5,7 +5,6 @@ import {
 
 import Bomb from 'traits/Bomb.js';
 import Obstacle from 'traits/Obstacle.js';
-import Explosion from 'entities/Explosion.js';
 import spriteDescription from 'sprites/Mushroom.js';
 
 export default class TopMushroom extends Entity {
@@ -14,7 +13,7 @@ export default class TopMushroom extends Entity {
     }
 
     _getFrame () {
-        const progress = Math.floor(this.behaviour.getExplosionProgress() * 4) + 1;
+        const progress = Math.floor(this.bomb.getExplosionProgress() * 4) + 1;
         return 'mushroom-' + progress;
     }
 
@@ -26,21 +25,19 @@ export default class TopMushroom extends Entity {
         return [
             new Bomb({
                 onBoom: this._onBoom.bind(this)
-            }),
+            }, true),
             new Obstacle()
         ];
     }
 
-    _onBoom () {
-        const {level} = this;
-        const images = {default: this.images.explosion};
-        const {x, y} = this.body.center;
-        const explosion = new Explosion({level, images, x, y});
-        level.addEntity(explosion);
+    _onBoom (body) {
+        if (!body.entity.killable) {
+            return;
+        }
+        body.entity.killable.changeHealth(-80);
     }
 }
 
 TopMushroom.images = {
-    default: 'Mushroom',
-    explosion: Explosion.images.default
+    default: 'Mushroom'
 };

@@ -208,10 +208,10 @@ export default class Level {
 
     _initEntities (data) {
         const level = this;
-        data.entities.forEach(({name, position: [x, y]}) => {
+        data.entities.forEach(({name, position: [x, y], ...settings}) => {
             const Entity = entities[name];
             const images = this._getImageNodes(Entity.images);
-            const entity = new Entity({level, images, x, y});
+            const entity = new Entity({level, settings, images, x, y});
             this.addEntity(entity);
         });
         return this.entities;

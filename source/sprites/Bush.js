@@ -1,6 +1,6 @@
 export default {
     frames: [{
         name: 'bush',
-        rect: [0, 0, 180, 60]
+        rect: [0, 0, 240, 80]
     }]
 };

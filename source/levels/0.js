@@ -1,10 +1,9 @@
 export default {
     meta: {
-        background: 'City'
+        background: 'Mountains'
     },
     tiles: [{
         ranges: [
-            [0, 400, 3, 4],
             [0, 1, 3, 7],
             [1, 11, 6, 7],
             [14, 20, 6, 7],
@@ -30,7 +29,15 @@ export default {
         ]
     }],
     entities: [{
-        name: 'FastMotion',
+        name: 'Stone',
+        position: [630, -200],
+        trigger: 500,
+        gravity: [-100, 981]
+    }, {
+        name: 'Bug',
+        position: [550, 330]
+    }, {
+        name: 'Box',
         position: [780, 0]
     }, {
         name: 'TopMushroom',

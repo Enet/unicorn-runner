@@ -15,7 +15,7 @@ export default class Bush extends StaticEntity {
     }
 
     _getSize () {
-        return new Vector2(180, 60);
+        return new Vector2(240, 80);
     }
 }
 
