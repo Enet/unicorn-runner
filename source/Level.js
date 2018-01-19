@@ -5,6 +5,7 @@ import {
 } from 'engine/math.js';
 
 import Tile from 'backgrounds/Tile.js';
+import Lava from 'backgrounds/Lava.js';
 import Player from 'entities/Player.js';
 import {
     entities,
@@ -24,9 +25,11 @@ export default class Level {
         this.entities = new Set();
         this.effects = new Set();
 
+        this._initBounds(...arguments);
         this._initWorld(...arguments);
         this._initTiles(...arguments);
         this._initStaticBackground(...arguments);
+        this._initLavaBackground(...arguments);
         this._initTileBackground(...arguments);
         this._initEntities(...arguments);
         this._initPlayer(...arguments);
@@ -139,8 +142,12 @@ export default class Level {
     }
 
     _play () {
-        const {player} = this;
-        if (player.body.center.y > 1200 || player.body.center.x > 11400) {
+        const {player, bounds} = this;
+        if (player.body.center.y - player.offset.y >= bounds.bottom - 100 &&
+            !player.killable.isDead()) {
+            player.killable.changeHealth(-100);
+        }
+        if (player.body.center.x - player.offset.x >= bounds.right - 100) {
             this.winGame();
         }
     }
@@ -154,12 +161,18 @@ export default class Level {
         return nodes;
     }
 
+    _initBounds ({meta}) {
+        const {bounds} = meta;
+        const top = +bounds[0];
+        const right = +bounds[1];
+        const bottom = +bounds[2];
+        const left = +bounds[3];
+        this.bounds = {top, right, bottom, left};
+    }
+
     _initWorld () {
-        const world = new World({
-            top: -300,
-            left: -300,
-            bottom: 600
-        });
+        const {bounds} = this;
+        const world = new World(bounds);
         return this.world = world;
     }
 
@@ -195,13 +208,19 @@ export default class Level {
     }
 
     _initTileBackground () {
-        const {scene, manager} = this;
+        const {scene} = this;
+        const images = this._getImageNodes(Tile.images);
         const background = new Tile({
-            images: {
-                tile: manager.getImage('Tile')
-            },
+            images,
             tiles: this._tileMatrix
         });
+        scene.add(background);
+        return background;
+    }
+
+    _initLavaBackground () {
+        const {scene, bounds} = this;
+        const background = new Lava({bounds});
         scene.add(background);
         return background;
     }

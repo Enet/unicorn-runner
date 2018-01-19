@@ -1,6 +1,7 @@
 export default {
     meta: {
-        background: 'Mountains'
+        background: 'Mountains',
+        bounds: [-300, 3000, 700, -300]
     },
     tiles: [{
         ranges: [

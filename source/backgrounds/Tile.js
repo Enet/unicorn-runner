@@ -39,3 +39,7 @@ export default class Tile extends Background {
         context.restore();
     }
 }
+
+Tile.images = {
+    tile: 'Tile'
+};
