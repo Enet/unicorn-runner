@@ -8,6 +8,10 @@ import spriteDescription from 'sprites/DustCloud.js';
 const animation = spriteDescription.animations[0];
 
 export default class DustCloud extends StaticEntity {
+    get index () {
+        return 600;
+    }
+
     entityWillUpdate (deltaTime) {
         super.entityWillUpdate(...arguments);
         this._lifeTime = this._lifeTime - deltaTime + deltaTime / 3;

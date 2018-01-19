@@ -1,10 +1,15 @@
 import Background from 'backgrounds/Background.js';
 
-const STEP = 8;
-const DOUBLE_STEP = 16;
-const QUAD_STEP = 32;
+const WAVE_0 = 4;
+const WAVE_1 = 8;
+const WAVE_2 = 16;
+const STEP = 64;
 
 export default class Lava extends Background {
+    get index () {
+        return 1000;
+    }
+
     constructor ({bounds}) {
         super(...arguments);
         this._bounds = bounds;
@@ -29,13 +34,13 @@ export default class Lava extends Background {
 
         let prevAngle = tx / 100;
         let prevWave = this._getWave(prevAngle);
-        for (let x = 0, xl = width; x < xl; x += QUAD_STEP) {
+        for (let x = 0, xl = width; x < xl; x += STEP) {
             context.beginPath();
             context.moveTo(tx + x, bounds.bottom - 150 + prevWave);
-            prevAngle += QUAD_STEP / 100;
+            prevAngle += STEP / 100;
             prevWave = this._getWave(prevAngle);
-            context.lineTo(tx + x + QUAD_STEP, bounds.bottom - 150 + prevWave);
-            context.lineTo(tx + x + QUAD_STEP, bounds.bottom);
+            context.lineTo(tx + x + STEP, bounds.bottom - 150 + prevWave);
+            context.lineTo(tx + x + STEP, bounds.bottom);
             context.lineTo(tx + x, bounds.bottom);
             context.fill();
         }
@@ -45,10 +50,10 @@ export default class Lava extends Background {
     }
 
     _getWave (angle) {
-        const phase = this._phase / 100;
+        const phase = this._phase / 50;
         return 0 +
-            Math.sin(angle + phase) * QUAD_STEP +
-            Math.cos(angle + 2 * phase) * DOUBLE_STEP +
-            Math.sin(angle + 4 * phase) * STEP;
+            Math.sin(angle + phase) * WAVE_2 +
+            Math.cos(angle + 2 * phase) * WAVE_1 +
+            Math.sin(angle + 4 * phase) * WAVE_0;
     }
 }

@@ -12,6 +12,10 @@ const ONE_OF_FIVE = GAS_CLOUD_TIME * 0.2;
 const FOUR_OF_FIVE = GAS_CLOUD_TIME - ONE_OF_FIVE;
 
 export default class GasCloud extends StaticEntity {
+    get index () {
+        return 600;
+    }
+
     get opacity () {
         if (this._lifeTime < ONE_OF_FIVE) {
             return this._lifeTime / ONE_OF_FIVE;

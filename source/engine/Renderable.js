@@ -3,6 +3,10 @@ import {
 } from './math.js';
 
 export default class Renderable {
+    get index () {
+        return 0;
+    }
+
     get position () {
         return null;
     }

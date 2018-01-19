@@ -8,6 +8,10 @@ import {
 } from 'constants.js';
 
 export default class Tile extends Background {
+    get index () {
+        return 500;
+    }
+
     constructor (options) {
         super(options);
 

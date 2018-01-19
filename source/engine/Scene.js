@@ -16,6 +16,7 @@ export default class Scene {
     constructor () {
         this._cameras = new Set();
         this._renderables = new Set();
+        this._sorted = null;
     }
 
     add (object) {
@@ -26,13 +27,16 @@ export default class Scene {
             }
         } else if (object instanceof Renderable) {
             this._renderables.add(object);
+            this._sorted = null;
         } else {
             throw 'Only camera or renderable object can be added to the scene!';
         }
     }
 
     remove (object) {
-        this._renderables.delete(object);
+        if (this._renderables.delete(object)) {
+            this._sorted = null;
+        }
         this._cameras.delete(object);
         if (object === this._camera) {
             this._camera = null;
@@ -44,9 +48,18 @@ export default class Scene {
         this._camera = null;
         this._cameras.clear();
         this._renderables.clear();
+        this._sorted = null;
     }
 
     forEach () {
-        return this._renderables.forEach(...arguments);
+        if (!this._sorted) {
+            this._sorted = Array.from(this._renderables.values());
+            this._sorted.sort(this._sortByIndex);
+        }
+        return this._sorted.forEach(...arguments);
+    }
+
+    _sortByIndex (renderable1, renderable2) {
+        return renderable1.index - renderable2.index;
     }
 }
