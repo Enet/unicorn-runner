@@ -46,6 +46,15 @@ export default class GasBomb extends Trait {
     }
 
     boom (body) {
+        let isBoomPrevented = false;
+        const {onBoom} = this._callbacks;
+        onBoom && onBoom(body, () => {
+            isBoomPrevented = true;
+        });
+        if (isBoomPrevented) {
+            return;
+        }
+
         this._isActivated = true;
 
         const {level} = this;
@@ -55,7 +64,5 @@ export default class GasBomb extends Trait {
         const cloud = new GasCloud({level, images, x, y});
         level.addEntity(cloud);
 
-        const {onBoom} = this._callbacks;
-        onBoom && onBoom(body);
     }
 }

@@ -35,13 +35,13 @@ export default {
         trigger: 700,
         gravity: [-100, 981]
     }, {
-        name: 'TopDustMushroom',
+        name: 'LeftGasMushroom',
         position: [400, 330]
     }, {
         name: 'TopGasMushroom',
         position: [450, 330]
     }, {
-        name: 'Lizard',
+        name: 'Box',
         position: [550, 330],
         range: [400, 550]
     }, {
