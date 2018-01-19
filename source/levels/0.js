@@ -30,6 +30,14 @@ export default {
         ]
     }],
     entities: [{
+        name: 'Platform',
+        position: [200, 300],
+        to: [700, 200]
+    }, {
+        name: 'Platform',
+        position: [260, 300],
+        to: [760, 200]
+    }, {
         name: 'Stone',
         position: [630, -200],
         trigger: 700,

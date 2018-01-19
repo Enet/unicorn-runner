@@ -58,6 +58,7 @@ const entityNames = [
     'FastMotion',
     'Medicine',
     'Box',
+    'Platform',
     'Bug',
     'Lizard',
     'Rainbow',

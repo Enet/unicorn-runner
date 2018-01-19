@@ -122,13 +122,10 @@ export default class Level {
         entities.forEach((entity) => {
             const tiles = getTileRangeByBounds(this._tileMatrix, entity.body);
             entity.body.candidates = tiles.concat(candidates);
+            entity.entityWillUpdate(deltaTime, this);
         });
 
         world.update(deltaTime / 1000);
-
-        entities.forEach((entity) => {
-            entity.entityWillUpdate(deltaTime, this);
-        });
 
         entities.forEach((entity) => {
             entity.entityDidUpdate();
