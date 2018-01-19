@@ -31,17 +31,15 @@ export default {
     entities: [{
         name: 'Stone',
         position: [630, -200],
-        trigger: 500,
+        trigger: 700,
         gravity: [-100, 981]
     }, {
-        name: 'Bug',
-        position: [550, 330]
+        name: 'Lizard',
+        position: [550, 330],
+        range: [400, 550]
     }, {
         name: 'Box',
         position: [780, 0]
-    }, {
-        name: 'TopMushroom',
-        position: [630, 330]
     }, {
         name: 'HorLaser',
         position: [690, 390]

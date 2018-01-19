@@ -24,6 +24,7 @@ const imageNames = [
     'Medicine',
     'Box',
     'Bug',
+    'Lizard',
     'Rainbow',
     'Unicorn',
     'Tile'
@@ -53,6 +54,7 @@ const entityNames = [
     'Medicine',
     'Box',
     'Bug',
+    'Lizard',
     'Rainbow',
     'Unicorn'
 ];

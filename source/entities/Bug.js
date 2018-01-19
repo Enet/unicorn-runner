@@ -4,7 +4,7 @@ import {
 } from 'engine/math.js';
 
 import Killable from 'traits/Killable.js';
-import BugBehaviour from 'traits/BugBehaviour.js';
+import Enemy from 'traits/Enemy.js';
 import spriteDescription from 'sprites/Bug.js';
 
 export default class Bug extends Entity {
@@ -25,11 +25,22 @@ export default class Bug extends Entity {
 
     _createTraits () {
         return [
-            new BugBehaviour(),
+            new Enemy({
+                onAttack: this._onAttack.bind(this)
+            }, {
+                count: 1,
+                power: 40
+            }),
             new Killable({
                 onKill: this._onKill.bind(this)
             })
         ];
+    }
+
+    _onAttack (preventAttack) {
+        if (Math.abs(this.body.angle % (2 * Math.PI)) > Math.PI / 12) {
+            preventAttack();
+        }
     }
 
     _onKill () {

@@ -44,6 +44,9 @@ export default class Killable extends Trait {
         if (this.isDead()) {
             return;
         }
+        if (delta < 0 && this.entity.fight && this.entity.fight.isFighting()) {
+            delta *= 0.5;
+        }
 
         this._health = Math.max(0, Math.min(100, this._health + delta));
 

@@ -12,6 +12,7 @@ export default class Renderer {
             const position = renderable.position || camera.position;
             const angle = renderable.angle;
             const offset = renderable.offset;
+            const scale = renderable.scale;
             const opacity = renderable.opacity;
             let x = position.x - camera.position.x;
             let y = position.y - camera.position.y;
@@ -22,6 +23,7 @@ export default class Renderer {
             context.save();
             context.translate(-offset.x, -offset.y);
             context.rotate(angle);
+            context.scale(scale.x, scale.y);
 
             context.globalAlpha = opacity;
             renderable.render(context, camera);
