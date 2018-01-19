@@ -4,7 +4,7 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import Bomb from 'traits/Bomb.js';
+import DustBomb from 'traits/DustBomb.js';
 import Meteor from 'traits/Meteor.js';
 import Obstacle from 'traits/Obstacle.js';
 import spriteDescription from 'sprites/Stone.js';
@@ -24,7 +24,7 @@ export default class Stone extends Entity {
 
     _createTraits ({settings}) {
         return [
-            new Bomb({
+            new DustBomb({
                 onBoom: this._onBoom.bind(this)
             }),
             new Meteor({

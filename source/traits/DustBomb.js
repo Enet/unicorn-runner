@@ -3,9 +3,9 @@ import {
 } from 'engine/math.js';
 import Trait from 'traits/Trait.js';
 
-import Explosion from 'entities/Explosion.js';
+import DustCloud from 'entities/DustCloud.js';
 
-export default class Bomb extends Trait {
+export default class DustBomb extends Trait {
     getExplosionProgress () {
         return this._explosionProgress;
     }
@@ -59,10 +59,10 @@ export default class Bomb extends Trait {
 
         const {level} = this;
         const {manager} = level;
-        const images = {default: manager.getImage('Explosion')};
+        const images = {default: manager.getImage('DustCloud')};
         const {x, y} = this.entity.body.center;
-        const explosion = new Explosion({level, images, x, y});
-        level.addEntity(explosion);
+        const cloud = new DustCloud({level, images, x, y});
+        level.addEntity(cloud);
 
         const {onBoom} = this._callbacks;
         onBoom && onBoom(body);

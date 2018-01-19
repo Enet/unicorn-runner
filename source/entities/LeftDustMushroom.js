@@ -1,9 +1,9 @@
-import TopMushroom from 'entities/TopMushroom.js';
+import TopDustMushroom from 'entities/TopDustMushroom.js';
 import {
     Vector2
 } from 'engine/math.js';
 
-export default class LeftMushroom extends TopMushroom {
+export default class LeftDustMushroom extends TopDustMushroom {
     get angle () {
         return super.angle - Math.PI / 2;
     }
@@ -26,4 +26,4 @@ export default class LeftMushroom extends TopMushroom {
     }
 }
 
-LeftMushroom.images = TopMushroom.images;
+LeftDustMushroom.images = TopDustMushroom.images;

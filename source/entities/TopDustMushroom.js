@@ -3,11 +3,11 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import Bomb from 'traits/Bomb.js';
+import DustBomb from 'traits/DustBomb.js';
 import Obstacle from 'traits/Obstacle.js';
 import spriteDescription from 'sprites/Mushroom.js';
 
-export default class TopMushroom extends Entity {
+export default class TopDustMushroom extends Entity {
     get offset () {
         const offset = super.offset;
         offset.y -= 10;
@@ -29,7 +29,7 @@ export default class TopMushroom extends Entity {
 
     _createTraits () {
         return [
-            new Bomb({
+            new DustBomb({
                 onBoom: this._onBoom.bind(this)
             }, true),
             new Obstacle()
@@ -44,6 +44,6 @@ export default class TopMushroom extends Entity {
     }
 }
 
-TopMushroom.images = {
-    default: 'Mushroom'
+TopDustMushroom.images = {
+    default: 'DustMushroom'
 };

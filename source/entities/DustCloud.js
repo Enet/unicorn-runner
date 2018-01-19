@@ -3,11 +3,11 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import spriteDescription from 'sprites/Explosion.js';
+import spriteDescription from 'sprites/DustCloud.js';
 
 const animation = spriteDescription.animations[0];
 
-export default class Explosion extends StaticEntity {
+export default class DustCloud extends StaticEntity {
     entityWillUpdate (deltaTime) {
         super.entityWillUpdate(...arguments);
         this._lifeTime = this._lifeTime - deltaTime + deltaTime / 3;
@@ -25,6 +25,6 @@ export default class Explosion extends StaticEntity {
     }
 }
 
-Explosion.images = {
-    default: 'Explosion'
+DustCloud.images = {
+    default: 'DustCloud'
 };
