@@ -1,6 +1,9 @@
 import {
     Vector2
 } from 'engine/math.js';
+import {
+    REACTION_NO
+} from 'engine/constants.js';
 import Trait from 'traits/Trait.js';
 
 import {
@@ -57,6 +60,6 @@ export default class Pickable extends Trait {
 
         const {entity} = this;
         entity.body.move(new Vector2(3, -3));
-        entity.body.collidable = false;
+        entity.body.reaction = REACTION_NO;
     }
 }

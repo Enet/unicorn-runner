@@ -2,6 +2,9 @@ import Collision from './Collision.js';
 import {
     Vector2
 } from './math.js';
+import {
+    REACTION_TRAP
+} from './constants.js';
 
 export default class World {
     constructor ({top=-Infinity, left=-Infinity, bottom=Infinity, right=Infinity, gravity, friction}) {
@@ -82,11 +85,19 @@ export default class World {
                 if (body1 === body2) {
                     continue;
                 }
-                if (!body1.collidable || !body2.collidable) {
+                if (!body1.reaction || !body2.reaction) {
                     continue;
                 }
                 const collision = new Collision(body1, body2);
-                collision.resolve();
+                if (body1.reaction === REACTION_TRAP ||
+                    body2.reaction === REACTION_TRAP) {
+                    collision.resolve((data) => {
+                        body1.emit('collision', body2, data);
+                        body2.emit('collision', body1, data);
+                    });
+                } else {
+                    collision.resolve();
+                }
             }
         }
     }

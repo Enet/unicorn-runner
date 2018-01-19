@@ -96,9 +96,14 @@ export default class Collision {
         this._collision = {body1, body2, edge, vector, contact};
     }
 
-    resolve () {
+    resolve (callback) {
         const collision = this._collision;
         if (!collision) {
+            return;
+        }
+
+        if (callback) {
+            callback(collision);
             return;
         }
 

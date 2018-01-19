@@ -1,4 +1,5 @@
 const imageNames = [
+    'Empty',
     'Bush',
     'Explosion',
     'Mushroom',
@@ -27,6 +28,8 @@ const levelNames = [
 ];
 
 const entityNames = [
+    'HorLaser',
+    'VerLaser',
     'Bush',
     'Explosion',
     'TopMushroom',
@@ -64,5 +67,7 @@ entityNames.forEach((entityName) => {
 
 export const aliases = {
     TopMushroom: 'Mushroom',
-    LeftMushroom: 'Mushroom'
+    LeftMushroom: 'Mushroom',
+    VerLaser: 'Empty',
+    HorLaser: 'Empty'
 };

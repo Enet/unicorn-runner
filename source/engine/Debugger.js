@@ -16,7 +16,7 @@ export default class Debugger {
 
         const {bodies} = this._world;
         bodies.all.forEach((body) => {
-            if (body.collidable) {
+            if (body.reaction) {
                 this._renderPolygon(context, body.points);
             } else {
                 this._renderLine(context, body.points[0], body.points[1]);

@@ -101,7 +101,7 @@ export default class Level {
     }
 
     setHealth (health) {
-        this.callbacks.onHealthChange(health);
+        this.callbacks.onHealthChange(Math.floor(health));
     }
 
     update (deltaTime) {

@@ -15,8 +15,4 @@ export default class StaticBoxBody extends Body {
     update () {
 
     }
-
-    emit () {
-
-    }
 }

@@ -2,7 +2,8 @@ export default {
     tiles: [{
         ranges: [
             [0, 1, 3, 7],
-            [1, 20, 6, 7],
+            [1, 10, 6, 7],
+            [14, 20, 6, 7],
             [24, 34, 6, 7],
             [38, 48, 4, 5],
             [51, 53, 4, 5],
@@ -26,10 +27,19 @@ export default {
     }],
     entities: [{
         name: 'Bug',
-        position: [780, 100]
+        position: [780, 0]
     }, {
-        name: 'LeftMushroom',
-        position: [740, 300]
+        name: 'VerLaser',
+        position: [630, 330]
+    }, {
+        name: 'HorLaser',
+        position: [690, 390]
+    }, {
+        name: 'HorLaser',
+        position: [750, 390]
+    }, {
+        name: 'HorLaser',
+        position: [810, 390]
     }] || [{
         name: 'Dollar10',
         position: [500, 0]

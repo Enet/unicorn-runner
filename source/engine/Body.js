@@ -2,12 +2,15 @@ import EventEmitter from 'events';
 import {
     Vector2
 } from './math.js';
+import {
+    REACTION_FULL
+} from './constants.js';
 
 export default class Body extends EventEmitter {
-    constructor ({points, stiffness=1, collidable=true}) {
+    constructor ({points, stiffness=1, reaction=REACTION_FULL}) {
         super();
 
-        Object.assign(this, {points, stiffness, collidable});
+        Object.assign(this, {points, stiffness, reaction});
         this._updateCenterOfMass();
         this._updateAabb();
 

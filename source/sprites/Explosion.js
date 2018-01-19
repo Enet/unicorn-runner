@@ -4,37 +4,37 @@ export default {
         rect: [0, 0, 180, 180]
     }, {
         name: 'explosion-2',
-        rect: [0, 0, 180, 180]
-    }, {
-        name: 'explosion-3',
         rect: [180, 0, 180, 180]
     }, {
-        name: 'explosion-4',
+        name: 'explosion-3',
         rect: [360, 0, 180, 180]
     }, {
-        name: 'explosion-5',
+        name: 'explosion-4',
         rect: [540, 0, 180, 180]
     }, {
-        name: 'explosion-6',
+        name: 'explosion-5',
         rect: [720, 0, 180, 180]
     }, {
-        name: 'explosion-7',
+        name: 'explosion-6',
         rect: [900, 0, 180, 180]
     }, {
-        name: 'explosion-8',
+        name: 'explosion-7',
         rect: [1080, 0, 180, 180]
     }, {
-        name: 'explosion-9',
+        name: 'explosion-8',
         rect: [1260, 0, 180, 180]
     }, {
-        name: 'explosion-10',
+        name: 'explosion-9',
         rect: [1440, 0, 180, 180]
     }, {
-        name: 'explosion-11',
+        name: 'explosion-10',
         rect: [1620, 0, 180, 180]
     }, {
-        name: 'explosion-12',
+        name: 'explosion-11',
         rect: [1800, 0, 180, 180]
+    }, {
+        name: 'explosion-12',
+        rect: [1920, 0, 180, 180]
     }],
     animations: [{
         name: 'default',
