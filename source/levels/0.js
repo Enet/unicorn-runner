@@ -1,6 +1,6 @@
 export default {
     meta: {
-        background: 'City',
+        background: 'Mountains',
         bounds: [-300, 3000, 700, -300]
     },
     tiles: [{
@@ -30,7 +30,7 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Rainbow',
+        name: 'TopDustMushroom',
         position: [250, 0]
     }, {
         name: 'Box',

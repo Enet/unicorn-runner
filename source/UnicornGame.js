@@ -89,8 +89,10 @@ export default class UnicornGame extends Game {
         });
 
         scene.add(camera);
-        this._debugger = new Debugger(level.world, camera, context);
         this._game = {renderer, scene, camera, level};
+        if (settings.debug) {
+            this._debugger = new Debugger(level.world, camera, context);
+        }
     }
 
     _onUpdate (deltaTime) {
@@ -100,7 +102,7 @@ export default class UnicornGame extends Game {
 
         const {renderer, scene} = this._game;
         renderer.render(scene);
-        this._debugger.render();
+        this._debugger && this._debugger.render();
     }
 }
 

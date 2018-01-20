@@ -1,21 +1,20 @@
 import {
-    Vector2,
-    Color
+    Vector2
 } from 'engine/math.js';
 import ParticleSystem from 'engine/ParticleSystem.js';
 import Trait from 'traits/Trait.js';
 
 import {
-    FLYING_BOOST
+    FLYING_BOOST,
+    RED_COLOR,
+    ORANGE_COLOR,
+    YELLOW_COLOR,
+    GREEN_COLOR,
+    SKY_COLOR,
+    BLUE_COLOR,
+    VIOLET_COLOR
 } from 'constants.js';
 
-const RED_COLOR = new Color(255, 0, 0);
-const ORANGE_COLOR = new Color(255, 128, 0);
-const YELLOW_COLOR = new Color(255, 255, 0);
-const GREEN_COLOR = new Color(0, 255, 0);
-const SKY_COLOR = new Color(0, 128, 255);
-const BLUE_COLOR = new Color(0, 0, 255);
-const VIOLET_COLOR = new Color(255, 0, 255);
 const rainbowColors = [
     RED_COLOR,
     ORANGE_COLOR,

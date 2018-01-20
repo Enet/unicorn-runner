@@ -52,7 +52,7 @@ export default class ParticleSystem extends Renderable {
         this._amountAccumulator = amountAccumulator;
 
         if (!this._particles.size) {
-            this._stopCallbacks.forEach(stopCallback => stopCallback(this));
+            this._callbacks.forEach(callback => callback(this));
             return;
         }
 
@@ -65,16 +65,16 @@ export default class ParticleSystem extends Renderable {
         });
     }
 
-    stop (stopCallback) {
+    stop (callback) {
         this.options.amount = 0;
-        this._stopCallbacks.add(stopCallback);
+        callback && this._callbacks.add(callback);
     }
 
     constructor (options={}) {
         super(...arguments);
         this._particles = new Set();
+        this._callbacks = new Set();
         this._amountAccumulator = 0;
-        this._stopCallbacks = new Set();
 
         this.options = this._initOptions(options);
         options.position = options.position || new Vector2(0, 0);
