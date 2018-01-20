@@ -30,9 +30,8 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Platform',
-        position: [250, 400],
-        to: [550, 100]
+        name: 'Rainbow',
+        position: [250, 0]
     }, {
         name: 'Box',
         position: [450, 330],

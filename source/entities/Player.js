@@ -12,8 +12,7 @@ import Fight from 'traits/Fight.js';
 
 export default class Player extends Unicorn {
     get scale () {
-        const x = 2 * this.run.getDirection() - 1
-        return new Vector2(x, 1);
+        return new Vector2(this.run.getDirection(), 1);
     }
 
     _getFrame () {

@@ -99,12 +99,27 @@ export class Color {
     }
 
     mix (color, slider) {
+        if (this.isEqual(color)) {
+            return color;
+        }
         slider = Math.max(0, Math.min(1, slider));
         let {r, g, b} = this;
         r = Math.floor(r + (color.r - r) * slider);
         g = Math.floor(g + (color.g - g) * slider);
         b = Math.floor(b + (color.b - b) * slider);
         return new Color(r, g, b);
+    }
+
+    isEqual (color) {
+        if (this === color) {
+            return true;
+        }
+        if (this.r === color.r &&
+            this.g === color.g &&
+            this.b === color.b) {
+            return true;
+        }
+        return false;
     }
 
     toString () {

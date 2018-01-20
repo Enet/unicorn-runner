@@ -1,12 +1,39 @@
 import {
-    Vector2
+    Vector2,
+    Color
 } from './math.js';
 import Renderable from './Renderable.js';
 import Particle from './Particle.js';
 
+const WHITE_COLOR = new Color(255, 255, 255);
+const defaults = {
+    amount: 100,
+    amountSpeed: 10,
+    velocity: 0,
+    velocityError: 50,
+    gravity: 0,
+    direction: 0,
+    directionError: 50,
+    lifeTime: 2000,
+    lifeTimeError: 50,
+    size: 5,
+    sizeError: 50,
+    sizeSpeed: 0.001,
+    colorError: 50,
+    colorSpeed: 0.001,
+    alpha: 1,
+    alphaError: 50,
+    alphaSpeed: 0.001
+};
+
 export default class ParticleSystem extends Renderable {
     get position () {
-        return this.options.position;
+        const {position, offset} = this.options;
+        return position.add(offset);
+    }
+
+    get mode () {
+        return this.options.mode;
     }
 
     render (context, camera) {
@@ -24,6 +51,11 @@ export default class ParticleSystem extends Renderable {
         }
         this._amountAccumulator = amountAccumulator;
 
+        if (!this._particles.size) {
+            this._stopCallbacks.forEach(stopCallback => stopCallback(this));
+            return;
+        }
+
         this._particles.forEach((particle) => {
             if (particle.isDead()) {
                 this._particles.delete(particle);
@@ -33,27 +65,42 @@ export default class ParticleSystem extends Renderable {
         });
     }
 
+    stop (stopCallback) {
+        this.options.amount = 0;
+        this._stopCallbacks.add(stopCallback);
+    }
+
     constructor (options={}) {
         super(...arguments);
         this._particles = new Set();
         this._amountAccumulator = 0;
+        this._stopCallbacks = new Set();
 
-        options.amount = +options.amount || 100;
-        options.amountSpeed = +options.amountSpeed || 1;
-        this.options = options;
+        this.options = this._initOptions(options);
+        options.position = options.position || new Vector2(0, 0);
+        options.offset = options.offset || new Vector2(0, 0);
+        options.startColor = options.startColor || WHITE_COLOR;
+        options.endColor = options.endColor || options.startColor;
+    }
+
+    _initOptions (options) {
+        for (let d in defaults) {
+            const option = +options[d];
+            options[d] = isNaN(option) ? defaults[d] : option;
+        }
+        return options;
     }
 
     _createParticle ({
-        position,
-        velocity=0.2, velocityError=50,
-        direction=0, directionError=50,
-        lifeTime=2000, lifeTimeError=50,
-        size=5, sizeError=50, sizeSpeed=0.001,
-        startColor, endColor, colorError=50, colorSpeed=0.001,
-        alpha=1, alphaError=50, alphaSpeed=0.001,
+        velocity, velocityError, gravity,
+        direction, directionError,
+        lifeTime, lifeTimeError,
+        size, sizeError, sizeSpeed,
+        startColor, endColor, colorError, colorSpeed,
+        alpha, alphaError, alphaSpeed,
         processParticleOptions
     }) {
-        position = new Vector2(0, 0);
+        const position = new Vector2(0, 0);
         velocity = this._getRandomValue(velocity, velocityError);
         direction = this._getRandomValue(direction, directionError, Math.PI);
         lifeTime = this._getRandomValue(lifeTime, lifeTimeError);
@@ -64,7 +111,7 @@ export default class ParticleSystem extends Renderable {
         alphaSpeed *= -1;
         colorSpeed *= -1;
 
-        velocity = new Vector2(velocity * Math.cos(direction), velocity * Math.sin(direction));
+        velocity = new Vector2(velocity * Math.cos(direction), velocity * Math.sin(direction) + gravity);
         const colorProgress = 1 - Math.random() * colorError / 100;
 
         let particleOptions = {
@@ -75,7 +122,6 @@ export default class ParticleSystem extends Renderable {
         if (processParticleOptions) {
             particleOptions = processParticleOptions(particleOptions);
         }
-
         return new Particle(particleOptions);
     }
 

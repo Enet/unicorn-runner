@@ -10,6 +10,7 @@ export default class Body extends EventEmitter {
     constructor ({points, stiffness=1, reaction=REACTION_FULL}) {
         super();
 
+        this.center = new Vector2(0, 0);
         Object.assign(this, {points, stiffness, reaction});
         this._updateCenterOfMass();
         this._updateAabb();
@@ -55,7 +56,7 @@ export default class Body extends EventEmitter {
         const center = points
             .reduce((accumulator, point) => accumulator.add(point), zero)
             .length(1 / points.length);
-        this.center = center;
+        this.center.set(center);
     }
 
     _updatePoints () {

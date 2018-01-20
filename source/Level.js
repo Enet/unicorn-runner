@@ -1,10 +1,8 @@
 import World from 'engine/World.js';
 import StaticBoxBody from 'engine/StaticBoxBody.js';
 import {
-    Vector2,
-    Color
+    Vector2
 } from 'engine/math.js';
-import ParticleSystem from 'engine/ParticleSystem.js';
 
 import Tile from 'backgrounds/Tile.js';
 import Lava from 'backgrounds/Lava.js';
@@ -40,25 +38,6 @@ export default class Level {
         this._slowFactor = 0;
         this._fastFactor = 0;
         this._isStopped = false;
-
-        const ps = new ParticleSystem({
-            position: new Vector2(250, 360),
-            startColor: new Color(255, 0, 255),
-            endColor: new Color(255, 255, 255),
-            size: 2,
-            amount: 1000,
-            amountSpeed: 100,
-            direction: -Math.PI / 2,
-            processParticleOptions123: (options) => {
-                const r = Math.floor(Math.random() * 255);
-                const g = Math.floor(Math.random() * 255);
-                const b = Math.floor(Math.random() * 255);
-                options.startColor = new Color(r, g, b);
-                return options;
-            }
-        });
-        this.scene.add(ps);
-        this.ps = ps;
     }
 
     addEntity (entity) {
@@ -132,8 +111,6 @@ export default class Level {
         if (this._isStopped) {
             return;
         }
-
-        this.ps.update(deltaTime);
 
         const {effects} = this;
         if (effects.has('slow') && ++this._slowFactor % 2) {
