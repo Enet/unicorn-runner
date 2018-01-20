@@ -24,7 +24,7 @@ export default class DustCloud extends StaticEntity {
             directionError: 50,
             size: 2,
             sizeError: 100,
-            amount: 1000,
+            amount: 100,
             amountSpeed: 100,
             alphaSpeed: 0.005,
             velocity: 1,

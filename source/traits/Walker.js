@@ -7,7 +7,7 @@ export default class Walker extends Trait {
     getDirection () {
         const {player} = this.level;
         const {entity} = this;
-        if (Math.abs(player.body.center.x - entity.body.center.x) < 100) {
+        if (Math.abs(player.body.center.x - entity.body.center.x) < 150) {
             return 0;
         } else {
             return this._direction;

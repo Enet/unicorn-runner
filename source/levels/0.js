@@ -30,8 +30,9 @@ export default {
         ]
     }],
     entities: [{
-        name: 'TopDustMushroom',
-        position: [250, 0]
+        name: 'Lizard',
+        position: [250, 0],
+        range: [250, 300]
     }, {
         name: 'Box',
         position: [450, 330],
