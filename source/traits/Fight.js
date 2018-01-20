@@ -44,7 +44,9 @@ export default class Fight extends Trait {
         if (body.center.y >= this.entity.body.center.y + this.entity.size.height / 2) {
             return;
         }
-        body.move(new Vector2(0.1, 0));
+
+        const direction = this.entity.run && this.entity.run.getDirection();
+        body.move(new Vector2(direction * 0.1, 0));
         if (!body.entity.killable || body.entity.killable.isDead()) {
             return;
         }

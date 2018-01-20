@@ -26,17 +26,17 @@ export default class Enemy extends Trait {
             return;
         }
 
+        const currentTime = Date.now();
+        if (currentTime - attack.prevTime < 1000) {
+            return;
+        }
+
         let isPrevented = false;
         const {onAttack} = this._callbacks;
         onAttack && onAttack(() => {
             isPrevented = true;
         });
         if (isPrevented) {
-            return;
-        }
-
-        const currentTime = Date.now();
-        if (currentTime - attack.prevTime < 1000) {
             return;
         }
 

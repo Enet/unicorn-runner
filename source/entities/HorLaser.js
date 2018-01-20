@@ -5,17 +5,23 @@ import {
 
 import Laser from 'traits/Laser.js';
 import spriteDescription from 'sprites/Empty.js';
+import {
+    RED_COLOR
+} from 'constants.js';
 
 export default class HorLaser extends StaticEntity {
+    get index () {
+        return 1;
+    }
+
     get opacity () {
-        return 0.25 + 0.75 * Math.abs(Math.sin(this._lifeTime / 100));
+        return 0.75 * Math.abs(Math.sin(this._lifeTime / 100));
     }
 
     render (context) {
-        const color = 'rgb(85,226,247)';
         const alpha = context.globalAlpha;
         const {offset} = this;
-        context.fillStyle = color;
+        context.fillStyle = RED_COLOR.toString();
         for (let i = 1; i < 5; i++) {
             context.globalAlpha = alpha * i * 0.25;
             context.beginPath();

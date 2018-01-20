@@ -1,6 +1,6 @@
 export default {
     meta: {
-        background: 'Mountains',
+        background: 'City',
         bounds: [-300, 3000, 700, -300]
     },
     tiles: [{
@@ -30,7 +30,10 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Lizard',
+        name: 'VerLaser',
+        position: [250, 330]
+    }, {
+        name: 'Box',
         position: [250, 0],
         range: [250, 300]
     }, {
@@ -44,6 +47,30 @@ export default {
     }, {
         name: 'Box',
         position: [780, 0]
+    }, {
+        name: 'Box',
+        position: [780, 70]
+    }, {
+        name: 'Box',
+        position: [780, 150]
+    }, {
+        name: 'Box',
+        position: [780, 210]
+    }, {
+        name: 'Box',
+        position: [780, 270]
+    }, {
+        name: 'Box',
+        position: [780, 330]
+    }, {
+        name: 'Box',
+        position: [780, 390]
+    }, {
+        name: 'Box',
+        position: [780, 450]
+    }, {
+        name: 'Box',
+        position: [720, 0]
     }, {
         name: 'HorLaser',
         position: [690, 390]

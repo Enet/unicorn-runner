@@ -22,7 +22,7 @@ export default class Tile extends Background {
     }
 
     render (context, camera) {
-        const indexWidth = getTileIndexByDistance(camera.size.width);
+        const indexWidth = getTileIndexByDistance(camera.size.width) + 1;
         const startIndex = getTileIndexByDistance(camera.position.x);
         const endIndex = startIndex + indexWidth;
         const {tiles, sprite} = this;
