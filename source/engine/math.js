@@ -92,3 +92,23 @@ export class Vector2 {
         return this.x * vector.x + this.y * vector.y;
     }
 }
+
+export class Color {
+    constructor (r, g, b) {
+        Object.assign(this, {r, g, b});
+    }
+
+    mix (color, slider) {
+        slider = Math.max(0, Math.min(1, slider));
+        let {r, g, b} = this;
+        r = Math.floor(r + (color.r - r) * slider);
+        g = Math.floor(g + (color.g - g) * slider);
+        b = Math.floor(b + (color.b - b) * slider);
+        return new Color(r, g, b);
+    }
+
+    toString () {
+        const {r, g, b} = this;
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+}
