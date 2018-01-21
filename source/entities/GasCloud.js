@@ -2,9 +2,6 @@ import StaticEntity from 'entities/StaticEntity.js';
 import {
     Vector2
 } from 'engine/math.js';
-import {
-    REACTION_TRAP
-} from 'engine/constants.js';
 
 import spriteDescription from 'sprites/GasCloudSprite.js';
 import {
@@ -66,12 +63,6 @@ export default class GasCloud extends StaticEntity {
 
     _getSize () {
         return new Vector2(360, 360);
-    }
-
-    _createBody () {
-        const body = super._createBody(...arguments);
-        body.reaction = REACTION_TRAP;
-        return body;
     }
 }
 
