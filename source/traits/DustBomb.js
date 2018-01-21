@@ -60,6 +60,15 @@ export default class DustBomb extends Trait {
         this.entity.body.move(new Vector2(-vx, -vy));
         this.entity.body.setGravity(null);
 
+        let isCloudPrevented = false;
+        const {onBoom} = this._callbacks;
+        onBoom && onBoom(body, () => {
+            isCloudPrevented = true;
+        });
+        if (isCloudPrevented) {
+            return;
+        }
+
         const {level} = this;
         const {manager} = level;
         const images = {default: manager.getImage('DustCloud')};
@@ -67,7 +76,5 @@ export default class DustBomb extends Trait {
         const cloud = new DustCloud({level, images, x, y});
         level.addEntity(cloud);
 
-        const {onBoom} = this._callbacks;
-        onBoom && onBoom(body);
     }
 }

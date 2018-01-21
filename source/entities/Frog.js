@@ -5,6 +5,7 @@ import {
 
 import Killable from 'traits/Killable.js';
 import Jumper from 'traits/Jumper.js';
+import Obstacle from 'traits/Obstacle.js';
 import spriteDescription from 'sprites/Frog.js';
 
 export default class Frog extends Entity {
@@ -50,7 +51,8 @@ export default class Frog extends Entity {
             new Killable({
                 onKill: this._onKill.bind(this)
             }),
-            new Jumper(settings.range)
+            new Jumper(settings.range),
+            new Obstacle()
         ];
     }
 

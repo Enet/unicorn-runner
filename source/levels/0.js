@@ -30,9 +30,8 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Frog',
-        position: [350, 150],
-        range: [300, 310]
+        name: 'Trap',
+        position: [350, 150]
     }, {
         name: 'Box',
         position: [450, 330],
