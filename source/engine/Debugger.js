@@ -23,7 +23,7 @@ export default class Debugger {
             }
         });
 
-        const {width, height} = context.canvas;
+        const {width, height} = camera.size;
         const {top, left, bottom, right} = this._world.bounds;
         this._renderLine(context, new Vector2(camera.position.x, top), new Vector2(camera.position.x + width, top), 'red');
         this._renderLine(context, new Vector2(camera.position.x, bottom), new Vector2(camera.position.x + width, bottom), 'red');

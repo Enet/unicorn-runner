@@ -1,15 +1,15 @@
 import ParallaxBackground from 'backgrounds/ParallaxBackground.js';
 
-export default class Night extends ParallaxBackground {
+export default class NightBackground extends ParallaxBackground {
     _getPosition (context, camera, {x, y, i}) {
-        const {height} = context.canvas;
+        const {height} = camera.size;
         const image = this.images[i];
         y = height - image.naturalHeight;
         return {x, y};
     }
 }
 
-Night.images = {
+NightBackground.images = {
     0: 'Night0',
     1: 'Night1',
     2: 'Night2'

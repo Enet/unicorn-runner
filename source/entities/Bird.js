@@ -6,7 +6,7 @@ import {
 import Killable from 'traits/Killable.js';
 import Walker from 'traits/Walker.js';
 import BirdBehaviour from 'traits/BirdBehaviour.js';
-import spriteDescription from 'sprites/Bird.js';
+import spriteDescription from 'sprites/BirdSprite.js';
 
 export default class Bird extends Entity {
     get scale () {

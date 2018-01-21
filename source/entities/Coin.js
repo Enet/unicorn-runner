@@ -5,12 +5,12 @@ import {
 
 import Score from 'traits/Score.js';
 import Pickable from 'traits/Pickable.js';
-import spriteDescription from 'sprites/Dollar.js';
+import spriteDescription from 'sprites/CoinSprite.js';
 
-export default class Dollar extends Entity {
+export default class Coin extends Entity {
     entityWillUpdate (deltaTime) {
         super.entityWillUpdate(...arguments);
-        if (this._lifeTime > 500) {
+        if (this._lifeTime > 500 && this.traits.size === 1) {
             this.traits.add(new Pickable());
         }
     }
@@ -24,7 +24,7 @@ export default class Dollar extends Entity {
     }
 
     _getFrame () {
-        return 'dollar';
+        return 'coin';
     }
 
     _getSize () {
@@ -42,4 +42,4 @@ export default class Dollar extends Entity {
     }
 }
 
-Dollar.images = {};
+Coin.images = {};

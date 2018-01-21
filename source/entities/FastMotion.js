@@ -1,6 +1,6 @@
 import SlowMotion from 'entities/SlowMotion.js';
 
-import spriteDescription from 'sprites/FastMotion.js';
+import spriteDescription from 'sprites/FastMotionSprite.js';
 
 export default class FastMotion extends SlowMotion {
     _getSpriteDescription () {

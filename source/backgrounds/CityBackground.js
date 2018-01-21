@@ -1,10 +1,13 @@
 import ParallaxBackground from 'backgrounds/ParallaxBackground.js';
 
-export default class City extends ParallaxBackground {
+const COLOR_CITY_1 = '#7aacf1';
+const COLOR_CITY_2 = '#ffffff';
+
+export default class CityBackground extends ParallaxBackground {
     _getGradient () {
         return {
-            0: '#7aacf1',
-            1: '#ffffff'
+            0: COLOR_CITY_1,
+            1: COLOR_CITY_2
         };
     }
 
@@ -14,7 +17,7 @@ export default class City extends ParallaxBackground {
     }
 }
 
-City.images = {
+CityBackground.images = {
     1: 'City1',
     2: 'City2',
     3: 'City3',

@@ -8,9 +8,9 @@ import Killable from 'traits/Killable.js';
 import Walker from 'traits/Walker.js';
 import Enemy from 'traits/Enemy.js';
 import Obstacle from 'traits/Obstacle.js';
-import spriteDescription from 'sprites/Lizard.js';
+import spriteDescription from 'sprites/LizardSprite.js';
 import {
-    ORANGE_COLOR
+    COLOR_ORANGE
 } from 'constants.js';
 
 export default class Lizard extends Entity {
@@ -93,7 +93,7 @@ export default class Lizard extends Entity {
             velocity: 0.3,
             alphaSpeed: 0.005,
             size: 1,
-            startColor: ORANGE_COLOR,
+            startColor: COLOR_ORANGE,
             mode: 'lighter'
         });
         particleSystem.update(0);

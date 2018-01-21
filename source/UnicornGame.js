@@ -6,6 +6,7 @@ import Debugger from 'engine/Debugger.js';
 
 import Level from 'Level.js';
 import {
+    CAMERA_OFFSET,
     KEY_SPACE,
     KEY_UP,
     KEY_DOWN,
@@ -35,8 +36,8 @@ export default class UnicornGame extends Game {
     _centerCamera () {
         const {camera, level} = this._game;
         const {player} = level;
-        camera.position.x = Math.max(0, player.body.center.x - 200);
-        camera.position.y = player.body.center.y - 300;
+        camera.position.x = player.body.center.x - CAMERA_OFFSET.x;
+        camera.position.y = player.body.center.y - CAMERA_OFFSET.y;
     }
 
     _controlPlayer () {

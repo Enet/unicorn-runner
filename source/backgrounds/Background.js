@@ -1,8 +1,11 @@
 import Renderable from 'engine/Renderable.js';
+import {
+    INDEX_STATIC_BACKGROUND
+} from 'constants.js';
 
 export default class Background extends Renderable {
     get index () {
-        return -1000;
+        return INDEX_STATIC_BACKGROUND;
     }
 
     constructor ({images}) {
@@ -10,3 +13,5 @@ export default class Background extends Renderable {
         this.images = images;
     }
 }
+
+Background.images = {};

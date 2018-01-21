@@ -5,7 +5,7 @@ import {
 
 import Killable from 'traits/Killable.js';
 import Enemy from 'traits/Enemy.js';
-import spriteDescription from 'sprites/Bug.js';
+import spriteDescription from 'sprites/BugSprite.js';
 
 export default class Bug extends Entity {
     get offset () {

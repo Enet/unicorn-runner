@@ -7,7 +7,7 @@ import Obstacle from 'traits/Obstacle.js';
 import {
     TILE_SIZE
 } from 'constants.js';
-import spriteDescription from 'sprites/Box.js';
+import spriteDescription from 'sprites/BoxSprite.js';
 
 export default class Box extends Entity {
     _getSpriteDescription () {

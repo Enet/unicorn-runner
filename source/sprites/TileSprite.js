@@ -4,7 +4,7 @@ import {
 
 export default {
     frames: [{
-        name: 'ground',
+        name: 'tile',
         rect: [0, 0, TILE_SIZE, TILE_SIZE]
     }]
 };

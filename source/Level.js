@@ -4,8 +4,8 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import Tile from 'backgrounds/Tile.js';
-import Lava from 'backgrounds/Lava.js';
+import TileBackground from 'backgrounds/TileBackground.js';
+import LavaBackground from 'backgrounds/LavaBackground.js';
 import Player from 'entities/Player.js';
 import {
     entities,
@@ -84,13 +84,6 @@ export default class Level {
         this.callbacks.onGameWin();
     }
 
-    restartGame () {
-        const {player} = this;
-        player.killable.reviveFully();
-        this.placePlayer();
-        this._isStopped = false;
-    }
-
     placePlayer () {
         const {player} = this;
         player.body.place(new Vector2(TILE_SIZE, TILE_SIZE));
@@ -100,13 +93,13 @@ export default class Level {
         return this._isStopped;
     }
 
-    changeScore (delta) {
-        this._score += delta;
-        this.callbacks.onScoreChange(Math.floor(this._score));
-    }
-
     getScore () {
         return this._score;
+    }
+
+    changeScore (deltaScore) {
+        this._score += deltaScore;
+        this.callbacks.onScoreChange(Math.floor(this._score));
     }
 
     setHealth (health) {
@@ -212,8 +205,8 @@ export default class Level {
 
     _initTileBackground () {
         const {scene} = this;
-        const images = this._getImageNodes(Tile.images);
-        const background = new Tile({
+        const images = this._getImageNodes(TileBackground.images);
+        const background = new TileBackground({
             images,
             tiles: this._tileMatrix
         });
@@ -223,7 +216,7 @@ export default class Level {
 
     _initLavaBackground () {
         const {scene, bounds} = this;
-        const background = new Lava({bounds});
+        const background = new LavaBackground({bounds});
         scene.add(background);
         return background;
     }

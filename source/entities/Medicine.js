@@ -5,7 +5,7 @@ import {
 
 import MedicineBehaviour from 'traits/MedicineBehaviour.js';
 import Pickable from 'traits/Pickable.js';
-import spriteDescription from 'sprites/Medicine.js';
+import spriteDescription from 'sprites/MedicineSprite.js';
 
 export default class Medicine extends Entity {
     _getSpriteDescription () {

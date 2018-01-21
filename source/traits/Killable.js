@@ -58,11 +58,6 @@ export default class Killable extends Trait {
         }
     }
 
-    reviveFully () {
-        this._health = 100;
-        this._afterDeathTime = 0;
-    }
-
     _onKill () {
         Object.defineProperty(this.entity, 'opacity', {
             configurable: true,

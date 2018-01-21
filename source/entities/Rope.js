@@ -8,7 +8,7 @@ import {
 import Entity from 'entities/Entity.js';
 
 import {
-    BLACK_COLOR
+    COLOR_BLACK
 } from 'constants.js';
 
 export default class Rope extends Entity {
@@ -23,7 +23,7 @@ export default class Rope extends Entity {
     render (context, camera) {
         const {points} = this.body;
         context.save();
-        context.strokeStyle = BLACK_COLOR.toString();
+        context.strokeStyle = COLOR_BLACK.toString();
         context.lineWidth = 3;
         context.beginPath();
         points.forEach((point) => {

@@ -6,7 +6,7 @@ import {
 import Killable from 'traits/Killable.js';
 import DustBomb from 'traits/DustBomb.js';
 import FruitFlyBehaviour from 'traits/FruitFlyBehaviour.js';
-import spriteDescription from 'sprites/FruitFly.js';
+import spriteDescription from 'sprites/FruitFlySprite.js';
 
 export default class FruitFly extends Entity {
     get offset () {

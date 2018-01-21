@@ -78,13 +78,13 @@ export default {
         name: 'HorLaser',
         position: [810, 390]
     }] || [{
-        name: 'Dollar10',
+        name: 'Coin10',
         position: [500, 0]
     }, {
-        name: 'Dollar50',
+        name: 'Coin50',
         position: [500, 60]
     }, {
-        name: 'Dollar100',
+        name: 'Coin100',
         position: [600, 0]
     }, {
         name: 'Bush',

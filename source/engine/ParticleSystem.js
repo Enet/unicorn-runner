@@ -1,11 +1,12 @@
 import {
-    Vector2,
-    Color
+    Vector2
 } from './math.js';
+import {
+    COLOR_WHITE
+} from './constants.js';
 import Renderable from './Renderable.js';
 import Particle from './Particle.js';
 
-const WHITE_COLOR = new Color(255, 255, 255);
 const defaults = {
     amount: 100,
     amountSpeed: 10,
@@ -79,7 +80,7 @@ export default class ParticleSystem extends Renderable {
         this.options = this._initOptions(options);
         options.position = options.position || new Vector2(0, 0);
         options.offset = options.offset || new Vector2(0, 0);
-        options.startColor = options.startColor || WHITE_COLOR;
+        options.startColor = options.startColor || COLOR_WHITE;
         options.endColor = options.endColor || options.startColor;
     }
 

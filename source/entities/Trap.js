@@ -5,7 +5,7 @@ import {
 
 import DustBomb from 'traits/DustBomb.js';
 import Obstacle from 'traits/Obstacle.js';
-import spriteDescription from 'sprites/Trap.js';
+import spriteDescription from 'sprites/TrapSprite.js';
 
 export default class Trap extends Entity {
     get angle () {

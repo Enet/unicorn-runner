@@ -6,9 +6,10 @@ import {
     REACTION_TRAP
 } from 'engine/constants.js';
 
-import spriteDescription from 'sprites/GasCloud.js';
+import spriteDescription from 'sprites/GasCloudSprite.js';
 import {
-    GAS_CLOUD_TIME
+    GAS_CLOUD_TIME,
+    INDEX_CLOUD
 } from 'constants.js';
 
 const ONE_OF_FIVE = GAS_CLOUD_TIME * 0.2;
@@ -16,7 +17,7 @@ const FOUR_OF_FIVE = GAS_CLOUD_TIME - ONE_OF_FIVE;
 
 export default class GasCloud extends StaticEntity {
     get index () {
-        return 600;
+        return INDEX_CLOUD;
     }
 
     get opacity () {

@@ -2,7 +2,7 @@ import {
     Matrix
 } from 'engine/math.js';
 
-export default function generateTileMatrix (tiles, patterns = [], iterator) {
+export default function generateTileMatrix (tiles, patterns=[], iterator) {
     const matrix = new Matrix();
     for (const {xIndex, yIndex} of unzipTiles(tiles, patterns, 0, 0)) {
         matrix.setElement(xIndex, yIndex, iterator(xIndex, yIndex));

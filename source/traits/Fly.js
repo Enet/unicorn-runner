@@ -6,23 +6,23 @@ import Trait from 'traits/Trait.js';
 
 import {
     FLYING_BOOST,
-    RED_COLOR,
-    ORANGE_COLOR,
-    YELLOW_COLOR,
-    GREEN_COLOR,
-    SKY_COLOR,
-    BLUE_COLOR,
-    VIOLET_COLOR
+    COLOR_RED,
+    COLOR_ORANGE,
+    COLOR_YELLOW,
+    COLOR_GREEN,
+    COLOR_SKY,
+    COLOR_BLUE,
+    COLOR_VIOLET
 } from 'constants.js';
 
 const rainbowColors = [
-    RED_COLOR,
-    ORANGE_COLOR,
-    YELLOW_COLOR,
-    GREEN_COLOR,
-    SKY_COLOR,
-    BLUE_COLOR,
-    VIOLET_COLOR
+    COLOR_RED,
+    COLOR_ORANGE,
+    COLOR_YELLOW,
+    COLOR_GREEN,
+    COLOR_SKY,
+    COLOR_BLUE,
+    COLOR_VIOLET
 ];
 
 export default class Fly extends Trait {

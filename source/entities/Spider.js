@@ -7,15 +7,15 @@ import Entity from 'entities/Entity.js';
 
 import Rope from 'entities/Rope.js';
 import Killable from 'traits/Killable.js';
-import Dollar10 from 'entities/Dollar10.js';
-import Dollar50 from 'entities/Dollar50.js';
-import Dollar100 from 'entities/Dollar100.js';
-import spriteDescription from 'sprites/Spider.js';
+import Coin10 from 'entities/Coin10.js';
+import Coin50 from 'entities/Coin50.js';
+import Coin100 from 'entities/Coin100.js';
+import spriteDescription from 'sprites/SpiderSprite.js';
 
-const dollars = {
-    10: Dollar10,
-    50: Dollar50,
-    100: Dollar100
+const coins = {
+    10: Coin10,
+    50: Coin50,
+    100: Coin100
 };
 
 export default class Spider extends Entity {
@@ -70,11 +70,11 @@ export default class Spider extends Entity {
 
         const {level} = this;
         const {manager} = level;
-        const images = {default: manager.getImage(`Dollar${nominal}`)};
+        const images = {default: manager.getImage(`Coin${nominal}`)};
         const x = this.level.player.body.center.x;
         const y = this.level.player.body.center.y;
-        const Dollar = dollars[nominal];
-        const coin = new Dollar({level, x, y, images});
+        const Coin = coins[nominal];
+        const coin = new Coin({level, x, y, images});
         this.level.addEntity(coin);
         this.level.changeScore(-nominal);
     }

@@ -7,16 +7,17 @@ import {
     REACTION_TRAP
 } from 'engine/constants.js';
 
-import spriteDescription from 'sprites/DustCloud.js';
+import spriteDescription from 'sprites/DustCloudSprite.js';
 import {
-    ORANGE_COLOR
+    COLOR_ORANGE,
+    INDEX_CLOUD
 } from 'constants.js';
 
 const animation = spriteDescription.animations[0];
 
 export default class DustCloud extends StaticEntity {
     get index () {
-        return 600;
+        return INDEX_CLOUD;
     }
 
     constructor () {
@@ -31,7 +32,7 @@ export default class DustCloud extends StaticEntity {
             amountSpeed: 100,
             alphaSpeed: 0.005,
             velocity: 1,
-            startColor: ORANGE_COLOR,
+            startColor: COLOR_ORANGE,
             mode: 'lighter'
         });
         particleSystem.update(0);

@@ -10,7 +10,7 @@ import {
 
 import GasBomb from 'traits/GasBomb.js';
 import Meteor from 'traits/Meteor.js';
-import spriteDescription from 'sprites/Drop.js';
+import spriteDescription from 'sprites/DropSprite.js';
 import {
     MAX_HIDING_TIME
 } from 'constants.js';

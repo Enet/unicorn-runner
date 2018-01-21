@@ -7,7 +7,7 @@ import {
 import DustBomb from 'traits/DustBomb.js';
 import Meteor from 'traits/Meteor.js';
 import Obstacle from 'traits/Obstacle.js';
-import spriteDescription from 'sprites/Stone.js';
+import spriteDescription from 'sprites/StoneSprite.js';
 
 export default class Stone extends Entity {
     _getSpriteDescription () {

@@ -1,17 +1,24 @@
 import Background from 'backgrounds/Background.js';
 
+import {
+    INDEX_LAVA_BACKGROUND
+} from 'constants.js';
+
+const COLOR_LAVA_1 = 'orange';
+const COLOR_LAVA_2 = 'red';
+const LAVA_HEIGHT = 150;
 const WAVE_0 = 4;
 const WAVE_1 = 8;
 const WAVE_2 = 16;
 const STEP = 64;
 
-export default class Lava extends Background {
+export default class LavaBackground extends Background {
     get mode () {
         return 'exclusion';
     }
 
     get index () {
-        return 1000;
+        return INDEX_LAVA_BACKGROUND;
     }
 
     constructor ({bounds}) {
@@ -21,29 +28,29 @@ export default class Lava extends Background {
     }
 
     render (context, camera) {
-        this._phase++;
+        this._phase += 0.02;
 
         const bounds = this._bounds;
         const tx = camera.position.x;
         const ty = camera.position.y;
-        const {width} = context.canvas;
+        const {width} = camera.size;
 
         context.save();
         context.translate(-tx, -ty);
 
         const gradient = context.createLinearGradient(0, 0, 0, width);
-        gradient.addColorStop(0, 'orange');
-        gradient.addColorStop(1, 'red');
+        gradient.addColorStop(0, COLOR_LAVA_1);
+        gradient.addColorStop(1, COLOR_LAVA_2);
         context.fillStyle = gradient;
 
         let prevAngle = tx / 100;
         let prevWave = this._getWave(prevAngle);
         for (let x = 0, xl = width; x < xl; x += STEP) {
             context.beginPath();
-            context.moveTo(tx + x, bounds.bottom - 150 + prevWave);
+            context.moveTo(tx + x, bounds.bottom - LAVA_HEIGHT + prevWave);
             prevAngle += STEP / 100;
             prevWave = this._getWave(prevAngle);
-            context.lineTo(tx + x + STEP, bounds.bottom - 150 + prevWave);
+            context.lineTo(tx + x + STEP, bounds.bottom - LAVA_HEIGHT + prevWave);
             context.lineTo(tx + x + STEP, bounds.bottom);
             context.lineTo(tx + x, bounds.bottom);
             context.fill();
@@ -54,7 +61,7 @@ export default class Lava extends Background {
     }
 
     _getWave (angle) {
-        const phase = this._phase / 50;
+        const phase = this._phase;
         return 0 +
             Math.sin(angle + phase) * WAVE_2 +
             Math.cos(angle + 2 * phase) * WAVE_1 +

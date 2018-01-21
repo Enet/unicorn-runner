@@ -5,7 +5,7 @@ import {
 
 import DustBomb from 'traits/DustBomb.js';
 import Obstacle from 'traits/Obstacle.js';
-import spriteDescription from 'sprites/Mushroom.js';
+import spriteDescription from 'sprites/MushroomSprite.js';
 
 export default class TopDustMushroom extends Entity {
     get offset () {

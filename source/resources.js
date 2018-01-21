@@ -19,9 +19,9 @@ const imageNames = [
     'GasCloud',
     'DustMushroom',
     'GasMushroom',
-    'Dollar10',
-    'Dollar50',
-    'Dollar100',
+    'Coin10',
+    'Coin50',
+    'Coin100',
     'SlowMotion',
     'FastMotion',
     'Medicine',
@@ -58,9 +58,9 @@ const entityNames = [
     'LeftDustMushroom',
     'TopGasMushroom',
     'LeftGasMushroom',
-    'Dollar10',
-    'Dollar50',
-    'Dollar100',
+    'Coin10',
+    'Coin50',
+    'Coin100',
     'SlowMotion',
     'FastMotion',
     'Medicine',
@@ -105,5 +105,5 @@ entityNames.forEach((entityName) => {
 
 export const backgrounds = {};
 backgroundNames.forEach((backgroundName) => {
-    backgrounds[backgroundName] = require(`backgrounds/${backgroundName}.js`).default;
+    backgrounds[backgroundName] = require(`backgrounds/${backgroundName}Background.js`).default;
 });

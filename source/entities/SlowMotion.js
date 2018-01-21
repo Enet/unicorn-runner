@@ -5,7 +5,7 @@ import {
 
 import SpeedEffect from 'traits/SpeedEffect.js';
 import Pickable from 'traits/Pickable.js';
-import spriteDescription from 'sprites/SlowMotion.js';
+import spriteDescription from 'sprites/SlowMotionSprite.js';
 import {
     SPEED_EFFECT_TIME
 } from 'constants.js';

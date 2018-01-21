@@ -1,41 +1,41 @@
-import Sprite from 'engine/Sprite.js';
 import Background from 'backgrounds/Background.js';
 
 import getTileIndexByDistance from 'utils/getTileIndexByDistance.js';
-import spriteDescription from 'sprites/Tile.js';
 import {
-    TILE_SIZE
+    TILE_SIZE,
+    INDEX_TILE_BACKGROUND
 } from 'constants.js';
 
-export default class Tile extends Background {
+const THOUSAND_TILE_SIZE = 1000 * TILE_SIZE;
+
+export default class TileBackground extends Background {
     get index () {
-        return 500;
+        return INDEX_TILE_BACKGROUND;
     }
 
     constructor (options) {
         super(options);
-
-        const sprite = new Sprite(this.images.tile, spriteDescription);
-
         this.tiles = options.tiles;
-        this.sprite = sprite;
     }
 
     render (context, camera) {
         const indexWidth = getTileIndexByDistance(camera.size.width) + 1;
         const startIndex = getTileIndexByDistance(camera.position.x);
         const endIndex = startIndex + indexWidth;
-        const {tiles, sprite} = this;
-        const tx = camera.position.x % 60;
+        const {tiles, images} = this;
+        const image = images.tile;
+        const tx = (camera.position.x + THOUSAND_TILE_SIZE) % TILE_SIZE;
         const ty = camera.position.y;
 
         context.save();
         context.translate(-tx, -ty);
 
-        for (let x = startIndex; x <= endIndex; ++x) {
-            const column = tiles.getColumn(x);
-            column && column.forEach((tile, y) => {
-                sprite.render('ground', context, (x - startIndex) * TILE_SIZE, y * TILE_SIZE);
+        for (let xIndex = startIndex; xIndex <= endIndex; ++xIndex) {
+            const column = tiles.getColumn(xIndex);
+            column && column.forEach((tile, yIndex) => {
+                const x = (xIndex - startIndex) * TILE_SIZE;
+                const y = yIndex * TILE_SIZE;
+                context.drawImage(image, x, y);
             });
         }
 
@@ -44,6 +44,6 @@ export default class Tile extends Background {
     }
 }
 
-Tile.images = {
+TileBackground.images = {
     tile: 'Tile'
 };

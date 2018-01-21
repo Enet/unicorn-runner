@@ -6,7 +6,7 @@ import {
 import Killable from 'traits/Killable.js';
 import Jumper from 'traits/Jumper.js';
 import Obstacle from 'traits/Obstacle.js';
-import spriteDescription from 'sprites/Frog.js';
+import spriteDescription from 'sprites/FrogSprite.js';
 
 export default class Frog extends Entity {
     get scale () {

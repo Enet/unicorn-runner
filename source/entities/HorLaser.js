@@ -4,14 +4,14 @@ import {
 } from 'engine/math.js';
 
 import Laser from 'traits/Laser.js';
-import spriteDescription from 'sprites/Empty.js';
 import {
-    RED_COLOR
+    COLOR_RED,
+    INDEX_RENDERABLE
 } from 'constants.js';
 
 export default class HorLaser extends StaticEntity {
     get index () {
-        return 1;
+        return INDEX_RENDERABLE + 1;
     }
 
     get opacity () {
@@ -21,7 +21,7 @@ export default class HorLaser extends StaticEntity {
     render (context) {
         const alpha = context.globalAlpha;
         const {offset} = this;
-        context.fillStyle = RED_COLOR.toString();
+        context.fillStyle = COLOR_RED.toString();
         for (let i = 1; i < 5; i++) {
             context.globalAlpha = alpha * i * 0.25;
             context.beginPath();
@@ -33,10 +33,6 @@ export default class HorLaser extends StaticEntity {
     entityWillUpdate (deltaTime) {
         super.entityWillUpdate(...arguments);
         this._lifeTime = this._lifeTime - deltaTime + deltaTime / 3;
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getSize () {

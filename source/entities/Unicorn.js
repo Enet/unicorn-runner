@@ -4,7 +4,7 @@ import {
 } from 'engine/math.js';
 
 import Killable from 'traits/Killable.js';
-import spriteDescription from 'sprites/Unicorn.js';
+import spriteDescription from 'sprites/UnicornSprite.js';
 
 export default class Unicorn extends Entity {
     get offset () {
