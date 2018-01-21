@@ -36,16 +36,20 @@ export default class Entity extends Renderable {
         traits.forEach(trait => this.traits.add(trait));
 
         this.entityCollision = this.entityCollision.bind(this);
-        this.body.addListener('collision', this.entityCollision);
-    }
-
-    destructor () {
-        this.body.removeListener('collision', this.entityCollision);
+        this.entityWillMount();
     }
 
     render (context) {
         const {sprite, offset} = this;
         sprite.render(this._getFrame(), context, offset.x, offset.y);
+    }
+
+    entityWillMount () {
+
+    }
+
+    entityDidMount () {
+        this.body.addListener('collision', this.entityCollision);
     }
 
     entityWillUpdate (deltaTime) {
@@ -57,7 +61,6 @@ export default class Entity extends Renderable {
 
     entityDidUpdate () {
         this.traits.forEach((trait) => {
-            trait.executeQueue();
             trait.traitDidUpdate();
         });
     }
@@ -66,6 +69,11 @@ export default class Entity extends Renderable {
         this.traits.forEach((trait) => {
             trait.traitCollision(body, collision);
         });
+    }
+
+    entityWillUnmount () {
+        this.body.removeListener('collision', this.entityCollision);
+        this.traits.forEach(trait => this.traits.remove(trait));
     }
 
     _getSize () {

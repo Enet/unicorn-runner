@@ -8,7 +8,11 @@ export default class TraitManager {
         this._storage.add(trait);
 
         const {entity} = this;
-        entity[trait.getName()] = trait;
+        const traitName = trait.getName();
+        if (entity[traitName]) {
+            throw 'Trait can not override existing property!';
+        }
+        entity[traitName] = trait;
 
         trait.entity = entity;
         trait.level = entity.level;

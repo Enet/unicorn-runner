@@ -45,9 +45,11 @@ export default class Level {
         scene.add(entity);
         world.add(entity.body);
         this.entities.add(entity);
+        entity.entityDidMount();
     }
 
     removeEntity (entity) {
+        entity.entityWillUnmount();
         const {scene, world} = this;
         this.entities.delete(entity);
         world.remove(entity.body);
