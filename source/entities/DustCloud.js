@@ -3,6 +3,9 @@ import StaticEntity from 'entities/StaticEntity.js';
 import {
     Vector2
 } from 'engine/math.js';
+import {
+    REACTION_TRAP
+} from 'engine/constants.js';
 
 import spriteDescription from 'sprites/DustCloud.js';
 import {
@@ -53,6 +56,12 @@ export default class DustCloud extends StaticEntity {
 
     _getSize () {
         return new Vector2(180, 180);
+    }
+
+    _createBody () {
+        const body = super._createBody(...arguments);
+        body.reaction = REACTION_TRAP;
+        return body;
     }
 }
 

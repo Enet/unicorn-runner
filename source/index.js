@@ -65,6 +65,7 @@ function setAppScreen (name) {
 
 function startGame (step) {
     unicornGame = new UnicornGame({
+        debug: false,
         step,
         context: canvasContext,
         settings,

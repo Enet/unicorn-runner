@@ -39,13 +39,19 @@ export default class Meteor extends Trait {
         if (!this._isFalling) {
             return;
         }
-        this._isFalling = false;
 
+        let isHitPrevented = false;
+        const {onHit} = this._callbacks;
+        onHit && onHit(body, () => {
+            isHitPrevented = true;
+        });
+        if (isHitPrevented) {
+            return;
+        }
+
+        this._isFalling = false;
         const x = 2 - 4 * Math.random();
         const y = -2 - 4 * Math.random();
         this.entity.body.move(new Vector2(-x, -y));
-
-        const {onHit} = this._callbacks;
-        onHit && onHit(body);
     }
 }

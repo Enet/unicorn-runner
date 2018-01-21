@@ -7,7 +7,7 @@ export default class Walker extends Trait {
     getDirection () {
         const {player} = this.level;
         const {entity} = this;
-        if (Math.abs(player.body.center.x - entity.body.center.x) < 150) {
+        if (Math.abs(player.body.center.x - entity.body.center.x) < this._freezeDistance) {
             return 0;
         } else {
             return this._direction;
@@ -18,10 +18,12 @@ export default class Walker extends Trait {
         return 'walker';
     }
 
-    traitWillMount ([from, to]) {
+    traitWillMount ([from, to], speed=0.05, freezeDistance=150) {
+        this._freezeDistance = freezeDistance;
         this._from = +from || 0;
         this._to = +to || 0;
         this._direction = 1;
+        this._speed = speed;
     }
 
     traitWillUpdate (deltaTime) {
@@ -30,7 +32,7 @@ export default class Walker extends Trait {
             return;
         }
 
-        this.entity.body.move(new Vector2(0.05 * direction, 0));
+        this.entity.body.move(new Vector2(this._speed * direction, 0));
         if (this.entity.body.center.x >= this._to) {
             this._direction = -1;
         } else if (this.entity.body.center.x <= this._from) {

@@ -30,12 +30,13 @@ export default {
         ]
     }],
     entities: [{
-        name: 'VerLaser',
-        position: [250, 330]
+        name: 'FruitFly',
+        position: [500, 350],
+        trigger: 150
     }, {
-        name: 'Box',
-        position: [250, 0],
-        range: [250, 300]
+        name: 'Bird',
+        position: [400, 150],
+        range: [400, 600]
     }, {
         name: 'Box',
         position: [450, 330],

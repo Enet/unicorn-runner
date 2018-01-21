@@ -74,7 +74,7 @@ export default class UnicornGame extends Game {
         }
     }
 
-    _onManagerReady ({context, step, settings, ...callbacks}) {
+    _onManagerReady ({debug, context, step, settings, ...callbacks}) {
         super._onManagerReady(...arguments);
         const scale = `scale(${settings.mirror ? -1 : 1}, 1)`;
         context.canvas.style.transform = scale;
@@ -90,7 +90,7 @@ export default class UnicornGame extends Game {
 
         scene.add(camera);
         this._game = {renderer, scene, camera, level};
-        if (settings.debug) {
+        if (debug) {
             this._debugger = new Debugger(level.world, camera, context);
         }
     }

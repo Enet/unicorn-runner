@@ -27,6 +27,9 @@ const imageNames = [
     'Box',
     'Bug',
     'Lizard',
+    'FruitFly',
+    'Bird',
+    'Drop',
     'Rainbow',
     'Unicorn',
     'Tile'
@@ -61,6 +64,9 @@ const entityNames = [
     'Platform',
     'Bug',
     'Lizard',
+    'FruitFly',
+    'Bird',
+    'Drop',
     'Rainbow',
     'Unicorn'
 ];

@@ -40,6 +40,12 @@ export default class Body extends EventEmitter {
         });
     }
 
+    stop () {
+        this.points.forEach((point) => {
+            point.cache.set(point);
+        });
+    }
+
     setGravity (gravity) {
         this.points.forEach((point) => {
             point.gravity = gravity;

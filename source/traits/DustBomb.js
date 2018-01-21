@@ -49,6 +49,9 @@ export default class DustBomb extends Trait {
     }
 
     boom (body) {
+        if (this._isActivated) {
+            return;
+        }
         this._isActivated = true;
 
         const vx = 10 - 10 * Math.random();
