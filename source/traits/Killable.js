@@ -65,6 +65,7 @@ export default class Killable extends Trait {
 
     _onKill () {
         Object.defineProperty(this.entity, 'opacity', {
+            configurable: true,
             get: () => 1 - this.getHidingProgress()
         });
     }

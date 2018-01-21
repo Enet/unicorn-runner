@@ -4,7 +4,6 @@ import {
 } from 'engine/math.js';
 
 import Killable from 'traits/Killable.js';
-import Enemy from 'traits/Enemy.js';
 import Walker from 'traits/Walker.js';
 import BirdBehaviour from 'traits/BirdBehaviour.js';
 import spriteDescription from 'sprites/Bird.js';
@@ -31,9 +30,31 @@ export default class Bird extends Entity {
         return offset;
     }
 
+    entityCollision (body) {
+        super.entityCollision(...arguments);
+        if (body !== this.level.player.body) {
+            return;
+        }
+        this.killable.changeHealth(-100);
+    }
+
+    entityWillUpdate (deltaTime) {
+        super.entityWillUpdate(...arguments);
+        if (this._afterDeathTime === null) {
+            return;
+        }
+        this._afterDeathTime += deltaTime;
+        this._lifeTime = this._afterDeathTime;
+        const animation = spriteDescription.animations[1];
+        if (this._afterDeathTime > animation.delay * animation.frames.length) {
+            this.level.removeEntity(this);
+        }
+    }
+
     constructor () {
         super(...arguments);
         this._prevCenter = this.body.center;
+        this._afterDeathTime = null;
     }
 
     _getSpriteDescription () {
@@ -45,7 +66,11 @@ export default class Bird extends Entity {
     }
 
     _getFrame () {
-        return super._getFrame('default');
+        if (this._afterDeathTime === null) {
+            return super._getFrame('default');
+        } else {
+            return super._getFrame('die');
+        }
     }
 
     _getDeltaAngle (delta, angle) {
@@ -58,12 +83,6 @@ export default class Bird extends Entity {
 
     _createTraits ({settings}) {
         return [
-            new Enemy({
-                onAttack: this._onAttack.bind(this)
-            }, {
-                count: 1,
-                power: 25
-            }),
             new Killable({
                 onKill: this._onKill.bind(this)
             }),
@@ -79,14 +98,13 @@ export default class Bird extends Entity {
         return body;
     }
 
-    _onAttack (preventAttack) {
-        if (Math.abs(this.body.angle % (2 * Math.PI)) > Math.PI / 12) {
-            preventAttack();
-        }
-    }
-
     _onKill () {
         this.level.changeScore(100);
+        this._afterDeathTime = 0;
+        this._lifeTime = 0;
+        Object.defineProperty(this, 'opacity', {
+            get: () => 1
+        });
     }
 }
 
