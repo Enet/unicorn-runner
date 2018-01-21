@@ -8,6 +8,13 @@ import Pickable from 'traits/Pickable.js';
 import spriteDescription from 'sprites/Dollar.js';
 
 export default class Dollar extends Entity {
+    entityWillUpdate (deltaTime) {
+        super.entityWillUpdate(...arguments);
+        if (this._lifeTime > 500) {
+            this.traits.add(new Pickable());
+        }
+    }
+
     get angle () {
         return this._lifeTime * this._getNominal() / 10000;
     }
@@ -30,8 +37,7 @@ export default class Dollar extends Entity {
 
     _createTraits () {
         return [
-            new Score(this._getNominal()),
-            new Pickable()
+            new Score(this._getNominal())
         ];
     }
 }

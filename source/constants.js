@@ -24,6 +24,7 @@ export const KEY_S = 83;
 export const KEY_A = 65;
 export const KEY_D = 68;
 
+export const BLACK_COLOR = new Color(0, 0, 0);
 export const RED_COLOR = new Color(255, 0, 0);
 export const ORANGE_COLOR = new Color(255, 128, 0);
 export const YELLOW_COLOR = new Color(255, 255, 0);

@@ -103,6 +103,10 @@ export default class Level {
         this.callbacks.onScoreChange(Math.floor(this._score));
     }
 
+    getScore () {
+        return this._score;
+    }
+
     setHealth (health) {
         this.callbacks.onHealthChange(Math.floor(health));
     }
