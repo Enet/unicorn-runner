@@ -1,3 +1,5 @@
+import Animation from './Animation.js';
+
 export default class Sprite {
     constructor (image, {frames=[], animations=[]}) {
         this.image = image;
@@ -38,11 +40,7 @@ export default class Sprite {
         return frame;
     }
 
-    _createAnimation ({frames, delay}) {
-        return (time) => {
-            const frameIndex = Math.floor(time / delay) % frames.length;
-            const frameName = frames[frameIndex];
-            return frameName;
-        };
+    _createAnimation (description) {
+        return new Animation(description);
     }
 }

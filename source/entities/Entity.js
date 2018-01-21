@@ -79,7 +79,7 @@ export default class Entity extends Renderable {
     _getFrame (name='default') {
         const {sprite} = this;
         const animation = sprite.animations.get(name);
-        return animation(this._lifeTime);
+        return animation.frame(this._lifeTime);
     }
 
     _createTraits () {

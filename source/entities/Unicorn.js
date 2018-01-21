@@ -10,7 +10,7 @@ export default class Unicorn extends Entity {
     get offset () {
         const offset = super.offset;
         offset.x -= (172 - 100) / 2;
-        offset.y -= (119 - 100) / 2;
+        offset.y -= (119 - 65) / 2 + 20;
         return offset;
     }
 
@@ -19,7 +19,7 @@ export default class Unicorn extends Entity {
     }
 
     _getSize () {
-        return new Vector2(100, 100);
+        return new Vector2(100, 65);
     }
 
     _getDeltaAngle (delta, angle) {

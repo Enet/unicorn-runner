@@ -30,13 +30,9 @@ export default {
         ]
     }],
     entities: [{
-        name: 'FruitFly',
-        position: [500, 350],
-        trigger: 150
-    }, {
-        name: 'Bird',
-        position: [400, 150],
-        range: [400, 600]
+        name: 'Frog',
+        position: [350, 150],
+        range: [300, 310]
     }, {
         name: 'Box',
         position: [450, 330],
