@@ -16,6 +16,9 @@ import {
 } from 'constants.js';
 import generateTileMatrix from 'utils/generateTileMatrix.js';
 import getTileRangeByBounds from 'utils/getTileRangeByBounds.js';
+import getImageNodes from 'utils/getImageNodes.js';
+
+let uniqueTimerId = 0;
 
 export default class Level {
     constructor (data, {manager, scene, callbacks}) {
@@ -24,6 +27,7 @@ export default class Level {
         this.callbacks = callbacks;
         this.entities = new Set();
         this.effects = new Set();
+        this.timers = new Map();
 
         this._initBounds(...arguments);
         this._initWorld(...arguments);
@@ -38,6 +42,7 @@ export default class Level {
         this._slowFactor = 0;
         this._fastFactor = 0;
         this._isStopped = false;
+        this._elapsedTime = 0;
     }
 
     addEntity (entity) {
@@ -72,6 +77,16 @@ export default class Level {
         const {effects} = this;
         effects.delete(name);
         this.callbacks.onEffectChange(effects);
+    }
+
+    setTimeout (callback, time) {
+        const timerId = uniqueTimerId++;
+        time += this._elapsedTime;
+        this.timers.set(timerId, {time, callback});
+    }
+
+    clearTimeout (timerId) {
+        this.timers.delete(timerId);
     }
 
     loseGame () {
@@ -116,6 +131,16 @@ export default class Level {
             return;
         }
 
+        const elapsedTime = this._elapsedTime;
+        const {timers} = this;
+        timers.forEach((timer, timerId) => {
+            if (timer.time > elapsedTime) {
+                return;
+            }
+            timer.callback();
+            timers.delete(timerId);
+        });
+
         const {world, entities} = this;
         const candidates = Array.from(entities.values()).map(entity => entity.body);
         entities.forEach((entity) => {
@@ -131,6 +156,7 @@ export default class Level {
         });
 
         this._play();
+        this._elapsedTime += deltaTime;
 
         if (effects.has('fast') && ++this._fastFactor % 2) {
             return this.update(deltaTime);
@@ -146,15 +172,6 @@ export default class Level {
         if (player.body.center.x + player.size.width / 2 >= bounds.right - 100) {
             this.winGame();
         }
-    }
-
-    _getImageNodes (images) {
-        const nodes = {};
-        const {manager} = this;
-        for (let i in images) {
-            nodes[i] = manager.getImage(images[i]);
-        }
-        return nodes;
     }
 
     _initBounds ({meta}) {
@@ -192,20 +209,20 @@ export default class Level {
     }
 
     _initStaticBackground ({meta}) {
-        const {scene} = this;
+        const {manager, scene} = this;
         const Background = backgrounds[meta.background];
         if (!Background) {
             return;
         }
-        const images = this._getImageNodes(Background.images);
+        const images = getImageNodes(manager, Background.images);
         const background = new Background({images});
         scene.add(background);
         return background;
     }
 
     _initTileBackground () {
-        const {scene} = this;
-        const images = this._getImageNodes(TileBackground.images);
+        const {manager, scene} = this;
+        const images = getImageNodes(manager, TileBackground.images);
         const background = new TileBackground({
             images,
             tiles: this._tileMatrix
@@ -223,9 +240,10 @@ export default class Level {
 
     _initEntities (data) {
         const level = this;
+        const {manager} = this;
         data.entities.forEach(({name, position: [x, y], ...settings}) => {
             const Entity = entities[name];
-            const images = this._getImageNodes(Entity.images);
+            const images = getImageNodes(manager, Entity.images);
             const entity = new Entity({level, settings, images, x, y});
             this.addEntity(entity);
         });
@@ -234,7 +252,8 @@ export default class Level {
 
     _initPlayer (data, {callbacks}) {
         const level = this;
-        const images = this._getImageNodes(Player.images);
+        const {manager} = this;
+        const images = getImageNodes(manager, Player.images);
         const player = new Player({level, images});
         this.player = player;
         this.addEntity(player);

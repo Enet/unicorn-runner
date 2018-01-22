@@ -42,37 +42,15 @@ export default class UnicornGame extends Game {
 
     _controlPlayer () {
         const keyboard = this._keyboard;
+        const newState = {
+            up: keyboard.isPressed(KEY_UP, KEY_W, KEY_SPACE),
+            down: keyboard.isPressed(KEY_DOWN, KEY_S),
+            left: keyboard.isPressed(KEY_LEFT, KEY_A),
+            right: keyboard.isPressed(KEY_RIGHT, KEY_D)
+        };
+
         const {player} = this._game.level;
-
-        if (keyboard.isPressed(KEY_DOWN, KEY_S)) {
-            player.fight.start();
-            player.fly.down(true);
-        } else {
-            player.fight.cancel();
-            player.fly.down(false);
-        }
-
-        if (keyboard.isPressed(KEY_UP, KEY_W, KEY_SPACE)) {
-            player.jump.start();
-            player.fly.up(true);
-        } else {
-            player.jump.cancel();
-            player.fly.up(false);
-        }
-
-        if (keyboard.isPressed(KEY_LEFT, KEY_A)) {
-            player.run.left();
-            player.fly.left(true);
-        } else {
-            player.fly.left(false);
-        }
-
-        if (keyboard.isPressed(KEY_RIGHT, KEY_D)) {
-            player.run.right();
-            player.fly.right(true);
-        } else {
-            player.fly.right(false);
-        }
+        player.controller.setState(newState);
     }
 
     _onManagerReady ({debug, context, step, settings, ...callbacks}) {

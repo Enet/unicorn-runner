@@ -4,16 +4,16 @@ import {
 } from 'engine/math.js';
 
 export const TILE_SIZE = 60;
-export const RUNNING_SPEED = 0.005;
-export const JUMPING_BOOST = 0.75;
-export const MAX_JUMPING_TIME = 300;
-export const MAX_NO_COLLISION_TIME = 50;
-export const MAX_HIDING_TIME = 500;
-export const FLYING_BOOST = 300;
-export const FLYING_TIME = 5000;
-export const SPEED_EFFECT_TIME = 5000;
-export const GAS_CLOUD_TIME = 5000;
+export const EFFECT_TIME = 5000;
 export const CAMERA_OFFSET = new Vector2(200, 300);
+
+export const RUN_SPEED = 0.005;
+export const FIGHT_DAMAGE = 10;
+export const FIGHT_SHIFT = 0.1;
+export const FLY_GRAVITY = 300;
+export const JUMP_IMPULSE_POWER = 0.75;
+export const JUMP_IMPULSE_TIME = 300;
+export const JUMP_NO_COLLISION_TIME = 50;
 
 export const INDEX_STATIC_BACKGROUND = -1000;
 export const INDEX_RENDERABLE = 0;

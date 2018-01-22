@@ -55,6 +55,7 @@ export default class Entity extends Renderable {
     entityWillUpdate (deltaTime) {
         this.traits.forEach((trait) => {
             trait.traitWillUpdate(deltaTime);
+            trait.update(deltaTime);
         });
         this._lifeTime += deltaTime;
     }
