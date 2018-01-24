@@ -6,13 +6,13 @@ export default class TriggerBoundTrait extends TriggerTrait {
         const {player} = level;
         const {x, y} = player.body.center;
         if (x > +options.x) {
-            this.activate({axis: 'x', value: true});
+            this.activate({coordinate: 'x', value: false});
         } else if (x <= +options.x) {
-            this.activate({axis: 'x', value: false});
+            this.activate({coordinate: 'x', value: true});
         } else if (y  > +options.y) {
-            this.activate({axis: 'y', value: true});
+            this.activate({coordinate: 'y', value: false});
         } else if (y <= +options.y) {
-            this.activate({axis: 'y', value: false});
+            this.activate({coordinate: 'y', value: true});
         }
     }
 }

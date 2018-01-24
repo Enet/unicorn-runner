@@ -14,7 +14,7 @@ export default class PickerTrait extends Trait {
         if (pickable.isPicked()) {
             return;
         }
-        pickable.pick();
+        pickable.pick(this.entity);
         const {options} = this;
         const {onPick} = options;
         onPick && onPick(entity);

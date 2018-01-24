@@ -2,6 +2,7 @@ import MotionTrait from 'traits/MotionTrait.js';
 
 const JUMP_PROBABILITY = 0.01;
 const JUMP_WAITING_TIME = 2000;
+const JUMP_ACTIVE_TIME = 50;
 
 export default class MotionJumpTrait extends MotionTrait {
     move (direction) {
@@ -13,9 +14,9 @@ export default class MotionJumpTrait extends MotionTrait {
         }
 
         const {jump} = this.entity;
-        jump.setDirection(Math.PI * (1 + 0.25 * direction));
+        jump.setDirection(Math.PI * (1 - 0.125 * direction));
         jump.start();
-        this.level.setTimeout(() => jump.stop());
+        this.level.setTimeout(() => jump.stop(), JUMP_ACTIVE_TIME);
         this._prevJumpTime = this._lifeTime;
     }
 
@@ -40,7 +41,11 @@ export default class MotionJumpTrait extends MotionTrait {
 
     _shouldToggleDirection (direction) {
         const {entity, options} = this;
-        const {fromPoint, toPoint} = options;
+        let {fromPoint, toPoint} = options;
+        if (fromPoint.x > toPoint.x) {
+            [fromPoint, toPoint] = [toPoint, fromPoint];
+        }
+
         const {x} = entity.body.center;
         if (direction === 1 && x > toPoint.x) {
             return true;

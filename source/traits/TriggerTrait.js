@@ -15,7 +15,7 @@ export default class TriggerTrait extends Trait {
         this._activationCount = +activationCount || 0;
     }
 
-    getActivationCound () {
+    getActivationCount () {
         return this._activationCount;
     }
 

@@ -33,11 +33,11 @@ frames:
     jump-16: [399, 733, 133, 111]
 animations:
     default.1000: [jump-1]
-    jump.25: [
+    jump.32: [
         jump-1, jump-2, jump-3, jump-4, jump-5, jump-6, jump-7, jump-8,
         jump-9, jump-10, jump-11, jump-12, jump-13, jump-14, jump-15, jump-16
     ]
-    fight.25: [
+    fight.32: [
         fight-1, fight-2, fight-3, fight-4, fight-5, fight-6, fight-7, fight-8,
         fight-9, fight-10, fight-11, fight-12, fight-13, fight-14, fight-15, fight-16
     ]

@@ -23,6 +23,10 @@ export default class MotionTrait extends Trait {
         return this._direction;
     }
 
+    setDirection (direction) {
+        this._direction = Math.sign(direction) || this._direction;
+    }
+
     toggleDirection () {
         this._direction *= -1;
     }

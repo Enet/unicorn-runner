@@ -29,7 +29,27 @@ export default {
             [193, 194, 6, 7]
         ]
     }],
-    entities: [] || [{
+    entities: [{
+        name: 'Spider',
+        position: [300, 130],
+        web: 50,
+        reaction: 10
+    }, {
+        name: 'Coin100',
+        position: [200, 200]
+    }, {
+        name: 'Coin100',
+        position: [200, 200]
+    }, {
+        name: 'Coin100',
+        position: [200, 400]
+    }, {
+        name: 'Coin100',
+        position: [200, 300]
+    }, {
+        name: 'Coin100',
+        position: [200, 100]
+    }] || [{
         name: 'Spider',
         position: [350, 50],
         reaction: 20

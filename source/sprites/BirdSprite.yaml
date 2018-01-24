@@ -17,4 +17,4 @@ frames:
     die-8: [288, 261, 96, 87]
 animations:
     default: [fly-1, fly-2, fly-3, fly-4, fly-5, fly-6, fly-7, fly-8]
-    die.45: [die-1, die-2, die-3, die-4, die-5, die-6, die-7, die-8]
+    die.48: [die-1, die-2, die-3, die-4, die-5, die-6, die-7, die-8]

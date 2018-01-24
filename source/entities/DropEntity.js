@@ -10,7 +10,7 @@ import {
 import Entity from 'entities/Entity.js';
 import TriggerContactTrait from 'traits/TriggerContactTrait.js';
 import BombGasTrait from 'traits/BombGasTrait.js';
-import AppearanceGravityTrait from 'traits/AppearanceGravityTrait.js';
+import BodyGravityTrait from 'traits/BodyGravityTrait.js';
 import AppearanceFadeOutTrait from 'traits/AppearanceFadeOutTrait.js';
 
 const DROP_DAMAGE = 10;
@@ -22,7 +22,7 @@ export default class DropEntity extends Entity {
 
     get offset () {
         const offset = super.offset;
-        if (!this.trigger.getActivationCound()) {
+        if (!this.trigger.getActivationCount()) {
             offset.y += (1 - this.opacity) * this.size.height;
         }
         return offset;
@@ -44,7 +44,7 @@ export default class DropEntity extends Entity {
                 onActivate: this._onContact.bind(this),
                 lifelessObjects: true
             }),
-            new AppearanceGravityTrait({
+            new BodyGravityTrait({
                 autoStart: false
             }),
             new BombGasTrait({
@@ -74,6 +74,7 @@ export default class DropEntity extends Entity {
     }
 
     _onExplode ({body}) {
+        this.fadeOut.start();
         const {organism} = body.entity;
         if (!organism) {
             return;

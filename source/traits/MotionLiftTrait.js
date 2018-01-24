@@ -32,7 +32,8 @@ export default class MotionLiftTrait extends MotionTrait {
         }
 
         const liftZeroPoint = entity.body.points[0];
-        body.move(liftZeroPoint.cache.subtract(liftZeroPoint));
+        const impulse = liftZeroPoint.cache.subtract(liftZeroPoint);
+        body.move(impulse.length(3));
     }
 
     _shouldToggleDirection (direction) {

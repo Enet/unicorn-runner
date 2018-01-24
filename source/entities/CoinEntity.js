@@ -44,6 +44,7 @@ export default class CoinEntity extends Entity {
     }
 
     _onPick () {
+        this.score.use();
         this.fallDown.start();
     }
 

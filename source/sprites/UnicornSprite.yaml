@@ -23,4 +23,4 @@ animations:
     run: [run-1, run-2, run-3, run-4]
     jump: [jump-1]
     fight: [fight-1, fight-2, fight-3, fight-4]
-    die.150: [die-1, die-2, die-3, die-4, die-5, die-6, die-7, die-8, die-9]
+    die.64: [die-1, die-2, die-3, die-4, die-5, die-6, die-7, die-8, die-9]

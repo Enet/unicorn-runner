@@ -2,6 +2,7 @@ import MushroomEntity from 'entities/MushroomEntity.js';
 import BombGasTrait from 'traits/BombGasTrait.js';
 import AppearanceFadeOutTrait from 'traits/AppearanceFadeOutTrait.js';
 import OrganismTrait from 'traits/OrganismTrait.js';
+import GameplayScoreTrait from 'traits/GameplayScoreTrait.js';
 import {
     SCORE_GAS_MUSHROOM_DEATH
 } from 'constants.js';
@@ -23,6 +24,9 @@ export default class GasMushroomEntity extends MushroomEntity {
             }),
             new AppearanceFadeOutTrait({
                 onEnd: this._onFadeOutEnd.bind(this)
+            }),
+            new GameplayScoreTrait({
+                deltaScore: SCORE_GAS_MUSHROOM_DEATH
             })
         ];
     }
@@ -37,8 +41,13 @@ export default class GasMushroomEntity extends MushroomEntity {
         super._willExplode(...arguments);
     }
 
+    _onExplode () {
+        super._onExplode(...arguments);
+        this.traits.remove(this.organism);
+    }
+
     _onDie () {
-        this.level.changeScore(SCORE_GAS_MUSHROOM_DEATH);
+        this.score.use();
         this.fadeOut.start();
     }
 

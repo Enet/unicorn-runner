@@ -2,9 +2,9 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import AppearanceTrait from 'traits/AppearanceTrait.js';
+import BodyTrait from 'traits/BodyTrait.js';
 
-export default class AppearanceGravityTrait extends AppearanceTrait {
+export default class BodyGravityTrait extends BodyTrait {
     start () {
         this.entity.body.setGravity(this._gravity);
     }
@@ -21,13 +21,5 @@ export default class AppearanceGravityTrait extends AppearanceTrait {
         x = +x || 0;
         y = +y || 0;
         this._gravity = new Vector2(x, y);
-    }
-
-    traitDidMount () {
-        let {autoStart} = this.options;
-        if (autoStart === undefined) {
-            autoStart = true;
-        }
-        autoStart && this.start();
     }
 }

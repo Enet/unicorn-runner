@@ -8,15 +8,34 @@ import TriggerContactTrait from 'traits/TriggerContactTrait.js';
 import OrganismTrait from 'traits/OrganismTrait.js';
 import MotionRocketTrait from 'traits/MotionRocketTrait.js';
 import BombDustTrait from 'traits/BombDustTrait.js';
-import AppearanceGravityTrait from 'traits/AppearanceGravityTrait.js';
+import GameplayScoreTrait from 'traits/GameplayScoreTrait.js';
+import BodyGravityTrait from 'traits/BodyGravityTrait.js';
 import AppearanceFadeOutTrait from 'traits/AppearanceFadeOutTrait.js';
 import {
     SCORE_FRUIT_FLY_DEATH
 } from 'constants.js';
 
 const FRUIT_FLY_DAMAGE = 25;
+const FRUIT_FLY_MAX_ANGLE = 0.2 * Math.PI;
 
 export default class FruitFly extends Entity {
+    get angle () {
+        const {player} = this.level;
+        let angle = 0.005 * (this.body.center.y - player.body.center.y);
+        angle = Math.max(-FRUIT_FLY_MAX_ANGLE, Math.min(FRUIT_FLY_MAX_ANGLE, angle));
+        angle *= this._getDirection();
+        return super.angle + angle;
+    }
+
+    get scale () {
+        return new Vector2(this._getDirection(), 1);
+    }
+
+    _getDirection () {
+        const {player} = this.level;
+        return 2 * (this.body.center.x > player.body.center.x) - 1;
+    }
+
     _getImageName () {
         return 'FruitFly';
     }
@@ -31,9 +50,10 @@ export default class FruitFly extends Entity {
             new TriggerBoundTrait({
                 maxActivationCount: Infinity,
                 onActivate: this._onStart.bind(this, !!trigger.value),
-                x: trigger.x
+                x: +trigger.x,
+                y: +trigger.y
             }),
-            new AppearanceGravityTrait(),
+            new BodyGravityTrait(),
             new OrganismTrait({
                 onDie: this._onDie.bind(this)
             }),
@@ -43,6 +63,9 @@ export default class FruitFly extends Entity {
             }),
             new AppearanceFadeOutTrait({
                 onEnd: this._onFadeOutEnd.bind(this)
+            }),
+            new GameplayScoreTrait({
+                deltaScore: SCORE_FRUIT_FLY_DEATH
             })
         ];
     }
@@ -52,6 +75,7 @@ export default class FruitFly extends Entity {
             return;
         }
         this.traits.remove(this.trigger);
+        this.motion.start();
 
         const trigger = new TriggerContactTrait({
             maxActivationCount: Infinity,
@@ -69,6 +93,7 @@ export default class FruitFly extends Entity {
             return;
         }
         this.traits.remove(this.trigger);
+        this.traits.remove(this.score);
         this.bomb.explode(player.body);
         this.organism.changeHealth(-100);
     }
@@ -78,7 +103,7 @@ export default class FruitFly extends Entity {
     }
 
     _onDie () {
-        this.level.changeScore(SCORE_FRUIT_FLY_DEATH);
+        this.score && this.score.use();
         this.fadeOut.start();
     }
 

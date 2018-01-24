@@ -10,7 +10,7 @@ import {
 const GAS_CLOUD_MIN_DISTANCE = 2;
 const GAS_CLOUD_DAMAGE = 2;
 
-export default class GasCloud extends StaticEntity {
+export default class GasCloudEntity extends StaticEntity {
     get index () {
         return INDEX_CLOUD;
     }

@@ -1,8 +1,8 @@
 import DynamicPoint from 'engine/DynamicPoint.js';
 
-import AppearanceTrait from 'traits/AppearanceTrait.js';
+import BodyTrait from 'traits/BodyTrait.js';
 
-export default class AppearanceImpulseLimitTrait extends AppearanceTrait {
+export default class BodyImpulseLimitTrait extends BodyTrait {
     start () {
         this.entity.body.points.forEach((point) => {
             if (point instanceof DynamicPoint === false) {
@@ -24,14 +24,6 @@ export default class AppearanceImpulseLimitTrait extends AppearanceTrait {
 
     traitWillMount ({limit=7.5}) {
         this._limit = +limit;
-    }
-
-    traitDidMount () {
-        let {autoStart} = this.options;
-        if (autoStart === undefined) {
-            autoStart = true;
-        }
-        autoStart && this.start();
     }
 
     _integratePoint (limit, ...a) {

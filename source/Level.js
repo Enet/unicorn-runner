@@ -55,6 +55,7 @@ export default class Level {
         this.entities.delete(entity);
         world.remove(entity.body);
         scene.remove(entity);
+        this.setTimeout(() => entity.entityDidUnmount());
     }
 
     addEffect (name) {

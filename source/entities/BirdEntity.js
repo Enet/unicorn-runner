@@ -4,11 +4,13 @@ import {
 
 import Entity from 'entities/Entity.js';
 import DropEntity from 'entities/DropEntity.js';
-import AppearanceAngleLimitTrait from 'traits/AppearanceAngleLimitTrait.js';
-import AppearanceGravityTrait from 'traits/AppearanceGravityTrait.js';
+import BodyAngleLimitTrait from 'traits/BodyAngleLimitTrait.js';
+import BodyGravityTrait from 'traits/BodyGravityTrait.js';
+import AppearanceVisualDirectionTrait from 'traits/AppearanceVisualDirectionTrait.js';
 import OrganismTrait from 'traits/OrganismTrait.js';
 import MotionWalkerTrait from 'traits/MotionWalkerTrait.js';
 import TriggerContactTrait from 'traits/TriggerContactTrait.js';
+import GameplayScoreTrait from 'traits/GameplayScoreTrait.js';
 import {
     SCORE_BIRD_DEATH
 } from 'constants.js';
@@ -17,11 +19,6 @@ const BIRD_DROP_PERIOD = 1000;
 const BIRD_DROP_PROBABILITY = 0.002;
 
 export default class BirdEntity extends Entity {
-    get scale () {
-        const direction = this.motion.getVisualDirection();
-        return new Vector2(-direction, 1);
-    }
-
     entityWillUpdate () {
         super.entityWillUpdate(...arguments);
 
@@ -34,8 +31,8 @@ export default class BirdEntity extends Entity {
 
         this._prevDropTime = this._lifeTime;
         const {level} = this;
-        const parent = this.entity;
-        const {x, y} = parent.body.center;
+        const parent = this;
+        const {x, y} = this.body.center;
         const drop = new DropEntity({x, y, level, parent});
         this.level.addEntity(drop);
     }
@@ -62,8 +59,8 @@ export default class BirdEntity extends Entity {
     _createTraits ({settings, y}) {
         const {range} = settings;
         return [
-            new AppearanceGravityTrait(),
-            new AppearanceAngleLimitTrait({
+            new BodyGravityTrait(),
+            new BodyAngleLimitTrait({
                 maxAngle: Math.PI / 3
             }),
             new MotionWalkerTrait({
@@ -76,6 +73,12 @@ export default class BirdEntity extends Entity {
             }),
             new OrganismTrait({
                 onDie: this._onDie.bind(this)
+            }),
+            new GameplayScoreTrait({
+                deltaScore: SCORE_BIRD_DEATH
+            }),
+            new AppearanceVisualDirectionTrait({
+                reverse: true
             })
         ];
     }
@@ -85,7 +88,8 @@ export default class BirdEntity extends Entity {
     }
 
     _onDie () {
-        this.level.changeScore(SCORE_BIRD_DEATH);
+        this._lifeTime = 0;
+        this.score.use();
     }
 
     _onDieAnimationEnd () {

@@ -5,4 +5,4 @@ frames:
     bug-4: [174, 0, 58, 65]
     bug-5: [232, 0, 58, 65]
 animations:
-    default: [bug-1, bug-2, bug-3, bug-4, bug-5]
+    default.48: [bug-1, bug-2, bug-3, bug-4, bug-5]

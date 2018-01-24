@@ -9,25 +9,27 @@ import MotionWalkerTrait from 'traits/MotionWalkerTrait.js';
 import FootholdTrait from 'traits/FootholdTrait.js';
 import TriggerContactTrait from 'traits/TriggerContactTrait.js';
 import AppearanceFadeOutTrait from 'traits/AppearanceFadeOutTrait.js';
+import AppearanceVisualDirectionTrait from 'traits/AppearanceVisualDirectionTrait.js';
 import ActionFightTrait from 'traits/ActionFightTrait.js';
+import GameplayScoreTrait from 'traits/GameplayScoreTrait.js';
 import {
     SCORE_LIZARD_DEATH,
     COLOR_ORANGE
 } from 'constants.js';
 
 const LIZARD_DAMAGE = 10;
-const LIZARD_FIGHT_DISTANCE = 100;
+const LIZARD_FIGHT_DISTANCE = 150;
 const LIZARD_FIGHT_WAITING_TIME = 1000;
 
 export default class LizardEntity extends Entity {
     get angle () {
-        return (1 - this.opacity) * Math.PI;
+        return super.angle - 0.5 * (1 - this.opacity) * Math.PI;
     }
 
     get scale () {
         let direction;
         if (this.fight.isStopped()) {
-            direction = this.motion.getVisualDirection();
+            direction = this.visualDirection.getDirection();
         } else {
             const {player} = this.level;
             direction = 2 * (this.body.center.x > player.body.center.x) - 1;
@@ -71,12 +73,15 @@ export default class LizardEntity extends Entity {
     _createTraits ({settings, y}) {
         return [
             new FootholdTrait(),
+            new AppearanceVisualDirectionTrait({
+                autoStart: false
+            }),
             new MotionWalkerTrait({
                 fromPoint: new Vector2(settings.range[0], y),
                 toPoint: new Vector2(settings.range[1], y)
             }),
             new ActionFightTrait({
-                damage: LIZARD_DAMAGE
+                damage: 0
             }),
             new OrganismTrait({
                 onDie: this._onDie.bind(this)
@@ -85,8 +90,11 @@ export default class LizardEntity extends Entity {
                 onEnd: this._onFadeOutEnd.bind(this)
             }),
             new TriggerContactTrait({
-                maxActivationTime: Infinity,
+                maxActivationCount: Infinity,
                 onActivate: this._onContact.bind(this)
+            }),
+            new GameplayScoreTrait({
+                deltaScore: SCORE_LIZARD_DEATH
             })
         ];
     }
@@ -131,11 +139,11 @@ export default class LizardEntity extends Entity {
         this.level.scene.add(particleSystem);
         this._particleSystem = particleSystem;
 
-        this._prevFightTime = Date.now();
+        this._prevFightTime = this._lifeTime;
     }
 
     _onDie () {
-        this.level.changeScore(SCORE_LIZARD_DEATH);
+        this.score.use();
         this.fadeOut.start();
     }
 

@@ -10,6 +10,7 @@ import {
     INDEX_RENDERABLE
 } from 'constants.js';
 
+const HALF_TILE_SIZE = 0.5 * TILE_SIZE;
 const LASER_DAMAGE = 0.25;
 
 export default class HorLaserEntity extends StaticEntity {
@@ -23,14 +24,13 @@ export default class HorLaserEntity extends StaticEntity {
 
     render (context) {
         const alpha = context.globalAlpha;
-        const {offset} = this;
         context.fillStyle = COLOR_RED.toString();
         for (let i = 1; i < 5; i++) {
             context.globalAlpha = alpha * i * 0.25;
             context.beginPath();
             context.fillRect(
-                offset.x,
-                offset.y + 0.5 * TILE_SIZE - (5 - i),
+                -HALF_TILE_SIZE,
+                -HALF_TILE_SIZE + 0.5 * TILE_SIZE - (5 - i),
                 TILE_SIZE,
                 (5 - i) * 2
             );
@@ -57,7 +57,7 @@ export default class HorLaserEntity extends StaticEntity {
 
     _onContact (body) {
         const coordinateName = this._getCoordinateName();
-        const laserCenter = this.entity.body.center[coordinateName];
+        const laserCenter = this.body.center[coordinateName];
         const halfBodyWidth = body.entity.size[coordinateName] * 0.5;
         if (body.center[coordinateName] + halfBodyWidth < laserCenter ||
             body.center[coordinateName] - halfBodyWidth > laserCenter) {

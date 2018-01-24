@@ -10,13 +10,9 @@ import TriggerContactTrait from 'traits/TriggerContactTrait.js';
 const TRAP_DAMAGE = 80;
 
 export default class TrapEntity extends Entity {
-    get angle () {
-        return this._angle;
-    }
-
     get offset () {
         const offset = super.offset;
-        offset.y += 15 - 10 * this._angle;
+        offset.y -= 5;
         return offset;
     }
 
@@ -25,14 +21,13 @@ export default class TrapEntity extends Entity {
     }
 
     _getFrame () {
-        let progress = 0.01 * (this._lifeTime - this._explodeTime) || 0;
-        progress = Math.max(1, Math.min(5, progress));
-        this._angle = 0.25 * (progress - 1);
+        let progress = 0.05 * (this._lifeTime - this._trapTime) || 0;
+        progress = Math.floor(Math.max(1, Math.min(5, progress)));
         return 'trap-' + progress;
     }
 
     _getSize () {
-        return new Vector2(50, 10);
+        return new Vector2(20, 30);
     }
 
     _createTraits () {
@@ -42,6 +37,7 @@ export default class TrapEntity extends Entity {
                 onActivate: this._onContact.bind(this)
             }),
             new BombDustTrait({
+                willExplode: this._willExplode.bind(this),
                 onExplode: this._onExplode.bind(this)
             })
         ];
@@ -51,8 +47,12 @@ export default class TrapEntity extends Entity {
         this.bomb.explode(body);
     }
 
-    _onExplode ({body, preventCloud}) {
+    _willExplode ({preventCloud}) {
         preventCloud();
+    }
+
+    _onExplode ({body}) {
+        this._trapTime = this._lifeTime;
         body.entity.organism.changeHealth(-TRAP_DAMAGE);
     }
 }

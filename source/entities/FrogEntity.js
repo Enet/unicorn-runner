@@ -8,31 +8,48 @@ import ActionFightTrait from 'traits/ActionFightTrait.js';
 import ActionJumpTrait from 'traits/ActionJumpTrait.js';
 import MotionJumpTrait from 'traits/MotionJumpTrait.js';
 import FootholdTrait from 'traits/FootholdTrait.js';
-import AppearanceAngleLimitTrait from 'traits/AppearanceAngleLimitTrait.js';
+import GameplayScoreTrait from 'traits/GameplayScoreTrait.js';
+import BodyAngleLimitTrait from 'traits/BodyAngleLimitTrait.js';
 import AppearanceFadeOutTrait from 'traits/AppearanceFadeOutTrait.js';
+import BodyFrictionTrait from 'traits/BodyFrictionTrait.js';
+import AppearanceVisualDirectionTrait from 'traits/AppearanceVisualDirectionTrait.js';
 import {
     SCORE_FROG_DEATH
 } from 'constants.js';
 
-const FROG_FIGHT_WAITING_TIME = 1000;
-const FROG_FIGHT_DISTANCE = 150;
-const FROG_DAMAGE_DISTANCE = 150;
-const FROG_DAMAGE = 10;
+const FROG_FIGHT_WAITING_TIME = 2000;
+const FROG_FIGHT_DISTANCE = 200;
+const FROG_DAMAGE_DISTANCE = 50;
+const FROG_DAMAGE = 25;
+const FROG_FIGHT_PROBABILITY = 0.01;
 
 export default class FrogEntity extends Entity {
+    get offset () {
+        const offset = super.offset;
+        offset.y -= 10;
+        if (!this.fight.isStopped()) {
+            offset.x -= 20 + this._fightOffset;
+        }
+        return offset;
+    }
+
     get scale () {
-        const direction = this._direction || this.motion.getDirection();
+        const direction = this.fight.isStopped() ?
+            this.visualDirection.getDirection() :
+            this._fightDirection;
         return new Vector2(-direction, 1);
     }
 
     entityWillUpdate (deltaTime) {
         super.entityWillUpdate(...arguments);
 
-        if (this._lifeTime - this._prevFightTime < FROG_FIGHT_WAITING_TIME) {
+        if (this.jump.isJumping()) {
+            this.friction.stop();
             return;
         }
 
-        if (this.jump.isJumping()) {
+        this.friction.start();
+        if (this._lifeTime - this._prevFightTime < FROG_FIGHT_WAITING_TIME) {
             return;
         }
 
@@ -46,19 +63,15 @@ export default class FrogEntity extends Entity {
             return;
         }
 
-        if (Math.random() > 0.01) {
+        if (Math.random() > FROG_FIGHT_PROBABILITY) {
             return;
         }
 
         this.motion.stop();
-        this._direction = 2 * (dx > 0) - 1;
-
         this.fight.start();
-        if (Math.abs(dx) < FROG_DAMAGE_DISTANCE + player.size.width * 0.5 + this.size.width * 0.5) {
-            player.organism.changeHealth(-FROG_DAMAGE);
-            player.body.move(new Vector2(Math.sign(dx) * 2, 0));
-        }
-        this._prevFightTime = Date.now();
+        this._fightDirection = 2 * (dx > 0) - 1;
+        this._lifeTime = 0;
+        this._prevFightTime = 0;
     }
 
     _getImageName () {
@@ -66,25 +79,25 @@ export default class FrogEntity extends Entity {
     }
 
     _getSize () {
-        return new Vector2(60, 80);
+        return new Vector2(50, 70);
     }
 
     _getFrame () {
         let animationName;
-        if (this.jump.isJumping()) {
+        if (this._isJumpAnimation) {
             animationName = 'jump';
         } else if (!this.fight.isStopped()) {
             animationName = 'fight';
         } else {
             animationName = 'default';
         }
-        super._getFrame(animationName);
+        return super._getFrame(animationName);
     }
 
     _createTraits ({settings, y}) {
         return [
             new FootholdTrait(),
-            new AppearanceAngleLimitTrait({
+            new BodyAngleLimitTrait({
                 maxAngle: Math.PI * 0.25
             }),
             new OrganismTrait({
@@ -94,7 +107,8 @@ export default class FrogEntity extends Entity {
                 damage: 0
             }),
             new ActionJumpTrait({
-                jumpImpulsePower: 20
+                jumpImpulsePower: 4,
+                onStart: this._onJumpStart.bind(this)
             }),
             new MotionJumpTrait({
                 fromPoint: new Vector2(settings.range[0], y),
@@ -102,25 +116,61 @@ export default class FrogEntity extends Entity {
             }),
             new AppearanceFadeOutTrait({
                 onEnd: this._onFadeOutEnd.bind(this)
+            }),
+            new GameplayScoreTrait({
+                deltaScore: SCORE_FROG_DEATH
+            }),
+            new BodyFrictionTrait({
+                x: 0.9,
+                y: 0.98
+            }),
+            new AppearanceVisualDirectionTrait({
+                autoStart: false
             })
         ];
     }
 
     _createSprite () {
-        this._onFightEnd = this._onFightEnd.bind(this);
         const sprite = super._createSprite(...arguments);
-        sprite.animations.get('fight').addListener('end', this._onFightEnd);
+        const fightAnimation = sprite.animations.get('fight');
+        const jumpAnimation = sprite.animations.get('jump');
+        fightAnimation.addListener('end', this._onFightAnimationEnd.bind(this));
+        fightAnimation.addListener('frame', this._onFightAnimationFrame.bind(this));
+        jumpAnimation.addListener('end', this._onJumpAnimationEnd.bind(this));
         return sprite;
     }
 
-    _onFightEnd () {
+    _onJumpStart () {
+        this._lifeTime = 0;
+        this._isJumpAnimation = true;
+    }
+
+    _onJumpAnimationEnd () {
+        this._isJumpAnimation = false;
+    }
+
+    _onFightAnimationFrame (frameName) {
+        const frameId = +frameName.substr('fight-'.length);
+        this._fightOffset = 8 - Math.abs(frameId - 8);
+        const {player} = this.level;
+        const damageDistance = (player.size.width + this.size.width) * 0.5 + FROG_DAMAGE_DISTANCE;
+        const dx = player.body.center.x - this.body.center.x;
+        if (frameId === 8 && Math.abs(dx) < damageDistance) {
+            player.organism.changeHealth(-FROG_DAMAGE);
+            player.body.move(new Vector2(Math.sign(dx) * 2, 0));
+        }
+    }
+
+    _onFightAnimationEnd () {
+        const direction = this._fightDirection;
+        this.motion.setDirection(direction);
+        this.visualDirection.setDirection(direction);
         this.fight.stop();
         this.motion.start();
-        this._direction = null;
     }
 
     _onDie () {
-        this.level.changeScore(SCORE_FROG_DEATH);
+        this.score.use();
         this.fadeOut.start();
     }
 

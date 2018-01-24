@@ -20,7 +20,7 @@ export default class AppearanceFadeInTrait extends AppearanceFadeOutTrait {
     }
 
     _processOpacity (opacity) {
-        return this._endValue - opacity;
+        return opacity;
     }
 
     _isEnded (opacity) {

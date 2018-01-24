@@ -46,6 +46,12 @@ export default class Body extends EventEmitter {
         });
     }
 
+    setFriction (friction) {
+        this.points.forEach((point) => {
+            point.friction = friction;
+        });
+    }
+
     setGravity (gravity) {
         this.points.forEach((point) => {
             point.gravity = gravity;

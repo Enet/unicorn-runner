@@ -27,6 +27,7 @@ export default class Entity extends Renderable {
         this._imageNode = null;
         this._spriteDescription = null;
 
+        this.options = options;
         this.level = options.level;
         this.sprite = this._createSprite(options);
         this.size = this._getSize(options);
@@ -78,6 +79,9 @@ export default class Entity extends Renderable {
 
     entityWillUnmount () {
         this.body.removeListener('collision', this.entityCollision);
+    }
+
+    entityDidUnmount () {
         this.traits.forEach(trait => this.traits.remove(trait));
     }
 

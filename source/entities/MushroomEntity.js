@@ -5,24 +5,32 @@ import {
 import Entity from 'entities/Entity.js';
 import FootholdTrait from 'traits/FootholdTrait.js';
 import TriggerContactTrait from 'traits/TriggerContactTrait.js';
-import AppearanceGravityTrait from 'traits/AppearanceGravityTrait.js';
+import BodyGravityTrait from 'traits/BodyGravityTrait.js';
 
 export default class MushroomEntity extends Entity {
     get angle () {
-        return this._angle;
+        return super.angle + this._angle;
     }
 
     entityWillMount () {
         super.entityWillMount(...arguments);
         const axis = this._getAxis();
-        this._angle = (axis === 'x') * 0.5 * Math.PI;
-        this._defaultOffset[axis] -= 10;
+        this._angle = -0.5 * Math.PI * (axis === 'x');
+        this._defaultOffset.y -= 5;
+    }
+
+    _getSpriteName () {
+        return 'Mushroom';
+    }
+
+    _getProgress () {
+        let progress = 0.01 * (this._lifeTime - this._explodeTime) || 0;
+        progress = Math.floor(Math.max(1, Math.min(5, progress)));
+        return progress;
     }
 
     _getFrame () {
-        let progress = 0.01 * (this._lifeTime - this._explodeTime) || 0;
-        progress = Math.max(1, Math.min(5, progress));
-        return 'mushroom-' + progress;
+        return 'mushroom-' + this._getProgress();
     }
 
     _getSize () {
@@ -50,7 +58,7 @@ export default class MushroomEntity extends Entity {
                 willExplode: this._willExplode.bind(this),
                 onExplode: this._onExplode.bind(this)
             }),
-            new AppearanceGravityTrait({
+            new BodyGravityTrait({
                 autoStart: this._getAxis() === 'x'
             })
         ];

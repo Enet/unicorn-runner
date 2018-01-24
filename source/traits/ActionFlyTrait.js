@@ -11,18 +11,20 @@ export default class ActionFlyTrait extends ActionTrait {
     start () {
         super.start();
         this._updateGravity();
-        this.level.addEffect('fly');
     }
 
     stop () {
         super.stop();
         this._updateGravity();
-        this.level.removeEffect('fly');
     }
 
     setGravityDirection (x, y) {
         this._gravityDirection.x = Math.sign(x);
         this._gravityDirection.y = Math.sign(y);
+        this._updateGravity();
+
+        const {onChange} = this.options;
+        onChange && onChange();
     }
 
     getGravityDirection () {
@@ -39,9 +41,11 @@ export default class ActionFlyTrait extends ActionTrait {
     }
 
     _updateGravity () {
-        const gravity = this._isStopped ?
-            null :
-            this.getGravityDirection().length(FLY_GRAVITY);
+        let gravity = null;
+        if (!this._isStopped) {
+            gravity = this.getGravityDirection().length(FLY_GRAVITY);
+            gravity.x *= 3;
+        }
         this.entity.body.setGravity(gravity);
     }
 }

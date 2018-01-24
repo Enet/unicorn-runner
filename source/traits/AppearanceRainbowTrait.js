@@ -59,6 +59,10 @@ export default class AppearanceRainbowTrait extends AppearanceTrait {
     }
 
     setGravityDirection (x, y) {
+        const velocityDirection = this._gravityDirection.x;
+        if (velocityDirection) {
+            this._prevVelocityDirection = velocityDirection;
+        }
         this._gravityDirection.x = Math.sign(x);
         this._gravityDirection.y = Math.sign(y);
     }
@@ -76,6 +80,7 @@ export default class AppearanceRainbowTrait extends AppearanceTrait {
         this._onParticleSystemStop = this._onParticleSystemStop.bind(this)
         this._particleSystems = new Set();
         this._gravityDirection = new Vector2(0, 0);
+        this._prevVelocityDirection = 1;
     }
 
     traitWillUpdate (deltaTime) {
@@ -89,8 +94,9 @@ export default class AppearanceRainbowTrait extends AppearanceTrait {
 
     _updateParticleSystem (deltaTime, particleSystem) {
         const {options} = particleSystem;
-        const {x, y} = this._getGravityDirection();
-        if (x >= 0) {
+        const {x, y} = this.getGravityDirection();
+        const velocityDirection = x || this._prevVelocityDirection;
+        if (velocityDirection > 0) {
             options.offset.x = -Math.abs(options.offset.x);
             options.direction = Math.PI;
         } else {

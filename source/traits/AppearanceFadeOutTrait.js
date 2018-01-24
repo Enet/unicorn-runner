@@ -10,11 +10,11 @@ export default class AppearanceFadeOutTrait extends AppearanceTrait {
     start (duration=DEFAULT_DURATION) {
         this._duration = +duration;
         this._startTime = this._lifeTime;
-        this._defineProperty(this._getOpacity);
+        this._defineProperty(this._getOpacity.bind(this));
 
         const {options} = this;
         const {onStart} = options;
-        onStart();
+        onStart && onStart();
     }
 
     stop () {
@@ -37,7 +37,7 @@ export default class AppearanceFadeOutTrait extends AppearanceTrait {
     }
 
     _defineProperty (get) {
-        Object.defineProperty('opacity', this.entity, {
+        Object.defineProperty(this.entity, 'opacity', {
             configurable: true,
             get
         });
@@ -49,7 +49,7 @@ export default class AppearanceFadeOutTrait extends AppearanceTrait {
     }
 
     _processOpacity (opacity) {
-        return opacity;
+        return this._startValue - opacity;
     }
 
     _isEnded (opacity) {
@@ -63,7 +63,7 @@ export default class AppearanceFadeOutTrait extends AppearanceTrait {
             this._defineProperty(getterMap[this._endValue]);
             const {options} = this;
             const {onEnd} = options;
-            onEnd();
+            onEnd && onEnd();
             return this._endValue;
         } else {
             return opacity;

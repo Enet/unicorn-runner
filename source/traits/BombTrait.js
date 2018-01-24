@@ -56,6 +56,7 @@ export default class BombTrait extends Trait {
         const y = -10 - 5 * Math.random();
         const impulse = new Vector2(x, y);
         body.move(impulse);
+        impulse.y *= 0.5;
         this.entity.body.move(impulse.length(-1));
     }
 

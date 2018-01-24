@@ -6,7 +6,7 @@ import {
     INDEX_CLOUD
 } from 'constants.js';
 
-export default class DustCloud extends StaticEntity {
+export default class DustCloudEntity extends StaticEntity {
     get index () {
         return INDEX_CLOUD;
     }
@@ -31,7 +31,9 @@ export default class DustCloud extends StaticEntity {
         this.level.scene.add(particleSystem);
         this._particleSystem = particleSystem;
 
-        this.sprite.animations.get('default').once('end', this._onAnimationEnd);
+        this.sprite.animations
+            .get('default')
+            .once('end', this._onAnimationEnd.bind(this));
     }
 
     entityWillUpdate (deltaTime) {

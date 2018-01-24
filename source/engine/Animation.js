@@ -5,17 +5,23 @@ export default class Animation extends EventEmitter {
         super();
         this.frames = frames;
         this.delay = delay;
+        this._prevFrameIndex = null;
     }
 
     frame (time) {
         const {frames, delay} = this;
         const frameIndex = Math.floor(time / delay) % frames.length;
+        const frameName = frames[frameIndex];
         if (!frameIndex) {
             this.emit('start');
-        } else if (frameIndex === frames.length - 1) {
+        }
+        if (frameIndex !== this._prevFrameIndex) {
+            this.emit('frame', frameName);
+        }
+        if (frameIndex === frames.length - 1) {
             this.emit('end');
         }
-        const frameName = frames[frameIndex];
+        this._prevFrameIndex = frameIndex;
         return frameName;
     }
 }

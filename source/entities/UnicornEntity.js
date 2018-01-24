@@ -4,7 +4,9 @@ import {
 
 import Entity from 'entities/Entity.js';
 import OrganismTrait from 'traits/OrganismTrait.js';
-import AppearanceAngleLimitTrait from 'traits/AppearanceAngleLimitTrait.js';
+import FootholdTrait from 'traits/FootholdTrait.js';
+import BodyAngleLimitTrait from 'traits/BodyAngleLimitTrait.js';
+import AppearanceRainbowTrait from 'traits/AppearanceRainbowTrait.js';
 
 export default class UnicornEntity extends Entity {
     get offset () {
@@ -23,7 +25,9 @@ export default class UnicornEntity extends Entity {
 
     _createTraits () {
         return [
-            new AppearanceAngleLimitTrait({
+            new FootholdTrait(),
+            new AppearanceRainbowTrait(),
+            new BodyAngleLimitTrait({
                 maxAngle: 0.33 * Math.PI
             }),
             new OrganismTrait({

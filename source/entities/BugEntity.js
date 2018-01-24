@@ -6,6 +6,7 @@ import Entity from 'entities/Entity.js';
 import TriggerContactTrait from 'traits/TriggerContactTrait.js';
 import OrganismTrait from 'traits/OrganismTrait.js';
 import AppearanceFadeOutTrait from 'traits/AppearanceFadeOutTrait.js';
+import GameplayScoreTrait from 'traits/GameplayScoreTrait.js';
 import {
     SCORE_BUG_DEATH
 } from 'constants.js';
@@ -39,6 +40,9 @@ export default class BugEntity extends Entity {
             }),
             new AppearanceFadeOutTrait({
                 onEnd: this._onFadeOutEnd.bind(this)
+            }),
+            new GameplayScoreTrait({
+                deltaScore: SCORE_BUG_DEATH
             })
         ];
     }
@@ -54,7 +58,7 @@ export default class BugEntity extends Entity {
     }
 
     _onDie () {
-        this.level.changeScore(SCORE_BUG_DEATH);
+        this.score.use();
         this.fadeOut.start();
     }
 

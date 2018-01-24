@@ -5,7 +5,7 @@ import {
 
 export const TILE_SIZE = 60;
 export const EFFECT_TIME = 5000;
-export const CAMERA_OFFSET = new Vector2(200, 300);
+export const CAMERA_OFFSET = new Vector2(500, 300);
 
 export const RUN_SPEED = 0.1;
 export const FIGHT_DAMAGE = 10;

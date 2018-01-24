@@ -9,11 +9,14 @@ import ActionRunTrait from 'traits/ActionRunTrait.js';
 import ActionJumpTrait from 'traits/ActionJumpTrait.js';
 import ActionFlyTrait from 'traits/ActionFlyTrait.js';
 import ActionFightTrait from 'traits/ActionFightTrait.js';
-import AppearanceImpulseLimitTrait from 'traits/AppearanceImpulseLimitTrait.js';
+import BodyImpulseLimitTrait from 'traits/BodyImpulseLimitTrait.js';
 
 export default class PlayerEntity extends UnicornEntity {
     get scale () {
-        const direction = this.run.getDirection();
+        const direction = this.fly.isStopped() ?
+            this.run.getDirection() :
+            this.fly.getGravityDirection().x || this._prevDirection;
+        this._prevDirection = direction;
         return new Vector2(direction, 1);
     }
 
@@ -43,18 +46,41 @@ export default class PlayerEntity extends UnicornEntity {
     _createTraits () {
         return [
             ...super._createTraits(...arguments),
-            new AppearanceImpulseLimitTrait(),
+            new BodyImpulseLimitTrait(),
             new ActionRunTrait(),
             new ActionJumpTrait(),
-            new ActionFlyTrait(),
             new ActionFightTrait(),
+            new ActionFlyTrait({
+                onStart: this._onFlyStart.bind(this),
+                onStop: this._onFlyStop.bind(this),
+                onChange: this._onFlyChange.bind(this)
+            }),
             new PickerTrait(),
             new ControllerTrait()
         ];
     }
 
+    _onFlyStart () {
+        this.rainbow.setGravityDirection(this._prevDirection, 0);
+        this.rainbow.start();
+    }
+
+    _onFlyChange () {
+        const {x, y} = this.fly.getGravityDirection();
+        this.rainbow.setGravityDirection(x, y);
+    }
+
+    _onFlyStop () {
+        this.rainbow.stop();
+        this.run.start(this._prevDirection);
+    }
+
     _onHealthChange ({health}) {
         this.level.setHealth(health);
+    }
+
+    _onDie () {
+        this._lifeTime = 0;
     }
 
     _onDieAnimationEnd () {

@@ -1,13 +1,13 @@
 import Trait from 'traits/Trait.js';
 
 export default class PickableTrait extends Trait {
-    pick () {
+    pick (picker) {
         if (this._isPicked) {
             return;
         }
         this._isPicked = true;
-        const {onPick} = this._callbacks;
-        onPick && onPick();
+        const {onPick} = this.options;
+        onPick && onPick(picker);
     }
 
     isPicked () {

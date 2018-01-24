@@ -3,6 +3,8 @@ import GameplayMedicineTrait from 'traits/GameplayMedicineTrait.js';
 import PickableTrait from 'traits/PickableTrait.js';
 import AppearanceFallDownTrait from 'traits/AppearanceFallDownTrait.js';
 
+const MEDICINE_DELTA_HEALTH = 40;
+
 export default class MedicineEntity extends Entity {
     _getImageName () {
         return 'Medicine';
@@ -10,7 +12,9 @@ export default class MedicineEntity extends Entity {
 
     _createTraits () {
         return [
-            new GameplayMedicineTrait(),
+            new GameplayMedicineTrait({
+                deltaHealth: MEDICINE_DELTA_HEALTH
+            }),
             new PickableTrait({
                 onPick: this._onPick.bind(this)
             }),
@@ -20,8 +24,8 @@ export default class MedicineEntity extends Entity {
         ];
     }
 
-    _onPick () {
-        this.medicine.use();
+    _onPick ({organism}) {
+        this.medicine.use(organism);
         this.fallDown.start();
     }
 
