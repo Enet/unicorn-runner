@@ -4,13 +4,12 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import spriteDescription from 'sprites/DustCloudSprite.js';
 import {
     COLOR_ORANGE,
     INDEX_CLOUD
 } from 'constants.js';
 
-const animation = spriteDescription.animations[0];
+const animation = null;
 
 export default class DustCloud extends StaticEntity {
     get index () {
@@ -46,10 +45,6 @@ export default class DustCloud extends StaticEntity {
             this.level.removeEntity(this);
             this.level.scene.remove(this._particleSystem);
         }
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getSize () {

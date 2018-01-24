@@ -7,8 +7,13 @@ export default class ControllerTrait extends Trait {
         const {player} = this.level;
 
         if (player.fly.isStopped()) {
-            left && player.run.left();
-            right && player.run.right();
+            if (right) {
+                player.run.right();
+            } else if (left) {
+                player.run.left();
+            } else {
+                player.run.stop();
+            }
 
             if (down) {
                 player.fight.start();
@@ -40,7 +45,7 @@ export default class ControllerTrait extends Trait {
     traitDidMount () {
         const {entity} = this;
         if (!entity.run || !entity.jump || !entity.fight || !entity.fly) {
-            throw 'Controller does not support this character!';
+            throw 'ControllerTrait does not support this character!';
         }
     }
 }

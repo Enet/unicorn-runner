@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 
 export default class Animation extends EventEmitter {
-    constructor ({frames, delay}) {
+    constructor (frames, delay) {
         super();
         this.frames = frames;
         this.delay = delay;

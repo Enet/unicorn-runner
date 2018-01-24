@@ -1,4 +1,4 @@
-import MotionTrait from 'traits/MotionTrait.js';
+import MotionTrait from 'traitsnew/MotionTrait.js';
 
 const DEFAULT_SPEED = 0.2;
 

@@ -1,20 +1,21 @@
 import Animation from './Animation.js';
 
 export default class Sprite {
-    constructor (image, {frames=[], animations=[]}) {
+    constructor () {
+        const {image, frames, animations} = this._initOptions(...arguments);
+
         this.image = image;
 
         this.frames = new Map();
-        frames.forEach((description) => {
-            const {name, rect} = description;
-            const frame = this._createFrame(...rect);
+        Object.keys(frames).forEach((rectangle, name) => {
+            const frame = this._createFrame(...rectangle);
             this.frames.set(name, frame);
         });
 
         this.animations = new Map();
-        animations.forEach((description) => {
-            const {name} = description;
-            const animation = this._createAnimation(description);
+        Object.keys(animations).forEach((frames, key) => {
+            let [name, delay] = key.split('.');
+            const animation = this._createAnimation(frames, delay);
             this.animations.set(name, animation);
         });
     }
@@ -22,6 +23,20 @@ export default class Sprite {
     render (name, context, x=0, y=0) {
         const frame = this.frames.get(name);
         context.drawImage(frame, x, y);
+    }
+
+    _initOptions (imageNode, spriteDescription) {
+        const image = imageNode;
+
+        const frames = spriteDescription.frames || {
+            default: [0, 0, image.naturalWidth, image.naturalHeight]
+        };
+
+        const animations = spriteDescription.animations || {
+            default: ['default']
+        };
+
+        return {image, frames, animations};
     }
 
     _createFrame (x, y, width, height) {
@@ -40,7 +55,8 @@ export default class Sprite {
         return frame;
     }
 
-    _createAnimation (description) {
-        return new Animation(description);
+    _createAnimation (frames, delay) {
+        delay = +delay || 16;
+        return new Animation(frames, delay);
     }
 }

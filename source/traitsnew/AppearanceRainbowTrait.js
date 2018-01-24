@@ -1,7 +1,8 @@
+import ParticleSystem from 'engine/ParticleSystem.js';
 import {
     Vector2
 } from 'engine/math.js';
-import ParticleSystem from 'engine/ParticleSystem.js';
+
 import AppearanceTrait from 'traitsnew/AppearanceTrait.js';
 
 import {

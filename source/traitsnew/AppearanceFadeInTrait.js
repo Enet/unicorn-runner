@@ -11,6 +11,14 @@ export default class AppearanceFadeInTrait extends AppearanceFadeOutTrait {
         this._endValue = 1;
     }
 
+    traitDidMount () {
+        let {autoStart} = this.options;
+        if (autoStart === undefined) {
+            autoStart = true;
+        }
+        autoStart && this.start();
+    }
+
     _processOpacity (opacity) {
         return this._endValue - opacity;
     }

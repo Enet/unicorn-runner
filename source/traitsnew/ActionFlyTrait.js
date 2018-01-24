@@ -1,8 +1,8 @@
 import {
     Vector2
 } from 'engine/math.js';
-import ActionTrait from 'traitsnew/ActionTrait.js';
 
+import ActionTrait from 'traitsnew/ActionTrait.js';
 import {
     FLY_GRAVITY
 } from 'constants.js';

@@ -5,7 +5,6 @@ import {
 
 import Killable from 'traits/Killable.js';
 import Enemy from 'traits/Enemy.js';
-import spriteDescription from 'sprites/BugSprite.js';
 
 export default class Bug extends Entity {
     get offset () {
@@ -13,10 +12,6 @@ export default class Bug extends Entity {
         offset.x -= (58 - 29) / 2;
         offset.y -= 20;
         return offset;
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getSize () {

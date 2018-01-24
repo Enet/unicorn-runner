@@ -7,16 +7,12 @@ import {
 import TileBackground from 'backgrounds/TileBackground.js';
 import LavaBackground from 'backgrounds/LavaBackground.js';
 import Player from 'entities/Player.js';
-import {
-    entities,
-    backgrounds
-} from 'resources.js';
-import {
-    TILE_SIZE
-} from 'constants.js';
 import generateTileMatrix from 'utils/generateTileMatrix.js';
 import getTileRangeByBounds from 'utils/getTileRangeByBounds.js';
 import getImageNodes from 'utils/getImageNodes.js';
+import {
+    TILE_SIZE
+} from 'constants.js';
 
 let uniqueTimerId = 0;
 
@@ -68,6 +64,7 @@ export default class Level {
             effects.delete('slow');
             effects.delete('fast');
         } else {
+            name === 'fly' && this.player.fly.start();
             effects.add(name);
         }
         this.callbacks.onEffectChange(effects);
@@ -76,10 +73,11 @@ export default class Level {
     removeEffect (name) {
         const {effects} = this;
         effects.delete(name);
+        name === 'fly' && this.player.fly.stop();
         this.callbacks.onEffectChange(effects);
     }
 
-    setTimeout (callback, time) {
+    setTimeout (callback, time=0) {
         const timerId = uniqueTimerId++;
         time += this._elapsedTime;
         this.timers.set(timerId, {time, callback});
@@ -198,7 +196,7 @@ export default class Level {
             const x = xIndex * width;
             const y = yIndex * height;
             const tile = new StaticBoxBody({x, y, width, height});
-            tile.entity = {obstacle: true, size: {width, height}};
+            tile.entity = {foothold: true, obstacle: true, size: {width, height}};
             tiles.push(tile);
             world.add(tile);
             return tile;
@@ -210,7 +208,7 @@ export default class Level {
 
     _initStaticBackground ({meta}) {
         const {manager, scene} = this;
-        const Background = backgrounds[meta.background];
+        const Background = manager.getBackground(meta.background);
         if (!Background) {
             return;
         }
@@ -242,7 +240,7 @@ export default class Level {
         const level = this;
         const {manager} = this;
         data.entities.forEach(({name, position: [x, y], ...settings}) => {
-            const Entity = entities[name];
+            const Entity = manager.getEntity(name);
             const images = getImageNodes(manager, Entity.images);
             const entity = new Entity({level, settings, images, x, y});
             this.addEntity(entity);

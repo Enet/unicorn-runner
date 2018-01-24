@@ -1,8 +1,8 @@
 import {
     Vector2
 } from 'engine/math.js';
-import ActionTrait from 'traits/ActionTrait.js';
 
+import ActionTrait from 'traitsnew/ActionTrait.js';
 import {
     JUMP_IMPULSE_POWER,
     JUMP_IMPULSE_TIME,
@@ -12,6 +12,14 @@ import {
 export default class ActionJumpTrait extends ActionTrait {
     isJumping () {
         return this._isJumping;
+    }
+
+    setDirection (angle) {
+        this._jumpImpulseDirection = angle;
+    }
+
+    getDirection () {
+        return this._jumpImpulseDirection;
     }
 
     start () {
@@ -33,6 +41,7 @@ export default class ActionJumpTrait extends ActionTrait {
     }
 
     traitWillMount ({
+        jumpImpulseDirection=Math.PI,
         jumpImpulsePower=JUMP_IMPULSE_POWER,
         jumpImpulseTime=JUMP_IMPULSE_TIME,
         jumpNoCollisionTime=JUMP_NO_COLLISION_TIME
@@ -43,7 +52,8 @@ export default class ActionJumpTrait extends ActionTrait {
         this._jumpEndTime = -Infinity;
         this._jumpNoCollisionTime = +jumpNoCollisionTime;
         this._jumpImpulseTime = +jumpImpulseTime;
-        this._impulse = new Vector2(0, -jumpImpulsePower);
+        this._jumpImpulseDirection = +jumpImpulseDirection;
+        this._jumpImpulsePower = +jumpImpulsePower;
     }
 
     traitWillUpdate (deltaTime) {
@@ -58,7 +68,13 @@ export default class ActionJumpTrait extends ActionTrait {
             return;
         }
 
-        this.entity.body.move(this._impulse);
+        const jumpImpulseDirection = this._jumpImpulseDirection;
+        const jumpImpulsePower = this._jumpImpulsePower;
+        const impulse = new Vector2(
+            Math.sin(jumpImpulseDirection) * jumpImpulsePower,
+            Math.cos(jumpImpulseDirection) * jumpImpulsePower
+        );
+        this.entity.body.move(impulse);
     }
 
     traitCollision (body) {

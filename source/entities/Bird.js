@@ -6,7 +6,6 @@ import {
 import Killable from 'traits/Killable.js';
 import Walker from 'traits/Walker.js';
 import BirdBehaviour from 'traits/BirdBehaviour.js';
-import spriteDescription from 'sprites/BirdSprite.js';
 
 export default class Bird extends Entity {
     get scale () {
@@ -45,7 +44,7 @@ export default class Bird extends Entity {
         }
         this._afterDeathTime += deltaTime;
         this._lifeTime = this._afterDeathTime;
-        const animation = spriteDescription.animations[1];
+        const animation = null;
         if (this._afterDeathTime > animation.delay * animation.frames.length) {
             this.level.removeEntity(this);
         }
@@ -55,10 +54,6 @@ export default class Bird extends Entity {
         super(...arguments);
         this._prevCenter = this.body.center;
         this._afterDeathTime = null;
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getSize () {

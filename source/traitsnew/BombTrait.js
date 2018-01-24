@@ -1,8 +1,8 @@
 import {
     Vector2
 } from 'engine/math.js';
-import Trait from 'traitsnew/Trait.js';
 
+import Trait from 'traitsnew/Trait.js';
 import getImageNodes from 'utils/getImageNodes.js';
 
 export default class BombTrait extends Trait {

@@ -5,6 +5,7 @@ import {
     REACTION_NO,
     REACTION_FULL
 } from 'engine/constants.js';
+
 import AppearanceFadeOutTrait from 'traitsnew/AppearanceFadeOutTrait.js';
 
 export default class AppearanceFallDownTrait extends AppearanceFadeOutTrait {

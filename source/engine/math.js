@@ -56,6 +56,11 @@ export class Vector2 {
         return new Vector2(x, y);
     }
 
+    reverse () {
+        const {x, y} = this;
+        return new Vector2(y, x);
+    }
+
     set (vector) {
         this.x = vector.x;
         this.y = vector.y;

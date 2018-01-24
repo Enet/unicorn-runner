@@ -39,6 +39,9 @@ module.exports = {
                 use: ['css-loader', 'stylus-loader']
             })
         }, {
+            test: /\.yaml$/,
+            use: 'yaml-loader'
+        }, {
             test: /\.(?:gif|png|jpe?g)$/i,
             use: [{
                 loader: 'url-loader',

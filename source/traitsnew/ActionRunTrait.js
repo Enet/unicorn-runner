@@ -1,8 +1,8 @@
 import {
     Vector2
 } from 'engine/math.js';
-import ActionTrait from 'traits/ActionTrait.js';
 
+import ActionTrait from 'traitsnew/ActionTrait.js';
 import {
     RUN_SPEED
 } from 'constants.js';

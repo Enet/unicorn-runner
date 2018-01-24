@@ -20,8 +20,10 @@ export default class TraitManager {
     }
 
     remove (trait) {
+        const traitName = trait.getName();
         trait.traitWillUnmount();
         this._storage.delete(trait);
+        delete this.entity[traitName];
     }
 
     forEach () {

@@ -1,13 +1,9 @@
-import {
-    Vector2
-} from 'engine/math.js';
-import Trait from 'traits/Trait.js';
+import MotionTrait from 'traitsnew/MotionTrait.js';
 
 const JUMP_PROBABILITY = 0.01;
-const JUMP_POWER = 5;
 const JUMP_WAITING_TIME = 2000;
 
-export default class Jumper extends Trait {
+export default class MotionJumpTrait extends MotionTrait {
     move (direction) {
         if (this._lifeTime - this._prevJumpTime < this._jumpWaitingTime) {
             return;
@@ -16,14 +12,15 @@ export default class Jumper extends Trait {
             return;
         }
 
-        this._impulse.x = Math.abs(this._impulse.x) * direction;
-        this.entity.body.move(this._impulse);
+        const {jump} = this.entity;
+        jump.setDirection(Math.PI * (1 + 0.25 * direction));
+        jump.start();
+        this.level.setTimeout(() => jump.stop());
         this._prevJumpTime = this._lifeTime;
     }
 
     traitWillMount ({
         jumpProbability=JUMP_PROBABILITY,
-        jumpPower=JUMP_POWER,
         jumpWaitingTime=JUMP_WAITING_TIME
     }) {
         super.traitWillMount(...arguments);
@@ -31,7 +28,14 @@ export default class Jumper extends Trait {
         this._prevJumpTime = 0;
         this._jumpProbability = +jumpProbability;
         this._jumpWaitingTime = +jumpWaitingTime;
-        this._impulse = new Vector2(+jumpPower, -2 * jumpPower);
+    }
+
+    traitDidMount () {
+        super.traitDidMount();
+        const {entity} = this;
+        if (!entity.jump) {
+            throw 'MotionJumpTrait does not support this character!';
+        }
     }
 
     _shouldToggleDirection (direction) {

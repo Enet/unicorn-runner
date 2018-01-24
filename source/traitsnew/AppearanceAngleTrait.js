@@ -19,7 +19,11 @@ export default class AppearanceAngleTrait extends AppearanceTrait {
     }
 
     traitDidMount () {
-        this.start();
+        let {autoStart} = this.options;
+        if (autoStart === undefined) {
+            autoStart = true;
+        }
+        autoStart && this.start();
     }
 
     _getDeltaAngle (deltaAngle, angle) {

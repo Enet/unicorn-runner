@@ -6,7 +6,7 @@ const UPDATE_TIME = 17;
 
 export default class Game {
     constructor (options) {
-        const manager = new ResourceManager();
+        const manager = this._createManager();
         manager.fetchResources(this._getResources()).then(() => {
             this._onManagerReady(options);
         });
@@ -29,6 +29,10 @@ export default class Game {
 
     getManager () {
         return this._manager;
+    }
+
+    _createManager () {
+        return new ResourceManager();
     }
 
     _getResources () {

@@ -90,7 +90,6 @@ export default class Fly extends Trait {
         this._remainingTime += flyTime;
         this._addParticleSystem();
         this._updateGravity();
-        this.level.addEffect('fly');
         this.entity.jump && this.entity.jump.cancel();
     }
 
@@ -99,7 +98,6 @@ export default class Fly extends Trait {
         this._remainingTime = 0;
         this._removeParticleSystem();
         this.entity.body.setGravity(null);
-        this.level.removeEffect('fly');
     }
 
     _addParticleSystem () {

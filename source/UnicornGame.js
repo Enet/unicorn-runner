@@ -4,6 +4,7 @@ import Camera from 'engine/Camera.js';
 import Scene from 'engine/Scene.js';
 import Debugger from 'engine/Debugger.js';
 
+import UnicornResourceManager from 'UnicornResourceManager.js';
 import Level from 'Level.js';
 import {
     CAMERA_OFFSET,
@@ -24,6 +25,10 @@ import {
 } from 'resources.js';
 
 export default class UnicornGame extends Game {
+    _createManager () {
+        return new UnicornResourceManager();
+    }
+
     _getResources () {
         return {images, sounds};
     }

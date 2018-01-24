@@ -5,7 +5,6 @@ import {
 
 import DustBomb from 'traits/DustBomb.js';
 import Obstacle from 'traits/Obstacle.js';
-import spriteDescription from 'sprites/TrapSprite.js';
 
 export default class Trap extends Entity {
     get angle () {
@@ -17,10 +16,6 @@ export default class Trap extends Entity {
         offset.x -= (70 - 50) / 2;
         offset.y -= (46 - 10) / 2 + 15 - (this._angle * 10 || 0);
         return offset;
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getFrame () {

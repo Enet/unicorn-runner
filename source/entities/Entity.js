@@ -99,11 +99,11 @@ export default class Entity extends Renderable {
         return new Sprite(images.default, description);
     }
 
-    _createBody ({x=0, y=0, stiffness=1}, Body=BoxBody) {
+    _createBody ({x=0, y=0}, Body=BoxBody) {
         const {width, height} = this.size;
         x -= width / 2;
         y -= height / 2;
-        const body = new Body({x, y, width, height, stiffness});
+        const body = new Body({x, y, width, height});
         body.entity = this;
         return body;
     }

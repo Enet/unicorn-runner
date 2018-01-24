@@ -41,8 +41,9 @@ export default class Rope extends Entity {
         return new Vector2(0, 0);
     }
 
-    _createBody ({points, stiffness=0.1}) {
+    _createBody ({points}) {
         const reaction = REACTION_NO;
+        const stiffness = 0.1;
         const body = new Body({points, reaction, stiffness});
         body.entity = this;
         return body;

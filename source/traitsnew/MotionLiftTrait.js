@@ -1,5 +1,4 @@
-import MotionTrait from 'traits/MotionTrait.js';
-
+import MotionTrait from 'traitsnew/MotionTrait.js';
 import {
     TILE_SIZE
 } from 'constants.js';

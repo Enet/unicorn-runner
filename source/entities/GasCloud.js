@@ -3,7 +3,6 @@ import {
     Vector2
 } from 'engine/math.js';
 
-import spriteDescription from 'sprites/GasCloudSprite.js';
 import {
     GAS_CLOUD_TIME,
     INDEX_CLOUD
@@ -55,10 +54,6 @@ export default class GasCloud extends StaticEntity {
         const distance = this.body.center.subtract(entity.body.center).length();
         const power = 2 / Math.max(2, distance);
         entity.killable.changeHealth(-power);
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getSize () {

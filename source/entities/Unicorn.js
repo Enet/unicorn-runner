@@ -4,7 +4,6 @@ import {
 } from 'engine/math.js';
 
 import Killable from 'traits/Killable.js';
-import spriteDescription from 'sprites/UnicornSprite.js';
 
 export default class Unicorn extends Entity {
     get offset () {
@@ -12,10 +11,6 @@ export default class Unicorn extends Entity {
         offset.x -= (172 - 100) / 2;
         offset.y -= (119 - 65) / 2 + 20;
         return offset;
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getSize () {

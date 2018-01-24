@@ -1,62 +1,127 @@
+import TriangleBody from 'engine/TriangleBody.js';
+import StaticPoint from 'engine/StaticPoint.js';
 import {
     Vector2
 } from 'engine/math.js';
-import StaticPoint from 'engine/StaticPoint.js';
-import TriangleBody from 'engine/TriangleBody.js';
-import Entity from 'entities/Entity.js';
 
-import Rope from 'entities/Rope.js';
-import Killable from 'traits/Killable.js';
-import Coin10 from 'entities/Coin10.js';
-import Coin50 from 'entities/Coin50.js';
-import Coin100 from 'entities/Coin100.js';
-import spriteDescription from 'sprites/SpiderSprite.js';
+import Entity from 'entitiesnew/Entity.js';
+import Rope from 'entitiesnew/Rope.js';
+import Coin10 from 'entitiesnew/Coin10.js';
+import Coin50 from 'entitiesnew/Coin50.js';
+import Coin100 from 'entitiesnew/Coin100.js';
+import OrganismTrait from 'traitsnew/OrganismTrait.js';
+import TriggerContactTrait from 'traitsnew/TriggerContactTrait.js';
+import AppearanceFadeOutTrait from 'traitsnew/AppearanceFadeOutTrait.js';
+import ActionFightTrait from 'traitsnew/ActionFightTrait.js';
+import {
+    SCORE_SPIDER_DEATH
+} from 'constants.js';
 
+const SPIDER_WAITING_TIME = 2000;
+const SPIDER_FIGHTING_TIME = 300;
+const SPIDER_DAMAGE = 5;
 const coins = {
     10: Coin10,
     50: Coin50,
     100: Coin100
 };
 
-export default class Spider extends Entity {
-    get offset () {
-        const offset = super.offset;
-        offset.x -= (60 - 60) / 2;
-        offset.y -= (66 - 33) / 2;
-        return offset;
-    }
-
+export default class SpiderEntity extends Entity {
     entityWillUpdate (deltaTime) {
         super.entityWillUpdate(...arguments);
-        if (this._lifeTime - this._collisionTime < 2000) {
+
+        if (this._lifeTime - this._collisionTime < SPIDER_WAITING_TIME) {
             return;
         }
+
         const {player} = this.level;
-        if (!this._attackTime && player.fight.isFighting() && Math.random() > 0.01) {
+        if (!this.fight.isFighting() &&
+            player.fight.isFighting() &&
+            Math.random() > 0.01) {
             return;
         }
-        if (Math.abs(this.body.center.x - player.body.center.x) < player.size.width / 2) {
-            if (this._attackTime > 300) {
-                this._collisionTime = this._lifeTime;
-                this._attackTime = 0;
-            } else {
-                this._attackTime += deltaTime;
-            }
-            this.body.move(new Vector2(0, this._reaction * (1 - this._attackTime / 300)));
+
+        if (Math.abs(this.body.center.x - player.body.center.x) > player.size.width / 2) {
+            return;
         }
+
+        const fightingTime = this._lifeTime - this._fightTime;
+        if (fightingTime > SPIDER_FIGHTING_TIME) {
+            this._collisionTime = this._lifeTime;
+            this.fight.stop();
+        } else {
+            this._fightTime = this._lifeTime;
+            this.fight.start();
+        }
+
+        const x = 0;
+        const y = this._reaction * (1 - fightingTime / SPIDER_FIGHTING_TIME);
+        const impulse = new Vector2(x, y);
+        this.body.move(impulse);
     }
 
-    entityCollision (body) {
-        if (this._lifeTime - this._collisionTime < 2000) {
+    entityWillMount ({settings}) {
+        super.entityWillMount(...arguments);
+        const {level} = this;
+        const points = [
+            new StaticPoint(this.body.center.x, this.body.center.y - 10),
+            this.body.points[0]
+        ];
+        const rope = new Rope({level, points});
+        this._reaction = +settings.reaction || 0;
+        this._rope = rope;
+        this._collisionTime = 0;
+        this._fightTime = 0;
+    }
+
+    entityDidMount () {
+        super.entityDidMount();
+        this.level.addEntity(this._rope);
+    }
+
+    _getImageName () {
+        return 'Spider';
+    }
+
+    _getSize () {
+        return new Vector2(60, 33);
+    }
+
+    _createBody (options) {
+        return super._createBody(options, TriangleBody);
+    }
+
+    _createTraits ({settings}) {
+        return [
+            new OrganismTrait({
+                onDie: this._onDie.bind(this)
+            }),
+            new ActionFightTrait({
+                damage: SPIDER_DAMAGE
+            }),
+            new TriggerContactTrait({
+                maxActivationCount: Infinity,
+                onActivate: this._onContact.bind(this)
+            }),
+            new AppearanceFadeOutTrait({
+                onEnd: this._onFadeOutEnd.bind(this)
+            })
+        ];
+    }
+
+    _onContact (body) {
+        if (this._lifeTime - this._collisionTime < SPIDER_WAITING_TIME) {
             return;
         }
         this._collisionTime = this._lifeTime;
 
-        if (body !== this.level.player.body) {
+        const {level} = this;
+        const {player} = level;
+        if (body !== player.body) {
             return;
         }
 
-        const score = this.level.getScore();
+        const score = level.getScore();
         let nominal;
         if (score > 100) {
             nominal = 100;
@@ -68,59 +133,20 @@ export default class Spider extends Entity {
             return;
         }
 
-        const {level} = this;
-        const {manager} = level;
-        const images = {default: manager.getImage(`Coin${nominal}`)};
-        const x = this.level.player.body.center.x;
-        const y = this.level.player.body.center.y;
+        const x = player.body.center.x;
+        const y = player.body.center.y;
         const Coin = coins[nominal];
-        const coin = new Coin({level, x, y, images});
-        this.level.addEntity(coin);
-        this.level.changeScore(-nominal);
+        const coin = new Coin({level, x, y});
+        level.addEntity(coin);
+        level.changeScore(-nominal);
     }
 
-    constructor ({settings}) {
-        super(...arguments);
-        const rope = new Rope({
-            level: this.level,
-            points: [
-                new StaticPoint(this.body.center.x, this.body.center.y - 10),
-                this.body.points[0]
-            ]
-        });
-        this._reaction = +settings.reaction || 0;
-        this._rope = rope;
-        this._attackTime = 0;
-        this._collisionTime = 0;
-        this.level.addEntity(rope);
+    _onDie () {
+        this.level.changeScore(SCORE_SPIDER_DEATH);
+        this.fadeOut.start();
     }
 
-    _getSpriteDescription () {
-        return spriteDescription;
-    }
-
-    _getSize () {
-        return new Vector2(60, 33);
-    }
-
-    _createBody (options) {
-        const body = super._createBody(options, TriangleBody);
-        return body;
-    }
-
-    _createTraits ({settings}) {
-        return [
-            new Killable({
-                onKill: this._onKill.bind(this)
-            })
-        ];
-    }
-
-    _onKill () {
-        this.level.changeScore(100);
+    _onFadeOutEnd () {
+        this.level.removeEntity(this);
     }
 }
-
-Spider.images = {
-    default: 'Spider'
-};

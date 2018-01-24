@@ -5,7 +5,6 @@ import {
 
 import Score from 'traits/Score.js';
 import Pickable from 'traits/Pickable.js';
-import spriteDescription from 'sprites/CoinSprite.js';
 
 export default class Coin extends Entity {
     entityWillUpdate (deltaTime) {
@@ -17,10 +16,6 @@ export default class Coin extends Entity {
 
     get angle () {
         return this._lifeTime * this._getNominal() / 10000;
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getFrame () {

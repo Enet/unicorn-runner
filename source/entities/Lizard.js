@@ -8,7 +8,6 @@ import Killable from 'traits/Killable.js';
 import Walker from 'traits/Walker.js';
 import Enemy from 'traits/Enemy.js';
 import Obstacle from 'traits/Obstacle.js';
-import spriteDescription from 'sprites/LizardSprite.js';
 import {
     COLOR_ORANGE
 } from 'constants.js';
@@ -41,10 +40,6 @@ export default class Lizard extends Entity {
             return;
         }
         this._particleSystem.update(deltaTime);
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getSize () {

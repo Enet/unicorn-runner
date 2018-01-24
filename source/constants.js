@@ -15,6 +15,13 @@ export const JUMP_IMPULSE_POWER = 0.75;
 export const JUMP_IMPULSE_TIME = 300;
 export const JUMP_NO_COLLISION_TIME = 50;
 
+export const SCORE_LIZARD_DEATH = 100;
+export const SCORE_BIRD_DEATH = 100;
+export const SCORE_BUG_DEATH = 100;
+export const SCORE_FROG_DEATH = 100;
+export const SCORE_FRUIT_FLY_DEATH = 100;
+export const SCORE_GAS_MUSHROOM_DEATH = 100;
+
 export const INDEX_STATIC_BACKGROUND = -1000;
 export const INDEX_RENDERABLE = 0;
 export const INDEX_TILE_BACKGROUND = 500;

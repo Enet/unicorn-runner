@@ -11,6 +11,14 @@ export default class TriggerTrait extends Trait {
         onActivate && onActivate(...arguments);
     }
 
+    setActivationCount (activationCount) {
+        this._activationCount = +activationCount || 0;
+    }
+
+    getActivationCound () {
+        return this._activationCount;
+    }
+
     getName () {
         return 'trigger';
     }

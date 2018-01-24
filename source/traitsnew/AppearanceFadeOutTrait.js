@@ -22,8 +22,8 @@ export default class AppearanceFadeOutTrait extends AppearanceTrait {
         this._defineProperty(getterMap[this._startValue]);
 
         const {options} = this;
-        const {onCancel} = options;
-        onCancel();
+        const {onStop} = options;
+        onStop();
     }
 
     getName () {

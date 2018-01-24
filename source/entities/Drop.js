@@ -10,7 +10,6 @@ import {
 
 import GasBomb from 'traits/GasBomb.js';
 import Meteor from 'traits/Meteor.js';
-import spriteDescription from 'sprites/DropSprite.js';
 import {
     MAX_HIDING_TIME
 } from 'constants.js';
@@ -57,10 +56,6 @@ export default class Drop extends Entity {
         super(...arguments);
         this._parent = parent;
         this._afterDeathTime = null;
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getFrame () {

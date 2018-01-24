@@ -5,13 +5,8 @@ import {
 
 import RainbowBehaviour from 'traits/RainbowBehaviour.js';
 import Pickable from 'traits/Pickable.js';
-import spriteDescription from 'sprites/RainbowSprite.js';
 
 export default class Rainbow extends Entity {
-    _getSpriteDescription () {
-        return spriteDescription;
-    }
-
     _getSize () {
         return new Vector2(83, 93);
     }

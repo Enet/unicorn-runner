@@ -1,6 +1,8 @@
 import GameplayTrait from 'traitsnew/GameplayTrait.js';
 
-const DEFAULT_DURATION = 5000;
+import {
+    EFFECT_TIME
+} from 'constants.js';
 
 export default class GameplayEffectTrait extends GameplayTrait {
     use () {
@@ -9,7 +11,7 @@ export default class GameplayEffectTrait extends GameplayTrait {
         }
         const {options, level} = this;
         const {effectName} = options;
-        const duration = +options.duration || DEFAULT_DURATION;
+        const duration = +options.duration || EFFECT_TIME;
         level.addEffect(effectName);
         level.setTimeout(this._onTimerTick.bind(this), duration);
         super.use(...arguments);

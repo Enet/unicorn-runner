@@ -6,7 +6,6 @@ import {
 import Killable from 'traits/Killable.js';
 import Jumper from 'traits/Jumper.js';
 import Obstacle from 'traits/Obstacle.js';
-import spriteDescription from 'sprites/FrogSprite.js';
 
 export default class Frog extends Entity {
     get scale () {
@@ -18,10 +17,6 @@ export default class Frog extends Entity {
         offset.x -= (133 - 60) / 2;
         offset.y -= (111 - 80) / 2;
         return offset;
-    }
-
-    _getSpriteDescription () {
-        return spriteDescription;
     }
 
     _getSize () {
