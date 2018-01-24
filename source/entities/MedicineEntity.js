@@ -6,8 +6,21 @@ import AppearanceFallDownTrait from 'traits/AppearanceFallDownTrait.js';
 const MEDICINE_DELTA_HEALTH = 40;
 
 export default class MedicineEntity extends Entity {
+    get angle () {
+        return Math.sin(0.005 * this._lifeTime);
+    }
+
+    entityWillMount () {
+        super.entityWillMount(...arguments);
+        this._view = Math.floor(Math.random() * this.sprite.frames.size) + 1;
+    }
+
     _getImageName () {
         return 'Medicine';
+    }
+
+    _getFrame () {
+        return 'medicine-' + this._view;
     }
 
     _createTraits () {

@@ -1,9 +1,0 @@
-frames:
-    rotate-1: [0, 0, 83, 93]
-    rotate-2: [83, 0, 83, 93]
-    rotate-3: [166, 0, 83, 93]
-    rotate-4: [249, 0, 83, 93]
-    rotate-5: [332, 0, 83, 93]
-    rotate-6: [415, 0, 83, 93]
-animations:
-    default: [rotate-1, rotate-2, rotate-3, rotate-4, rotate-5, rotate-6]

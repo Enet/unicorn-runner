@@ -4,6 +4,10 @@ import GameplayEffectTrait from 'traits/GameplayEffectTrait.js';
 import AppearanceFallDownTrait from 'traits/AppearanceFallDownTrait.js';
 
 export default class EffectEntity extends Entity {
+    get angle () {
+        return Math.sin(0.002 * this._lifeTime);
+    }
+
     _getEffectName () {
         return '';
     }

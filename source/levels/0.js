@@ -30,7 +30,7 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Box',
+        name: 'FastMotion',
         position: [200, 200]
     }] || [{
         name: 'Spider',
