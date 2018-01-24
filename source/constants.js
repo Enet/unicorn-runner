@@ -7,7 +7,7 @@ export const TILE_SIZE = 60;
 export const EFFECT_TIME = 5000;
 export const CAMERA_OFFSET = new Vector2(200, 300);
 
-export const RUN_SPEED = 0.005;
+export const RUN_SPEED = 0.1;
 export const FIGHT_DAMAGE = 10;
 export const FIGHT_SHIFT = 0.1;
 export const FLY_GRAVITY = 300;
@@ -15,6 +15,7 @@ export const JUMP_IMPULSE_POWER = 0.75;
 export const JUMP_IMPULSE_TIME = 300;
 export const JUMP_NO_COLLISION_TIME = 50;
 
+export const SCORE_SPIDER_DEATH = 100;
 export const SCORE_LIZARD_DEATH = 100;
 export const SCORE_BIRD_DEATH = 100;
 export const SCORE_BUG_DEATH = 100;

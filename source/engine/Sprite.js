@@ -7,14 +7,16 @@ export default class Sprite {
         this.image = image;
 
         this.frames = new Map();
-        Object.keys(frames).forEach((rectangle, name) => {
+        Object.keys(frames).forEach((name) => {
+            const rectangle = frames[name];
             const frame = this._createFrame(...rectangle);
             this.frames.set(name, frame);
         });
 
         this.animations = new Map();
-        Object.keys(animations).forEach((frames, key) => {
-            let [name, delay] = key.split('.');
+        Object.keys(animations).forEach((key) => {
+            const frames = animations[key];
+            const [name, delay] = key.split('.');
             const animation = this._createAnimation(frames, delay);
             this.animations.set(name, animation);
         });
@@ -25,7 +27,7 @@ export default class Sprite {
         context.drawImage(frame, x, y);
     }
 
-    _initOptions (imageNode, spriteDescription) {
+    _initOptions (imageNode, spriteDescription={}) {
         const image = imageNode;
 
         const frames = spriteDescription.frames || {

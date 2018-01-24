@@ -6,7 +6,7 @@ import {
 
 import TileBackground from 'backgrounds/TileBackground.js';
 import LavaBackground from 'backgrounds/LavaBackground.js';
-import Player from 'entities/Player.js';
+import PlayerEntity from 'entities/PlayerEntity.js';
 import generateTileMatrix from 'utils/generateTileMatrix.js';
 import getTileRangeByBounds from 'utils/getTileRangeByBounds.js';
 import getImageNodes from 'utils/getImageNodes.js';
@@ -164,8 +164,8 @@ export default class Level {
     _play () {
         const {player, bounds} = this;
         if (player.body.center.y + player.size.height / 2 >= bounds.bottom - 100 &&
-            !player.killable.isDead()) {
-            player.killable.changeHealth(-100);
+            !player.organism.isDead()) {
+            player.organism.changeHealth(-100);
         }
         if (player.body.center.x + player.size.width / 2 >= bounds.right - 100) {
             this.winGame();
@@ -241,8 +241,7 @@ export default class Level {
         const {manager} = this;
         data.entities.forEach(({name, position: [x, y], ...settings}) => {
             const Entity = manager.getEntity(name);
-            const images = getImageNodes(manager, Entity.images);
-            const entity = new Entity({level, settings, images, x, y});
+            const entity = new Entity({level, settings, x, y});
             this.addEntity(entity);
         });
         return this.entities;
@@ -250,9 +249,7 @@ export default class Level {
 
     _initPlayer (data, {callbacks}) {
         const level = this;
-        const {manager} = this;
-        const images = getImageNodes(manager, Player.images);
-        const player = new Player({level, images});
+        const player = new PlayerEntity({level});
         this.player = player;
         this.addEntity(player);
         this.placePlayer();

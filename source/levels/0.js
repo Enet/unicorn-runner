@@ -29,7 +29,7 @@ export default {
             [193, 194, 6, 7]
         ]
     }],
-    entities: [{
+    entities: [] || [{
         name: 'Spider',
         position: [350, 50],
         reaction: 20

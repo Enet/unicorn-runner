@@ -2,6 +2,7 @@ import StaticBoxBody from 'engine/StaticBoxBody.js';
 import {
     REACTION_TRAP
 } from 'engine/constants.js';
+
 import Entity from 'entities/Entity.js';
 
 export default class StaticEntity extends Entity {
@@ -11,5 +12,3 @@ export default class StaticEntity extends Entity {
         return body;
     }
 }
-
-StaticEntity.images = {};

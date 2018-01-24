@@ -40,7 +40,7 @@ module.exports = {
             })
         }, {
             test: /\.yaml$/,
-            use: 'yaml-loader'
+            use: ['json-loader', 'yaml-loader']
         }, {
             test: /\.(?:gif|png|jpe?g)$/i,
             use: [{
