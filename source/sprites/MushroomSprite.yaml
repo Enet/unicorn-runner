@@ -1,0 +1,6 @@
+frames:
+    mushroom-1: [0, 0, 40, 30]
+    mushroom-2: [40, 0, 40, 30]
+    mushroom-3: [80, 0, 40, 30]
+    mushroom-4: [120, 0, 40, 30]
+    mushroom-5: [160, 0, 40, 30]

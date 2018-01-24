@@ -1,0 +1,9 @@
+frames:
+    spark-1: [0, 0, 83, 93]
+    spark-2: [83, 0, 83, 93]
+    spark-3: [166, 0, 83, 93]
+    spark-4: [249, 0, 83, 93]
+    spark-5: [332, 0, 83, 93]
+    spark-6: [415, 0, 83, 93]
+animations:
+    default: [spark-1, spark-2, spark-3, spark-4, spark-5, spark-6]

@@ -1,0 +1,8 @@
+frames:
+    bug-1: [0, 0, 58, 65]
+    bug-2: [58, 0, 58, 65]
+    bug-3: [116, 0, 58, 65]
+    bug-4: [174, 0, 58, 65]
+    bug-5: [232, 0, 58, 65]
+animations:
+    default: [bug-1, bug-2, bug-3, bug-4, bug-5]

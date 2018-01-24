@@ -1,0 +1,8 @@
+frames:
+    trap-1: [0, 0, 70, 46]
+    trap-2: [70, 0, 70, 46]
+    trap-3: [140, 0, 70, 46]
+    trap-4: [210, 0, 70, 46]
+    trap-5: [280, 0, 70, 46]
+animations:
+    default: [trap-1, trap-2, trap-3, trap-4, trap-5]
