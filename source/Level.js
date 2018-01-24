@@ -9,7 +9,6 @@ import LavaBackground from 'backgrounds/LavaBackground.js';
 import PlayerEntity from 'entities/PlayerEntity.js';
 import generateTileMatrix from 'utils/generateTileMatrix.js';
 import getTileRangeByBounds from 'utils/getTileRangeByBounds.js';
-import getImageNodes from 'utils/getImageNodes.js';
 import {
     TILE_SIZE
 } from 'constants.js';
@@ -213,17 +212,15 @@ export default class Level {
         if (!Background) {
             return;
         }
-        const images = getImageNodes(manager, Background.images);
-        const background = new Background({images});
+        const background = new Background({manager});
         scene.add(background);
         return background;
     }
 
     _initTileBackground () {
         const {manager, scene} = this;
-        const images = getImageNodes(manager, TileBackground.images);
         const background = new TileBackground({
-            images,
+            manager,
             tiles: this._tileMatrix
         });
         scene.add(background);
@@ -231,8 +228,8 @@ export default class Level {
     }
 
     _initLavaBackground () {
-        const {scene, bounds} = this;
-        const background = new LavaBackground({bounds});
+        const {manager, bounds, scene} = this;
+        const background = new LavaBackground({manager, bounds});
         scene.add(background);
         return background;
     }

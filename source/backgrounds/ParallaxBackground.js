@@ -55,5 +55,3 @@ export default class ParallaxBackground extends Background {
         }
     }
 }
-
-ParallaxBackground.images = Background.images;

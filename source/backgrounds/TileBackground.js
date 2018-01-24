@@ -1,5 +1,6 @@
-import Background from 'backgrounds/Background.js';
+import Sprite from 'engine/Sprite.js';
 
+import Background from 'backgrounds/Background.js';
 import getTileIndexByDistance from 'utils/getTileIndexByDistance.js';
 import {
     TILE_SIZE,
@@ -15,15 +16,18 @@ export default class TileBackground extends Background {
 
     constructor (options) {
         super(options);
+        const {images, manager} = this;
         this.tiles = options.tiles;
+        this.sprite = new Sprite(images.tile, manager.getSprite('Tile'));
     }
 
     render (context, camera) {
         const indexWidth = getTileIndexByDistance(camera.size.width) + 1;
         const startIndex = getTileIndexByDistance(camera.position.x);
         const endIndex = startIndex + indexWidth;
-        const {tiles, images} = this;
-        const image = images.tile;
+        const {tiles} = this;
+        const imageUp = this.sprite.frames.get('tile-up');
+        const imageCenter = this.sprite.frames.get('tile-center');
         const tx = (camera.position.x + THOUSAND_TILE_SIZE) % TILE_SIZE;
         const ty = camera.position.y;
 
@@ -35,6 +39,7 @@ export default class TileBackground extends Background {
             column && column.forEach((tile, yIndex) => {
                 const x = (xIndex - startIndex) * TILE_SIZE;
                 const y = yIndex * TILE_SIZE;
+                const image = tiles.getElement(xIndex, yIndex - 1) ? imageCenter : imageUp;
                 context.drawImage(image, x, y);
             });
         }
@@ -42,8 +47,10 @@ export default class TileBackground extends Background {
         context.translate(tx, ty);
         context.restore();
     }
-}
 
-TileBackground.images = {
-    tile: 'Tile'
-};
+    _getImageNames () {
+        return {
+            tile: 'Tile'
+        };
+    }
+}

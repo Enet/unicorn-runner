@@ -1,2 +1,3 @@
 frames:
-    tile: [0, 0, 60, 60]
+    tile-up: [0, 0, 60, 60]
+    tile-center: [60, 0, 60, 60]
