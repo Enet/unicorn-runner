@@ -44,8 +44,11 @@ export default class Entity extends Renderable {
         this.entityWillMount(...arguments);
     }
 
-    render (context) {
-        const {sprite, offset} = this;
+    render (context, camera) {
+        if (!this._shouldRender(camera)) {
+            return;
+        }
+        const {offset, sprite} = this;
         sprite.render(this._getFrame(), context, offset.x, offset.y);
     }
 
@@ -83,6 +86,18 @@ export default class Entity extends Renderable {
 
     entityDidUnmount () {
         this.traits.forEach(trait => this.traits.remove(trait));
+    }
+
+    _shouldRender (camera) {
+        const {width, height} = this._defaultSize;
+        const {position} = this;
+        if (position.x + width < camera.position.x ||
+            position.x > camera.position.x + camera.size.width ||
+            position.y + height < camera.position.y ||
+            position.y > camera.position.y + camera.size.height) {
+            return false;
+        }
+        return true;
     }
 
     _getImageName () {

@@ -20,6 +20,9 @@ export default class GasCloudEntity extends StaticEntity {
     }
 
     render (context) {
+        if (!this._shouldRender()) {
+            return;
+        }
         const {sprite, offset} = this;
         const alpha = context.globalAlpha * 0.9;
         const phase = 0.2 * this._lifeTime / EFFECT_TIME;

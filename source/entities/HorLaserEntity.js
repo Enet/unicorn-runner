@@ -23,6 +23,9 @@ export default class HorLaserEntity extends StaticEntity {
     }
 
     render (context) {
+        if (!this._shouldRender()) {
+            return;
+        }
         const alpha = context.globalAlpha;
         context.fillStyle = COLOR_RED.toString();
         for (let i = 1; i < 5; i++) {
@@ -36,6 +39,11 @@ export default class HorLaserEntity extends StaticEntity {
             );
         }
         context.globalAlpha = alpha;
+    }
+
+    entityWillMount () {
+        super.entityWillMount(...arguments);
+        this._defaultSize = this.size;
     }
 
     _getSize () {
