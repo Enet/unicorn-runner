@@ -1,34 +1,3 @@
-export class Matrix {
-    constructor (table) {
-        this._table = table || [];
-    }
-
-    getColumn (x) {
-        return this._table[x];
-    }
-
-    setColumn (x, value) {
-        this._table[x] = value;
-    }
-
-    getElement (x, y) {
-        const column = this.getColumn(x);
-        if (!column) {
-            return undefined;
-        }
-        return column[y];
-    }
-
-    setElement (x, y, value) {
-        let column = this.getColumn(x);
-        if (!column) {
-            column = [];
-            this.setColumn(x, column);
-        }
-        column[y] = value;
-    }
-}
-
 export class Vector2 {
     get width () {
         return this.x;
@@ -130,5 +99,44 @@ export class Color {
     toString () {
         const {r, g, b} = this;
         return `rgb(${r}, ${g}, ${b})`;
+    }
+}
+
+export class Matrix {
+    constructor (table) {
+        this._size = new Vector2(0, 0);
+        this._table = table || [];
+    }
+
+    getSize () {
+        return this._size;
+    }
+
+    getColumn (x) {
+        return this._table[x];
+    }
+
+    setColumn (x, value) {
+        this._table[x] = value;
+        this._size.x = Math.max(this._size.x, x + 1);
+    }
+
+    getElement (x, y) {
+        const column = this.getColumn(x);
+        if (!column) {
+            return undefined;
+        }
+        return column[y];
+    }
+
+    setElement (x, y, value) {
+        let column = this.getColumn(x);
+        if (!column) {
+            column = [];
+            this.setColumn(x, column);
+        }
+        column[y] = value;
+        this._size.x = Math.max(this._size.x, x + 1);
+        this._size.y = Math.max(this._size.y, y + 1);
     }
 }

@@ -1,3 +1,8 @@
 frames:
-    tile-up: [0, 0, 60, 60]
-    tile-center: [60, 0, 60, 60]
+    tile-pipe: [0, 0, 60, 60]
+    tile-corner: [60, 0, 60, 60]
+    tile-corner-flipped: [120, 0, 60, 60]
+    tile-edge: [180, 0, 90, 60]
+    cloud-edge: [0, 60, 90, 43]
+    cloud-pipe: [90, 60, 90, 43]
+    cloud-center: [180, 60, 90, 43]

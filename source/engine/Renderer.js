@@ -15,26 +15,12 @@ export default class Renderer {
             let y = position.y - camera.position.y;
 
             context.save();
-            context.translate(x, y);
-
-            context.save();
-            context.translate(-offset.x, -offset.y);
+            context.translate(x - offset.x, y - offset.y);
             context.rotate(angle);
             context.scale(scale.x, scale.y);
-
             context.globalAlpha = opacity;
             context.globalCompositeOperation = mode;
-
             renderable.render(context, camera);
-
-            context.globalCompositeOperation = 'source-over';
-            context.globalAlpha = 1;
-
-            context.rotate(-angle);
-            context.translate(offset.x, offset.y);
-            context.restore();
-
-            context.translate(-x, -y);
             context.restore();
         });
     }
