@@ -27,7 +27,7 @@ export default class RopeEntity extends Entity {
         context.lineWidth = 3;
         context.beginPath();
         points.forEach((point) => {
-            context.lineTo(point.x - this.position.x, point.y - this.position.y);
+            context.lineTo(point.x - this.position.x | 0, point.y - this.position.y | 0);
         });
         context.stroke();
         context.restore();

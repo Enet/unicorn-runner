@@ -50,7 +50,7 @@ export default class ParallaxBackground extends Background {
                     y: height - naturalHeight - (camera.position.y * i - halfHeight) * PARALLAX_SHIFT_Y,
                     i
                 });
-                context.drawImage(image, x % naturalWidth + r * naturalWidth, y);
+                context.drawImage(image, x % naturalWidth + r * naturalWidth | 0, y | 0);
             }
         }
     }

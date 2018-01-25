@@ -19,35 +19,37 @@ export default class TileBackground extends Background {
     constructor (options) {
         super(options);
         const {images, manager} = this;
-        this.tiles = polarizeTileMatrix(options.tiles);
 
+        this.tiles = polarizeTileMatrix(options.tiles);
         this.sprite = new Sprite(images.tile, manager.getSprite('Tile'));
-        this._setFrame('cloud-edge-flipped', this._transformFrame('cloud-edge', {
+        this.cloudRenderer = options.cloudRenderer;
+
+        this._setFrame('cloud-edge-right', this._transformFrame('cloud-edge-left', {
             scale: [-1, 1]
         }, {}, 90, 43));
         this._setFrame('0', this.sprite.frames.get('cloud-center'));
-        this._setFrame('1', this._transformFrame('tile-corner', {
+        this._setFrame('1', this._transformFrame('tile-corner-left', {
             rotate: [0]
         }));
-        this._setFrame('2', this._transformFrame('tile-corner', {
+        this._setFrame('2', this._transformFrame('tile-corner-left', {
             rotate: [Math.PI / 2]
         }));
-        this._setFrame('3', this._transformFrame('tile-corner', {
+        this._setFrame('3', this._transformFrame('tile-corner-left', {
             rotate: [Math.PI]
         }));
-        this._setFrame('4', this._transformFrame('tile-corner', {
+        this._setFrame('4', this._transformFrame('tile-corner-left', {
             rotate: [-Math.PI / 2]
         }));
-        this._setFrame('1f', this._transformFrame('tile-corner-flipped', {
+        this._setFrame('1f', this._transformFrame('tile-corner-right', {
             scale: [1, 1]
         }));
-        this._setFrame('2f', this._transformFrame('tile-corner-flipped', {
+        this._setFrame('2f', this._transformFrame('tile-corner-right', {
             scale: [-1, 1]
         }));
-        this._setFrame('3f', this._transformFrame('tile-corner-flipped', {
+        this._setFrame('3f', this._transformFrame('tile-corner-right', {
             scale: [-1, -1]
         }));
-        this._setFrame('4f', this._transformFrame('tile-corner-flipped', {
+        this._setFrame('4f', this._transformFrame('tile-corner-right', {
             scale: [-1, 1]
         }));
         this._setFrame('59', this._transformFrame('tile-pipe', {
@@ -60,17 +62,17 @@ export default class TileBackground extends Background {
         }, {
             alphaGradient: true
         }));
-        this._setFrame('6', this._transformFrame('tile-edge', {
+        this._setFrame('6', this._transformFrame('tile-edge-left', {
             scale: [-1, 1]
         }));
-        this._setFrame('7', this._transformFrame('tile-edge', {
+        this._setFrame('7', this._transformFrame('tile-edge-left', {
             scale: [1, 1]
         }));
-        this._setFrame('6f', this._transformFrame('tile-edge', {
-            scale: [-1, -1]
+        this._setFrame('6f', this._transformFrame('tile-edge-right', {
+            scale: [-1, 1]
         }));
-        this._setFrame('7f', this._transformFrame('tile-edge', {
-            scale: [1, -1]
+        this._setFrame('7f', this._transformFrame('tile-edge-right', {
+            scale: [1, 1]
         }));
         this._setFrame('8BEF', this._transformFrame('tile-pipe', {
             scale: [1, 1]
@@ -90,7 +92,7 @@ export default class TileBackground extends Background {
         const indexWidth = getTileIndexByDistance(camera.size.width) + 1;
         const startIndex = getTileIndexByDistance(camera.position.x);
         const endIndex = startIndex + indexWidth;
-        const {tiles} = this;
+        const {tiles, cloudRenderer} = this;
         const tx = (camera.position.x + THOUSAND_TILE_SIZE) % TILE_SIZE;
         const ty = camera.position.y;
 
@@ -106,12 +108,14 @@ export default class TileBackground extends Background {
                 const cloudImage = this.sprite.frames.get(tile.cloudName);
                 context.drawImage(tileImage, x, y);
                 let cloudOffset = (90 - 60) * 0.5;
-                if (tile.cloudName === 'cloud-edge') {
+                if (tile.cloudName === 'cloud-edge-left') {
                     cloudOffset += 15;
-                } else if (tile.cloudName === 'cloud-edge-flipped') {
+                } else if (tile.cloudName === 'cloud-edge-right') {
                     cloudOffset -= 15;
                 }
-                cloudImage && context.drawImage(cloudImage, x - cloudOffset, y - 20);
+                cloudImage && cloudRenderer.renderAsync((context) => {
+                    context.drawImage(cloudImage, x - cloudOffset - tx, y - 20 - ty);
+                });
 
                 if (DEBUG_TILE_IMAGES) {
                     const fontSize = 16;
@@ -123,7 +127,6 @@ export default class TileBackground extends Background {
             });
         }
 
-        context.translate(tx, ty);
         context.restore();
     }
 

@@ -15,7 +15,7 @@ export default class Renderer {
             let y = position.y - camera.position.y;
 
             context.save();
-            context.translate(x - offset.x, y - offset.y);
+            context.translate(x - offset.x | 0, y - offset.y | 0);
             context.rotate(angle);
             context.scale(scale.x, scale.y);
             context.globalAlpha = opacity;

@@ -24,7 +24,7 @@ export default class Sprite {
 
     render (name, context, x=0, y=0) {
         const frame = this.frames.get(name);
-        context.drawImage(frame, x, y);
+        context.drawImage(frame, x | 0, y | 0);
     }
 
     _initOptions (imageNode, spriteDescription={}) {

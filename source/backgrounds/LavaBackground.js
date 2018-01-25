@@ -31,8 +31,8 @@ export default class LavaBackground extends Background {
         this._phase += 0.02;
 
         const bounds = this._bounds;
-        const tx = camera.position.x;
-        const ty = camera.position.y;
+        const tx = camera.position.x | 0;
+        const ty = camera.position.y | 0;
         const {width} = camera.size;
 
         context.save();
@@ -56,7 +56,6 @@ export default class LavaBackground extends Background {
             context.fill();
         }
 
-        context.translate(tx, ty);
         context.restore();
     }
 

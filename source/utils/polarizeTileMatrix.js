@@ -1,5 +1,11 @@
 let uniquePathId = 0;
 
+const DEBUG_MODE = false;
+const DEBUG_FROM_X = 1;
+const DEBUG_TO_X = 10;
+const DEBUG_FROM_Y = 0;
+const DEBUG_TO_Y = 6;
+
 class TileEnvironment extends Map {
     constructor (tile, {top, right, bottom, left}) {
         super();
@@ -162,6 +168,17 @@ export default function polarizeTileMatrix (matrix) {
 }
 
 function findPath (matrix, xIndex, yIndex, pathId, angle) {
+    const debug = DEBUG_MODE &&
+        xIndex > DEBUG_FROM_X &&
+        xIndex < DEBUG_TO_X &&
+        yIndex > DEBUG_FROM_Y &&
+        yIndex < DEBUG_TO_Y;
+
+    // eslint-disable-next-line
+    const log = function () {
+        debug && console.log(...arguments);
+    };
+
     const tile = matrix.getElement(xIndex, yIndex);
     if (!tile || tile.pathId) {
         return;
@@ -193,7 +210,7 @@ function findPath (matrix, xIndex, yIndex, pathId, angle) {
         } else {
             imageName = filteredEnvironment.has('right') ? '6' : '7';
         }
-        angle = angle || 270;
+        angle = angle || 90;
         imageName = imageName + (angle > 180 ? '' : 'f');
         filteredEnvironment.initialize({imageName, pathId});
         findPath(matrix, xIndex - 1, yIndex, pathId, angle);
@@ -206,15 +223,28 @@ function findPath (matrix, xIndex, yIndex, pathId, angle) {
     }
 
     if (tile.pathId && !filteredEnvironment.has('top')) {
+        let leftCloudEdge = false;
+        let rightCloudEdge = false;
+        if (!fullEnvironment.has('left') ||
+            fullEnvironment.get('left').pathId !== pathId ||
+            (matrix.getElement(xIndex - 1, yIndex - 1) || {}).pathId === pathId) {
+            leftCloudEdge = true;
+        }
+        if (!fullEnvironment.has('right') ||
+            fullEnvironment.get('right').pathId !== pathId ||
+            (matrix.getElement(xIndex + 1, yIndex - 1) || {}).pathId === pathId) {
+            rightCloudEdge = true;
+        }
+
         tile.cloudName = 'cloud';
-        if (!fullEnvironment.hasNotCorner('left') && !fullEnvironment.hasNotCorner('right')) {
+        if (leftCloudEdge && rightCloudEdge) {
             tile.cloudName += '-center';
-        } else if (fullEnvironment.hasNotCorner('left') && fullEnvironment.hasNotCorner('right')) {
+        } else if (leftCloudEdge) {
+            tile.cloudName += '-edge-left';
+        } else if (rightCloudEdge) {
+            tile.cloudName += '-edge-right';
+        } else {
             tile.cloudName += '-pipe';
-        } else if (fullEnvironment.hasNotCorner('right')) {
-            tile.cloudName += '-edge';
-        } else if (fullEnvironment.hasNotCorner('left')) {
-            tile.cloudName += '-edge-flipped';
         }
     }
 }

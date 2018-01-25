@@ -4,6 +4,7 @@ import {
     Vector2
 } from 'engine/math.js';
 
+import CloudBackground from 'backgrounds/CloudBackground.js';
 import TileBackground from 'backgrounds/TileBackground.js';
 import LavaBackground from 'backgrounds/LavaBackground.js';
 import PlayerEntity from 'entities/PlayerEntity.js';
@@ -217,11 +218,20 @@ export default class Level {
         return background;
     }
 
+    _initCloudBackground () {
+        const {manager, scene} = this;
+        const background = new CloudBackground({manager});
+        scene.add(background);
+        return background;
+    }
+
     _initTileBackground () {
         const {manager, scene} = this;
+        const cloudRenderer = this._initCloudBackground(...arguments);
         const background = new TileBackground({
             manager,
-            tiles: this._tileMatrix
+            tiles: this._tileMatrix,
+            cloudRenderer
         });
         scene.add(background);
         return background;

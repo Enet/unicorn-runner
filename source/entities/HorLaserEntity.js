@@ -33,7 +33,7 @@ export default class HorLaserEntity extends StaticEntity {
             context.beginPath();
             context.fillRect(
                 -HALF_TILE_SIZE,
-                -HALF_TILE_SIZE + 0.5 * TILE_SIZE - (5 - i),
+                -HALF_TILE_SIZE + HALF_TILE_SIZE - (5 - i),
                 TILE_SIZE,
                 (5 - i) * 2
             );
