@@ -61,4 +61,35 @@ export default class Sprite {
         delay = +delay || 16;
         return new Animation(frames, delay);
     }
+
+    static transformFrame (image, transforms={}, effects={}) {
+        const {width, height} = image;
+        const halfWidth = width * 0.5;
+        const halfHeight = height * 0.5;
+
+        const frame = document.createElement('canvas');
+        frame.width = width;
+        frame.height = height;
+
+        const context = frame.getContext('2d');
+
+        context.translate(halfWidth, halfHeight);
+        for (let t in transforms) {
+            context[t](...transforms[t]);
+        }
+        context.drawImage(image, -halfWidth, -halfHeight);
+        if (effects.alphaGradient) {
+            const imageData = context.getImageData(0, 0, width, height);
+            for (let x = 0; x < width; x++) {
+                for (let y = halfHeight; y < height; y++) {
+                    const alphaIndex = (x + y * width) * 4 + 3;
+                    const alphaValue = 255 * (1 - (y - halfHeight) * 2 / height);
+                    imageData.data[alphaIndex] = alphaValue;
+                }
+            }
+            context.putImageData(imageData, 0, 0);
+        }
+
+        return frame;
+    }
 }

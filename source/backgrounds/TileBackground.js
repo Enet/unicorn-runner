@@ -2,14 +2,141 @@ import Sprite from 'engine/Sprite.js';
 
 import Background from 'backgrounds/Background.js';
 import getTileIndexByDistance from 'utils/getTileIndexByDistance.js';
-import polarizeTileMatrix from 'utils/polarizeTileMatrix.js';
+import resolveTileMatrix from 'utils/resolveTileMatrix.js';
 import {
     TILE_SIZE,
     INDEX_TILE_BACKGROUND
 } from 'constants.js';
 
 const THOUSAND_TILE_SIZE = 1000 * TILE_SIZE;
+const CLOUD_OFFSET_X = (90 - TILE_SIZE) * 0.5;
+const CLOUD_OFFSET_Y = 20;
+const CLOUD_EDGE_OFFSET_X = 15;
 const DEBUG_TILE_IMAGES = false;
+
+const frameDescriptions = {
+    'cloud-edge-right': {
+        from: 'cloud-edge-left',
+        transforms: {
+            scale: [-1, 1]
+        }
+    },
+    '1-l': {
+        from: 'tile-corner-left',
+        transforms: {
+            rotate: [0]
+        }
+    },
+    '2-l': {
+        from: 'tile-corner-left',
+        transforms: {
+            rotate: [Math.PI / 2]
+        }
+    },
+    '3-l': {
+        from: 'tile-corner-left',
+        transforms: {
+            rotate: [Math.PI]
+        }
+    },
+    '4-l': {
+        from: 'tile-corner-left',
+        transforms: {
+            rotate: [-Math.PI / 2]
+        }
+    },
+    '1-r': {
+        from: 'tile-corner-right',
+        transforms: {
+            scale: [1, 1]
+        }
+    },
+    '2-r': {
+        from: 'tile-corner-right',
+        transforms: {
+            scale: [-1, 1]
+        }
+    },
+    '3-r': {
+        from: 'tile-corner-right',
+        transforms: {
+            scale: [-1, -1]
+        }
+    },
+    '4-r': {
+        from: 'tile-corner-right',
+        transforms: {
+            scale: [-1, 1]
+        }
+    },
+    '59-l': {
+        from: 'tile-pipe',
+        transforms: {
+            scale: [1, 1]
+        },
+        effects: {
+            alphaGradient: true
+        }
+    },
+    '59-r': {
+        from: 'tile-pipe',
+        transforms: {
+            scale: [-1, 1]
+        },
+        effects: {
+            alphaGradient: true
+        }
+    },
+    '6-l': {
+        from: 'tile-edge-left',
+        transforms: {
+            scale: [-1, 1]
+        }
+    },
+    '7-l': {
+        from: 'tile-edge-left',
+        transforms: {
+            scale: [1, 1]
+        }
+    },
+    '6-r': {
+        from: 'tile-edge-right',
+        transforms: {
+            scale: [-1, 1]
+        }
+    },
+    '7-r': {
+        from: 'tile-edge-right',
+        transforms: {
+            scale: [1, 1]
+        }
+    },
+    '8BEF-l': {
+        from: 'tile-pipe',
+        transforms: {
+            scale: [1, 1]
+        }
+    },
+    '8BEF-r': {
+        from: 'tile-pipe',
+        transforms: {
+            scale: [-1, 1]
+        }
+    },
+    'ACD-l': {
+        from: 'tile-pipe',
+        transforms: {
+            rotate: [-Math.PI / 2]
+        }
+    },
+    'ACD-r': {
+        from: 'tile-pipe',
+        transforms: {
+            rotate: [Math.PI / 2]
+        }
+    }
+};
+
 
 export default class TileBackground extends Background {
     get index () {
@@ -19,73 +146,23 @@ export default class TileBackground extends Background {
     constructor (options) {
         super(options);
         const {images, manager} = this;
+        const sprite = new Sprite(images.tile, manager.getSprite('Tile'));
 
-        this.tiles = polarizeTileMatrix(options.tiles);
-        this.sprite = new Sprite(images.tile, manager.getSprite('Tile'));
+        this.tiles = resolveTileMatrix(options.tiles);
+        this.sprite = sprite;
         this.cloudRenderer = options.cloudRenderer;
 
-        this._setFrame('cloud-edge-right', this._transformFrame('cloud-edge-left', {
-            scale: [-1, 1]
-        }, {}, 90, 43));
-        this._setFrame('0', this.sprite.frames.get('cloud-center'));
-        this._setFrame('1', this._transformFrame('tile-corner-left', {
-            rotate: [0]
-        }));
-        this._setFrame('2', this._transformFrame('tile-corner-left', {
-            rotate: [Math.PI / 2]
-        }));
-        this._setFrame('3', this._transformFrame('tile-corner-left', {
-            rotate: [Math.PI]
-        }));
-        this._setFrame('4', this._transformFrame('tile-corner-left', {
-            rotate: [-Math.PI / 2]
-        }));
-        this._setFrame('1f', this._transformFrame('tile-corner-right', {
-            scale: [1, 1]
-        }));
-        this._setFrame('2f', this._transformFrame('tile-corner-right', {
-            scale: [-1, 1]
-        }));
-        this._setFrame('3f', this._transformFrame('tile-corner-right', {
-            scale: [-1, -1]
-        }));
-        this._setFrame('4f', this._transformFrame('tile-corner-right', {
-            scale: [-1, 1]
-        }));
-        this._setFrame('59', this._transformFrame('tile-pipe', {
-            scale: [1, 1]
-        }, {
-            alphaGradient: true
-        }));
-        this._setFrame('59f', this._transformFrame('tile-pipe', {
-            scale: [-1, 1]
-        }, {
-            alphaGradient: true
-        }));
-        this._setFrame('6', this._transformFrame('tile-edge-left', {
-            scale: [-1, 1]
-        }));
-        this._setFrame('7', this._transformFrame('tile-edge-left', {
-            scale: [1, 1]
-        }));
-        this._setFrame('6f', this._transformFrame('tile-edge-right', {
-            scale: [-1, 1]
-        }));
-        this._setFrame('7f', this._transformFrame('tile-edge-right', {
-            scale: [1, 1]
-        }));
-        this._setFrame('8BEF', this._transformFrame('tile-pipe', {
-            scale: [1, 1]
-        }));
-        this._setFrame('8BEFf', this._transformFrame('tile-pipe', {
-            scale: [-1, 1]
-        }));
-        this._setFrame('ACD', this._transformFrame('tile-pipe', {
-            rotate: [-Math.PI / 2]
-        }));
-        this._setFrame('ACDf', this._transformFrame('ACD', {
-            scale: [1, -1]
-        }));
+        for (let frameName in frameDescriptions) {
+            const frameDescription = frameDescriptions[frameName];
+            const {from, transforms, effects} = frameDescription;
+            const frame = Sprite.transformFrame(
+                sprite.frames.get(from),
+                transforms,
+                effects
+            );
+            frame.frameName = frameName; // information to debug
+            sprite.frames.set(frameName, frame);
+        }
     }
 
     render (context, camera) {
@@ -104,17 +181,27 @@ export default class TileBackground extends Background {
             column && column.forEach((tile, yIndex) => {
                 const x = (xIndex - startIndex) * TILE_SIZE;
                 const y = yIndex * TILE_SIZE;
+
+                if (!tile.imageName) {
+                    return;
+                }
+
                 const tileImage = this.sprite.frames.get(tile.imageName);
-                const cloudImage = this.sprite.frames.get(tile.cloudName);
                 context.drawImage(tileImage, x, y);
-                let cloudOffset = (90 - 60) * 0.5;
+
+                const cloudImage = this.sprite.frames.get(tile.cloudName);
+                let cloudEdgeOffset = 0;
                 if (tile.cloudName === 'cloud-edge-left') {
-                    cloudOffset += 15;
+                    cloudEdgeOffset = CLOUD_EDGE_OFFSET_X;
                 } else if (tile.cloudName === 'cloud-edge-right') {
-                    cloudOffset -= 15;
+                    cloudEdgeOffset = -CLOUD_EDGE_OFFSET_X;
                 }
                 cloudImage && cloudRenderer.renderAsync((context) => {
-                    context.drawImage(cloudImage, x - cloudOffset - tx, y - 20 - ty);
+                    context.drawImage(
+                        cloudImage,
+                        x - CLOUD_OFFSET_X - cloudEdgeOffset - tx,
+                        y - CLOUD_OFFSET_Y - ty
+                    );
                 });
 
                 if (DEBUG_TILE_IMAGES) {
@@ -134,39 +221,5 @@ export default class TileBackground extends Background {
         return {
             tile: 'Tile'
         };
-    }
-
-    _setFrame (frameName, frame) {
-        frame.frameName = frameName;
-        this.sprite.frames.set(frameName, frame);
-    }
-
-    _transformFrame (frameName, transformations={}, effects={}, width=TILE_SIZE, height=TILE_SIZE) {
-        const image = this.sprite.frames.get(frameName);
-        const halfWidth = width * 0.5;
-        const halfHeight = height * 0.5;
-
-        const frame = document.createElement('canvas');
-        frame.width = width;
-        frame.height = height;
-
-        const context = frame.getContext('2d');
-
-        context.translate(halfWidth, halfHeight);
-        for (let t in transformations) {
-            context[t](...transformations[t]);
-        }
-        context.drawImage(image, -halfWidth, -halfHeight);
-        if (effects.alphaGradient) {
-            const imageData = context.getImageData(0, 0, width, height);
-            for (let x = 0; x < width; x++) {
-                for (let y = 0; y < height; y++) {
-                    imageData.data[(x + y * width) * 4 + 3] = 255 * (1 - y / height);
-                }
-            }
-            context.putImageData(imageData, 0, 0);
-        }
-
-        return frame;
     }
 }
