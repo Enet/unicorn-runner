@@ -46,6 +46,9 @@ export default class CoinEntity extends Entity {
     _onPick () {
         this.score.use();
         this.fallDown.start();
+        this.level.playSound({
+            name: 'coin'
+        });
     }
 
     _onFallDownEnd () {

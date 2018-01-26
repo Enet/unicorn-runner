@@ -90,6 +90,9 @@ export default class BirdEntity extends Entity {
     _onDie () {
         this._lifeTime = 0;
         this.score.use();
+        this.level.playSound({
+            name: 'bird'
+        });
     }
 
     _onDieAnimationEnd () {

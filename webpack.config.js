@@ -46,8 +46,18 @@ module.exports = {
             use: [{
                 loader: 'url-loader',
                 options: {
-                    limit: 2048 * 1024,
-                    outputPath: path.resolve('output', 'images'),
+                    limit: 0 * 1024,
+                    outputPath: 'images',
+                    name: '[name].[hash].[ext]'
+                }
+            }]
+        }, {
+            test: /\.(?:mp3)$/i,
+            use: [{
+                loader: 'url-loader',
+                options: {
+                    limit: 0 * 1024,
+                    outputPath: 'sounds',
                     name: '[name].[hash].[ext]'
                 }
             }]

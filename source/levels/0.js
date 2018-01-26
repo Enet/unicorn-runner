@@ -30,8 +30,21 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Trap',
-        position: [250, 330]
+        name: 'Bird',
+        position: [300, 200],
+        range: [300, 600]
+    }, {
+        name: 'Box',
+        position: [300, 330]
+    }, {
+        name: 'Coin10',
+        position: [300, 300]
+    }, {
+        name: 'Coin50',
+        position: [350, 330]
+    }, {
+        name: 'Coin10',
+        position: [400, 370]
     }] || [{
         name: 'Spider',
         position: [350, 50],

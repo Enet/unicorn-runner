@@ -19,6 +19,14 @@ export default class GasCloudEntity extends StaticEntity {
         return this._lifeTime / 2000;
     }
 
+    entityDidMount () {
+        super.entityDidMount(...arguments);
+        this.level.playSound({
+            name: 'gas',
+            position: this.body.center
+        });
+    }
+
     render (context, camera) {
         if (!this._shouldRender(camera)) {
             return;

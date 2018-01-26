@@ -12,6 +12,8 @@ import {
     COLOR_ORANGE
 } from 'constants.js';
 
+let uniqueEntityId = 0;
+
 export default class Entity extends Renderable {
     get position () {
         return this.body.center.add(this.offset);
@@ -39,6 +41,7 @@ export default class Entity extends Renderable {
         this.size = this._getSize(options);
         this.body = this._createBody(options);
         this.traits = new TraitManager(this);
+        this.id = ++uniqueEntityId;
 
         const traits = this._createTraits(options);
         traits.forEach(trait => this.traits.add(trait));
@@ -84,6 +87,10 @@ export default class Entity extends Renderable {
             if (this.body.center.y > this.level.bounds.bottom - LAVA_HEIGHT) {
                 this._isDrowned = true;
                 this._addLavaSplash();
+                this.level.playSound({
+                    name: 'splash' + (Math.random() * 4 | 0),
+                    position: this.body.center
+                });
             }
         }
     }

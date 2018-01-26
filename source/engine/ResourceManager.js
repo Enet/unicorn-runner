@@ -10,8 +10,15 @@ function fetchImages (rawImages) {
     }));
 }
 
-function fetchSounds (sounds) {
-    return Promise.resolve(Object.keys(sounds));
+function fetchSounds (rawSounds) {
+    return Promise.all(Object.keys(rawSounds).map((soundName) => {
+        return new Promise((resolve, reject) => {
+            const audio = new Audio(rawSounds[soundName]);
+            audio.oncanplaythrough = () => resolve(audio);
+            audio.name = soundName;
+            audio.onerror = reject;
+        });
+    }));
 }
 
 export default class ResourceManager {

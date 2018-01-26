@@ -1,5 +1,6 @@
 import World from 'engine/World.js';
 import StaticBoxBody from 'engine/StaticBoxBody.js';
+import Sound from 'engine/Sound.js';
 import {
     Vector2
 } from 'engine/math.js';
@@ -24,6 +25,7 @@ export default class Level {
         this.entities = new Set();
         this.effects = new Set();
         this.timers = new Map();
+        this.sounds = new Map();
 
         this._initBounds(...arguments);
         this._initWorld(...arguments);
@@ -33,6 +35,7 @@ export default class Level {
         this._initTileBackground(...arguments);
         this._initEntities(...arguments);
         this._initPlayer(...arguments);
+        this._initMusic(...arguments);
 
         this._score = 0;
         this._slowFactor = 0;
@@ -118,6 +121,50 @@ export default class Level {
 
     setHealth (health) {
         this.callbacks.onHealthChange(Math.floor(health));
+    }
+
+    loopSound ({name, position, key, volume}) {
+        let sound = this.sounds.get(key);
+        const {player} = this;
+
+        if (sound && sound.name === name) {
+            sound.audio.paused && sound.play();
+        } else {
+            sound && sound.pause();
+            const {manager} = this;
+
+            sound = new Sound(manager.getSound(name), {
+                autoPlay: true
+            });
+            sound.name = name;
+            this.sounds.set(key, sound);
+        }
+
+        if (typeof volume !== 'number') {
+            position = position || player.body.center;
+            const distance = player.body.center.subtract(position).length();
+            volume = 1 - distance * 0.001;
+        }
+        sound.setVolume(volume);
+    }
+
+    stopSound ({key}) {
+        const sound = this.sounds.get(key);
+        sound && sound.pause();
+    }
+
+    playSound ({name, position, volume}) {
+        const {manager, player} = this;
+        if (typeof volume !== 'number') {
+            position = position || player.body.center;
+            const distance = player.body.center.subtract(position).length();
+            volume = 1 - distance * 0.001;
+        }
+
+        new Sound(manager.getSound(name), {
+            autoPlay: true,
+            volume
+        });
     }
 
     update (deltaTime) {
@@ -262,5 +309,14 @@ export default class Level {
         this.addEntity(player);
         this.placePlayer();
         return player;
+    }
+
+    _initMusic (data) {
+        return;
+        const {manager} = this;
+        new Sound(manager.getSound('0'), {
+            autoPlay: true,
+            loop: true
+        });
     }
 }

@@ -58,6 +58,12 @@ export default class Body extends EventEmitter {
         });
     }
 
+    getVelocity () {
+        return this.points.reduce((accumulator, point) => {
+            return accumulator.add(point.subtract(point.cache));
+        }, new Vector2(0, 0)).length(1 / this.points.length);
+    }
+
     getDeltaAngle (delta, angle) {
         return delta;
     }

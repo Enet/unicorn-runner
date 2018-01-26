@@ -26,14 +26,43 @@ export default class PlayerEntity extends UnicornEntity {
 
     entityWillUpdate (deltaTime) {
         super.entityWillUpdate(...arguments);
+
         if (this.jump.isJumping()) {
+            this.level.stopSound({key: 'run'});
+            this.level.stopSound({key: 'walk'});
+
             if (!this._isJumpStarted) {
                 this._isFalling = true;
             }
         } else {
             this._isFalling = false;
             this._isJumpStarted = false;
+
+            const velocity = Math.abs(this.visualDirection.getVelocity().x);
+            if (velocity < 1) {
+                this.level.stopSound({key: 'run'});
+                this.level.stopSound({key: 'walk'});
+            } else {
+                const name = velocity < 4 ? 'walk' : 'run';
+                this.level.loopSound({
+                    name,
+                    volume: velocity < 4 ? 0.05 : 0.5,
+                    key: 'run'
+                });
+            }
         }
+    }
+
+    entityCollision (body) {
+        if (this.jump.isJumping() &&
+            Math.abs(body.getVelocity().y) > 1 &&
+            this.jump.getNoCollisionTime() > 100) {
+            console.log(body.getVelocity().y, this.jump.getNoCollisionTime());
+            this.level.playSound({
+                name: 'landing'
+            });
+        }
+        super.entityCollision(...arguments);
     }
 
     _getFrame () {
@@ -81,6 +110,7 @@ export default class PlayerEntity extends UnicornEntity {
 
     _createSprite () {
         const sprite = super._createSprite(...arguments);
+        sprite.animations.get('fight').on('start', this._onFightAnimationStart.bind(this));
         sprite.animations.get('jump').on('end', this._onJumpAnimationEnd.bind(this));
         sprite.animations.get('die').once('end', this._onDieAnimationEnd.bind(this));
         return sprite;
@@ -131,6 +161,13 @@ export default class PlayerEntity extends UnicornEntity {
         this.level.setHealth(health);
     }
 
+    _onFightAnimationStart () {
+        this.level.playSound({
+            name: 'fight',
+            key: 'fight'
+        });
+    }
+
     _onFightStart () {
         this._lifeTime = 0;
         this.run.setSpeed(RUN_SPEED * 0.1);
@@ -142,6 +179,10 @@ export default class PlayerEntity extends UnicornEntity {
 
     _onDie () {
         this._lifeTime = 0;
+        this.level.playSound({
+            name: 'die',
+            volume: 0.5
+        });
     }
 
     _onDieAnimationEnd () {
@@ -152,6 +193,10 @@ export default class PlayerEntity extends UnicornEntity {
         this._lifeTime = 0;
         this._isFalling = false;
         this._isJumpStarted = true;
+        this.level.playSound({
+            name: 'jump',
+            volume: 0.25
+        });
     }
 
     _onJumpAnimationEnd () {
