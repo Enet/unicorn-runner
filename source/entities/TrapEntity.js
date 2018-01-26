@@ -27,7 +27,7 @@ export default class TrapEntity extends Entity {
     }
 
     _getSize () {
-        return new Vector2(20, 30);
+        return new Vector2(20, 20);
     }
 
     _createTraits () {

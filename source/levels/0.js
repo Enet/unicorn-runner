@@ -31,7 +31,7 @@ export default {
     }],
     entities: [{
         name: 'Trap',
-        position: [250, 300]
+        position: [250, 330]
     }] || [{
         name: 'Spider',
         position: [350, 50],
