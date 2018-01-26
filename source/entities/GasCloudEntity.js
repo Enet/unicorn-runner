@@ -19,8 +19,8 @@ export default class GasCloudEntity extends StaticEntity {
         return this._lifeTime / 2000;
     }
 
-    render (context) {
-        if (!this._shouldRender()) {
+    render (context, camera) {
+        if (!this._shouldRender(camera)) {
             return;
         }
         const {sprite, offset} = this;

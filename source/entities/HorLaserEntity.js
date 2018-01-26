@@ -22,8 +22,8 @@ export default class HorLaserEntity extends StaticEntity {
         return 0.75 * Math.abs(Math.sin(0.002 * this._lifeTime));
     }
 
-    render (context) {
-        if (!this._shouldRender()) {
+    render (context, camera) {
+        if (!this._shouldRender(camera)) {
             return;
         }
         const alpha = context.globalAlpha;

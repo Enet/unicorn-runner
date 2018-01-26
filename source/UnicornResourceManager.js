@@ -18,6 +18,7 @@ export default class UnicornResourceManager extends ResourceManager {
     getBackground (backgroundName) {
         if (backgroundName === 'Parallax' ||
             backgroundName === 'Tile' ||
+            backgroundName === 'Cloud' ||
             backgroundName === 'Lava') {
             return;
         }

@@ -30,8 +30,8 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Rainbow',
-        position: [200, 200]
+        name: 'Trap',
+        position: [250, 300]
     }] || [{
         name: 'Spider',
         position: [350, 50],

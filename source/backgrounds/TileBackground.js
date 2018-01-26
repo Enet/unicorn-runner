@@ -10,7 +10,7 @@ import {
 
 const THOUSAND_TILE_SIZE = 1000 * TILE_SIZE;
 const CLOUD_OFFSET_X = (90 - TILE_SIZE) * 0.5;
-const CLOUD_OFFSET_Y = 20;
+const CLOUD_OFFSET_Y = 7;
 const CLOUD_EDGE_OFFSET_X = 15;
 const DEBUG_TILE_IMAGES = false;
 
