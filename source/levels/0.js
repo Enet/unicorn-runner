@@ -5,13 +5,7 @@ export default {
     },
     tiles: [{
         ranges: [
-            [8, 11, 4, 5],
-            [8, 9, 3, 4],
-            [8, 11, 2, 3],
-            [10, 11, 1, 3],
-
             [3, 7, 1, 2],
-
             [0, 1, 3, 7],
             [1, 11, 6, 7],
             [14, 20, 6, 7],
@@ -37,7 +31,7 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Medicine',
+        name: 'Rainbow',
         position: [200, 200]
     }] || [{
         name: 'Spider',

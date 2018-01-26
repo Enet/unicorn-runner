@@ -1,12 +1,14 @@
 import Background from 'backgrounds/Background.js';
 
 import {
-    INDEX_LAVA_BACKGROUND
+    LAVA_HEIGHT,
+    INDEX_LAVA_BACKGROUND,
+    COLOR_ORANGE,
+    COLOR_RED
 } from 'constants.js';
 
-const COLOR_LAVA_1 = 'orange';
-const COLOR_LAVA_2 = 'red';
-const LAVA_HEIGHT = 150;
+const COLOR_LAVA_1 = COLOR_ORANGE;
+const COLOR_LAVA_2 = COLOR_RED;
 const WAVE_0 = 4;
 const WAVE_1 = 8;
 const WAVE_2 = 16;

@@ -1,11 +1,16 @@
 import Renderable from 'engine/Renderable.js';
 import BoxBody from 'engine/BoxBody.js';
 import Sprite from 'engine/Sprite.js';
+import ParticleSystem from 'engine/ParticleSystem.js';
 import {
     Vector2
 } from 'engine/math.js';
 
 import TraitManager from 'TraitManager.js';
+import {
+    LAVA_HEIGHT,
+    COLOR_ORANGE
+} from 'constants.js';
 
 export default class Entity extends Renderable {
     get position () {
@@ -26,6 +31,7 @@ export default class Entity extends Renderable {
         this._lifeTime = 0;
         this._imageNode = null;
         this._spriteDescription = null;
+        this._isDrowned = false;
 
         this.options = options;
         this.level = options.level;
@@ -57,6 +63,7 @@ export default class Entity extends Renderable {
     }
 
     entityDidMount () {
+        this._onLavaSplashStop = this._onLavaSplashStop.bind(this);
         this.body.addListener('collision', this.entityCollision);
     }
 
@@ -66,6 +73,19 @@ export default class Entity extends Renderable {
             trait.update(deltaTime);
         });
         this._lifeTime += deltaTime;
+
+        const lavaSplash = this._lavaSplash;
+        if (lavaSplash) {
+            lavaSplash.update(deltaTime);
+            if (lavaSplash.isFullySaturated()) {
+                lavaSplash.stop(this._onLavaSplashStop);
+            }
+        } else if (!this._isDrowned) {
+            if (this.body.center.y > this.level.bounds.bottom - LAVA_HEIGHT) {
+                this._isDrowned = true;
+                this._addLavaSplash();
+            }
+        }
     }
 
     entityDidUpdate () {
@@ -160,5 +180,32 @@ export default class Entity extends Renderable {
         const body = new Body({x, y, width, height});
         body.entity = this;
         return body;
+    }
+
+    _addLavaSplash () {
+        const {width, height} = this.size;
+        const volume = width * height;
+        const lavaSplash = new ParticleSystem({
+            position: this.body.center.add(new Vector2(0, height * 0.5)),
+            index: 1500,
+            direction: -0.5 * Math.PI,
+            directionError: 50,
+            size: 2,
+            sizeError: 300,
+            amount: volume * 0.05,
+            amountSpeed: volume * 0.01,
+            alphaSpeed: 0.005,
+            velocity: 0.3 + volume * 0.00003,
+            gravity: 0.002,
+            startColor: COLOR_ORANGE,
+            mode: 'exclusion'
+        });
+        this.level.scene.add(lavaSplash);
+        this._lavaSplash = lavaSplash;
+    }
+
+    _onLavaSplashStop (lavaSplash) {
+        this.level.scene.remove(lavaSplash);
+        this._lavaSplash = null;
     }
 }

@@ -4,6 +4,7 @@ import {
 } from 'engine/math.js';
 
 export const TILE_SIZE = 60;
+export const LAVA_HEIGHT = 150;
 export const EFFECT_TIME = 5000;
 export const CAMERA_OFFSET = new Vector2(500, 300);
 

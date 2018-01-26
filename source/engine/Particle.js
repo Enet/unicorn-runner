@@ -15,6 +15,7 @@ export default class Particle {
 
     update (deltaTime) {
         this.lifeTime -= deltaTime;
+        this.velocity.set(this.velocity.add(this.gravity.length(deltaTime)));
         this.position.set(this.position.add(this.velocity.length(deltaTime)));
         this.size = Math.max(0, this.size + this.sizeSpeed * deltaTime);
         this.alpha = Math.max(0, this.alpha + this.alphaSpeed * deltaTime);
@@ -22,12 +23,12 @@ export default class Particle {
     }
 
     constructor ({
-        position, velocity, size, sizeSpeed,
+        position, velocity, gravity, size, sizeSpeed,
         alpha, alphaSpeed, lifeTime,
         startColor, endColor, colorProgress, colorSpeed
     }) {
         Object.assign(this, {
-            position, velocity, size, sizeSpeed,
+            position, velocity, gravity, size, sizeSpeed,
             alpha, alphaSpeed, lifeTime,
             startColor, endColor, colorProgress, colorSpeed
         });

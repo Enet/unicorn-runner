@@ -108,7 +108,7 @@ export default class AppearanceRainbowTrait extends AppearanceTrait {
         const gTarget = y ? -RAINBOW_ACTION_POWER * y : RAINBOW_IDLE_POWER;
         const {velocity, gravity} = options;
         options.velocity = velocity + Math.sign(vTarget - velocity) * RAINBOW_STEP;
-        options.gravity = gravity + Math.sign(gTarget - gravity) * RAINBOW_STEP;
+        options.gravity = 0.02 * (gravity + Math.sign(gTarget - gravity) * RAINBOW_STEP);
 
         particleSystem.update(deltaTime);
     }

@@ -34,7 +34,15 @@ export default class ParticleSystem extends Renderable {
     }
 
     get mode () {
-        return this.options.mode;
+        return this.options.mode || super.mode;
+    }
+
+    get index () {
+        return +this.options.index || super.index;
+    }
+
+    isFullySaturated () {
+        return this._particles.size >= this.options.amount;
     }
 
     render (context, camera) {
@@ -54,6 +62,7 @@ export default class ParticleSystem extends Renderable {
 
         if (!this._particles.size) {
             this._callbacks.forEach(callback => callback(this));
+            this._callbacks.clear();
             return;
         }
 
@@ -112,11 +121,12 @@ export default class ParticleSystem extends Renderable {
         alphaSpeed *= -1;
         colorSpeed *= -1;
 
-        velocity = new Vector2(velocity * Math.cos(direction), velocity * Math.sin(direction) + gravity);
+        gravity = new Vector2(0, +gravity || 0);
+        velocity = new Vector2(velocity * Math.cos(direction), velocity * Math.sin(direction));
         const colorProgress = 1 - Math.random() * colorError / 100;
 
         let particleOptions = {
-            position, velocity, size, sizeSpeed,
+            position, velocity, gravity, size, sizeSpeed,
             alpha, alphaSpeed, lifeTime,
             startColor, endColor, colorProgress, colorSpeed
         };
