@@ -11,7 +11,7 @@ import AppearanceRainbowTrait from 'traits/AppearanceRainbowTrait.js';
 export default class UnicornEntity extends Entity {
     get offset () {
         const offset = super.offset;
-        offset.y -= 20;
+        offset.y -= 40;
         return offset;
     }
 

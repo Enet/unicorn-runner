@@ -10,6 +10,10 @@ import ActionJumpTrait from 'traits/ActionJumpTrait.js';
 import ActionFlyTrait from 'traits/ActionFlyTrait.js';
 import ActionFightTrait from 'traits/ActionFightTrait.js';
 import BodyImpulseLimitTrait from 'traits/BodyImpulseLimitTrait.js';
+import AppearanceVisualDirectionTrait from 'traits/AppearanceVisualDirectionTrait.js';
+import {
+    RUN_SPEED
+} from 'constants.js';
 
 export default class PlayerEntity extends UnicornEntity {
     get scale () {
@@ -17,28 +21,67 @@ export default class PlayerEntity extends UnicornEntity {
             this.run.getDirection() :
             this.fly.getGravityDirection().x || this._prevDirection;
         this._prevDirection = direction;
-        return new Vector2(direction, 1);
+        return new Vector2(-direction, 1);
+    }
+
+    entityWillUpdate (deltaTime) {
+        super.entityWillUpdate(...arguments);
+        if (this.jump.isJumping()) {
+            if (!this._isJumpStarted) {
+                this._isFalling = true;
+            }
+        } else {
+            this._isFalling = false;
+            this._isJumpStarted = false;
+        }
     }
 
     _getFrame () {
         let animationName;
+        const isRealJump = false ||
+            this._isFalling ||
+            this.controller.getState().up ||
+            this._isJumpStarted ||
+            Math.abs(this.visualDirection.getVelocity().y) > 3;
+
         if (this.organism.isDead()) {
             animationName = 'die';
-        } else if (this.jump.isJumping()) {
-            animationName = 'jump';
+        } else if (!this.fly.isStopped()) {
+            animationName = 'fall';
+        } else if (this.jump.isJumping() && isRealJump) {
+            if (this._isFalling) {
+                animationName = 'fall';
+            } else {
+                animationName = 'jump';
+            }
         } else if (!this.fight.isStopped()) {
             animationName = 'fight';
         } else if (!this.run.isStopped()) {
-            this._lifeTime = this.body.center.x;
-            animationName = 'run';
+            if (Math.abs(this.visualDirection.getVelocity().x) < 4) {
+                this._lifeTime = this.body.center.x * 3;
+                animationName = 'walk';
+            } else {
+                this._lifeTime = this.body.center.x * 2;
+                animationName = 'run';
+            }
         } else {
-            animationName = 'default';
+            if (Math.abs(this.visualDirection.getVelocity().x) < 0.5) {
+                if (this._prevAnimationName !== 'default') {
+                    this._lifeTime = 0;
+                }
+                animationName = 'default';
+            } else {
+                this._lifeTime = this.body.center.x * 4;
+                animationName = 'walk';
+            }
         }
+        this._prevAnimationName = animationName;
         return super._getFrame(animationName);
     }
 
     _createSprite () {
         const sprite = super._createSprite(...arguments);
+        sprite.animations.get('jump').on('end', this._onJumpAnimationEnd.bind(this));
         sprite.animations.get('die').once('end', this._onDieAnimationEnd.bind(this));
         return sprite;
     }
@@ -47,9 +90,17 @@ export default class PlayerEntity extends UnicornEntity {
         return [
             ...super._createTraits(...arguments),
             new BodyImpulseLimitTrait(),
+            new AppearanceVisualDirectionTrait({
+                autoStart: false
+            }),
             new ActionRunTrait(),
-            new ActionJumpTrait(),
-            new ActionFightTrait(),
+            new ActionJumpTrait({
+                onStart: this._onJumpStart.bind(this)
+            }),
+            new ActionFightTrait({
+                onStart: this._onFightStart.bind(this),
+                onStop: this._onFightStop.bind(this)
+            }),
             new ActionFlyTrait({
                 onStart: this._onFlyStart.bind(this),
                 onStop: this._onFlyStop.bind(this),
@@ -61,6 +112,7 @@ export default class PlayerEntity extends UnicornEntity {
     }
 
     _onFlyStart () {
+        this._lifeTime = 0;
         this.rainbow.setGravityDirection(this._prevDirection, 0);
         this.rainbow.start();
     }
@@ -79,11 +131,30 @@ export default class PlayerEntity extends UnicornEntity {
         this.level.setHealth(health);
     }
 
+    _onFightStart () {
+        this._lifeTime = 0;
+        this.run.setSpeed(RUN_SPEED * 0.1);
+    }
+
+    _onFightStop () {
+        this.run.setSpeed();
+    }
+
     _onDie () {
         this._lifeTime = 0;
     }
 
     _onDieAnimationEnd () {
         this.level.loseGame();
+    }
+
+    _onJumpStart () {
+        this._lifeTime = 0;
+        this._isFalling = false;
+        this._isJumpStarted = true;
+    }
+
+    _onJumpAnimationEnd () {
+        this._isFalling = true;
     }
 }

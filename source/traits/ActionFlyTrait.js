@@ -44,7 +44,7 @@ export default class ActionFlyTrait extends ActionTrait {
         let gravity = null;
         if (!this._isStopped) {
             gravity = this.getGravityDirection().length(FLY_GRAVITY);
-            gravity.x *= 3;
+            gravity.x *= 2;
         }
         this.entity.body.setGravity(gravity);
     }

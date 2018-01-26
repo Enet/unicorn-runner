@@ -30,13 +30,18 @@ export default class AppearanceVisualDirectionTrait extends AppearanceTrait {
         return direction;
     }
 
+    getVelocity () {
+        return this._velocity;
+    }
+
     getName () {
         return 'visualDirection';
     }
 
     traitDidMount () {
         this.setDirection(1);
-        this._prevCenterX = this.entity.body.center.x;
+        this._prevCenter = this.entity.body.center.x;
+        this._velocity = new Vector2(0, 0);
         let {autoStart} = this.options;
         if (autoStart === undefined) {
             autoStart = true;
@@ -46,12 +51,13 @@ export default class AppearanceVisualDirectionTrait extends AppearanceTrait {
 
     traitWillUpdate () {
         super.traitWillUpdate(...arguments);
-        const {x} = this.entity.body.center;
-        const dx = Math.round(x - this._prevCenterX);
+        const {center} = this.entity.body;
+        const dx = Math.round(center.x - this._prevCenter.x);
         const direction = Math.sign(dx) || this._prevDirection;
+        this._velocity = center.subtract(this._prevCenter);
         this._direction = direction;
         this._prevDirection = direction;
-        this._prevCenterX = x;
+        this._prevCenter = center.clone();
     }
 
     _getDirection () {

@@ -1,6 +1,10 @@
 import Trait from 'traits/Trait.js';
 
 export default class ControllerTrait extends Trait {
+    getState () {
+        return this._state;
+    }
+
     setState (deltaState) {
         Object.assign(this._state, deltaState);
         const {up, down, left, right} = this._state;
@@ -15,7 +19,7 @@ export default class ControllerTrait extends Trait {
                 player.run.stop();
             }
 
-            if (down) {
+            if (down && !player.jump.isJumping()) {
                 player.fight.start();
             } else {
                 player.fight.stop();

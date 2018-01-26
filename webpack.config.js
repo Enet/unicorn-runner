@@ -46,7 +46,7 @@ module.exports = {
             use: [{
                 loader: 'url-loader',
                 options: {
-                    limit: 512 * 1024,
+                    limit: 2048 * 1024,
                     outputPath: path.resolve('output', 'images'),
                     name: '[name].[hash].[ext]'
                 }

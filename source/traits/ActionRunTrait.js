@@ -37,10 +37,18 @@ export default class ActionRunTrait extends ActionTrait {
         return 'run';
     }
 
-    traitWillMount ({speed=RUN_SPEED}) {
+    getSpeed () {
+        return this._impulse;
+    }
+
+    setSpeed (speed=RUN_SPEED) {
+        this._impulse = new Vector2(+speed, 0);
+    }
+
+    traitWillMount ({speed}) {
         super.traitWillMount(...arguments);
         this._direction = 1;
-        this._impulse = new Vector2(+speed, 0);
+        this.setSpeed(speed);
     }
 
     traitWillUpdate () {

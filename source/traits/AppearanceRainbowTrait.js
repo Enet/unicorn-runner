@@ -33,8 +33,9 @@ export default class AppearanceRainbowTrait extends AppearanceTrait {
     start () {
         const {entity} = this;
         const particleSystem = new ParticleSystem({
+            index: -1,
             position: entity.body.center,
-            offset: new Vector2(-entity.size.width * 0.5, 0),
+            offset: new Vector2(-entity.size.width * 0.5, -20),
             direction: Math.PI,
             directionError: 10,
             size: 2,

@@ -14,6 +14,16 @@ export default class ActionJumpTrait extends ActionTrait {
         return this._isJumping;
     }
 
+    isStopped () {
+        return this._lifeTime - this._jumpStartTime >= this._jumpImpulseTime ?
+            true :
+            super.isStopped();
+    }
+
+    getNoCollisionTime () {
+        return this._lifeTime - this._jumpEndTime;
+    }
+
     setDirection (angle) {
         this._jumpImpulseDirection = angle;
     }
@@ -105,6 +115,9 @@ export default class ActionJumpTrait extends ActionTrait {
         }
 
         this._isJumping = false;
-        !this._isStopped && this.start();
+        if (!this._isStopped) {
+            this._isStopped = true;
+            this.start();
+        }
     }
 }
