@@ -77,11 +77,12 @@ export default class UnicornGame extends Game {
         const renderer = new Renderer(context);
         const camera = new Camera({width, height});
         const scene = new Scene();
+        scene.add(camera);
+
         const level = new Level(levels[step], {
             manager, scene, settings, callbacks
         });
 
-        scene.add(camera);
         this._game = {renderer, scene, camera, level};
         if (debug) {
             this._debugger = new Debugger(level.world, camera, context);

@@ -154,14 +154,15 @@ export default class Level {
         if (!this.settings.sound) {
             options.amplitude = 0;
         }
-
         const {manager} = this;
-        const sound = new Sound(manager.getSound(name), options);
+        options.buffer = manager.getSound(name);
+
+        const sound = new Sound(options);
         sound.position = options.position;
         sound.name = name;
         sound.setPlaybackRate(this._playbackRate);
 
-        this._setVolumeByPosition(sound);
+        this._updateSoundByPosition(sound);
         this.sounds.add(sound);
 
         if (!options.loop) {
@@ -212,7 +213,7 @@ export default class Level {
             entity.entityDidUpdate();
         });
 
-        this.sounds.forEach(sound => this._setVolumeByPosition(sound));
+        this.sounds.forEach(sound => this._updateSoundByPosition(sound));
 
         this._play();
         this._elapsedTime += deltaTime;
@@ -233,13 +234,15 @@ export default class Level {
         }
     }
 
-    _setVolumeByPosition (sound) {
+    _updateSoundByPosition (sound) {
         if (!sound.position) {
             return;
         }
-        const {player} = this;
+        const {player, scene} = this;
         const volume = 1 - player.body.center.subtract(sound.position).length() * 0.002;
+        const pan = 2 * (sound.position.x - player.body.center.x) / scene.camera.size.width;
         sound.setVolume(volume);
+        sound.setPanValue(pan);
     }
 
     _setPlaybackRate (playbackRate) {

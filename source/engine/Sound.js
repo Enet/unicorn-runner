@@ -8,14 +8,11 @@ export default class Sound extends EventEmitter {
         if (!this._isPaused) {
             return this;
         }
-
         if (this._isStopped) {
-            this.setVolume(1);
-            this._clearTimeout();
             this._currentTime = 0;
         }
-
         if (this.options.fadeInOnPlay) {
+            this._isStopped && this.setVolume(0);
             this.fadeIn(this.options.fadeInOnPlay);
         }
         this._play();
@@ -51,8 +48,8 @@ export default class Sound extends EventEmitter {
             return this;
         }
 
-        this._isPaused = true;
         this._isStopped = true;
+        this._isPaused = true;
         if (this.options.fadeOutOnPause) {
             this.fadeOut(this.options.fadeOutOnPause);
         } else {
@@ -72,22 +69,22 @@ export default class Sound extends EventEmitter {
         return this._isStopped;
     }
 
+    isPlaying () {
+        return this._isPlaying;
+    }
+
     fadeTo (options={}) {
-        let {duration, to} = options;
+        const {volumeNode} = this._nodes;
+        let {duration, to, from} = options;
         duration = +duration || 100;
         to = typeof to === 'number' ? to : 1;
-
-        if (options.from !== undefined) {
-            this.setVolume(+options.from);
-        }
-
-        const startTime = Date.now();
-        this._animation.startValue = this.volumeNode.gain.value;
-        this._animation.endValue = to;
-        this._animation.startTime = startTime;
-        this._animation.endTime = startTime + duration;
-        this._isStopped = false;
-        this._setTimeout();
+        from = typeof options.from === 'number' ? from : volumeNode.gain.value;
+        const startTime = AUDIO_CONTEXT.currentTime;
+        const endTime = startTime + duration * 0.001;
+        volumeNode.gain.cancelScheduledValues(0);
+        volumeNode.gain.exponentialRampToValueAtTime(from || 0.001, startTime);
+        volumeNode.gain.exponentialRampToValueAtTime(to || 0.001, endTime);
+        setTimeout(this._onTimerTick, duration);
         return this;
     }
 
@@ -102,108 +99,111 @@ export default class Sound extends EventEmitter {
     }
 
     getPlaybackRate () {
-        return this.source.playbackRate.value;
+        const {sourceNode} = this._nodes;
+        return sourceNode.playbackRate.value;
     }
 
     setPlaybackRate (playbackRate=1) {
-        this.source.playbackRate.value = +playbackRate;
+        const {sourceNode} = this._nodes;
+        sourceNode.playbackRate.value = +playbackRate;
         return this;
     }
 
     getVolume () {
-        return this.volumeNode.gain.value;
+        const {volumeNode} = this._nodes;
+        return volumeNode.gain.value;
     }
 
-    setVolume (volume) {
-        volume = Math.max(0, Math.min(1, +volume));
-        this.volumeNode.gain.value = volume;
+    setVolume (value) {
+        const {volumeNode} = this._nodes;
+        value = Math.max(0, Math.min(1, +value));
+        volumeNode.gain.value = value;
         return this;
     }
 
-    constructor (buffer, {amplitude=1, loop=false}) {
+    getPanValue () {
+        const {stereoPanNode} = this._nodes;
+        return stereoPanNode.pan.value;
+    }
+
+    setPanValue (value) {
+        const {stereoPanNode} = this._nodes;
+        value = Math.max(-1, Math.min(1, +value));
+        stereoPanNode.pan.value = value;
+        return this;
+    }
+
+    constructor (options={}) {
         super();
-        this._onAnimationTimerTick = this._onAnimationTimerTick.bind(this);
+        this.options = options;
+        this._onEnd = this._onEnd.bind(this);
+        this._onTimerTick = this._onTimerTick.bind(this);
 
-        const source = AUDIO_CONTEXT.createBufferSource();
-        source.buffer = buffer;
-        source.loop = !!loop;
-        source.onended = this._onEnd.bind(this);
-
+        const nodes = {};
         const amplitudeNode = AUDIO_CONTEXT.createGain();
-        amplitudeNode.gain.value = +amplitude;
+        amplitudeNode.gain.value = +options.amplitude || 1;
 
         const volumeNode = AUDIO_CONTEXT.createGain();
-        volumeNode.gain.value = 1;
+        volumeNode.gain.value = this.fadeInOnPlay ? 0 : 1;
 
-        source.connect(amplitudeNode);
+        const stereoPanNode = AUDIO_CONTEXT.createStereoPanner();
+        const sourceNode = this._createSourceNode(options);
+
+        sourceNode.connect(amplitudeNode);
         amplitudeNode.connect(volumeNode);
-        volumeNode.connect(AUDIO_CONTEXT.destination);
-        Object.assign(this, {source, amplitudeNode, volumeNode});
+        volumeNode.connect(stereoPanNode);
+        stereoPanNode.connect(AUDIO_CONTEXT.destination);
+        Object.assign(nodes, {
+            sourceNode,
+            amplitudeNode,
+            volumeNode,
+            stereoPanNode
+        });
 
-        this.options = arguments[1];
-
-        this._animation = {
-            timer: null,
-            startValue: null,
-            endValue: null,
-            startTime: null,
-            endTime: null
-        };
+        this._nodes = nodes;
         this._startTime = 0;
         this._currentTime = 0;
+
         this._isPaused = true;
         this._isStopped = true;
         this._isPlaying = false;
     }
 
-    _clearTimeout () {
-        clearTimeout(this._animation.timer);
-        this._animation.timer = null;
-    }
-
-    _setTimeout () {
-        if (this._animation.timer) {
-            return;
-        }
-        this._animation.timer = setTimeout(this._onAnimationTimerTick);
+    _createSourceNode ({buffer, loop}) {
+        const source = AUDIO_CONTEXT.createBufferSource();
+        source.buffer = buffer;
+        source.loop = !!loop;
+        source.onended = this._onEnd;
+        return source;
     }
 
     _play () {
         if (this._isPlaying) {
             return;
         }
-        this._startTime = AUDIO_CONTEXT.currentTime - this._currentTime;
-        this.source.start(this._currentTime);
+        const currentTime = this._currentTime;
+        const {sourceNode} = this._nodes;
+        sourceNode.start(currentTime);
+        this._startTime = AUDIO_CONTEXT.currentTime - currentTime;
+        this._isPlaying = true;
     }
 
     _stop () {
+        const {sourceNode, amplitudeNode} = this._nodes;
         this._currentTime = AUDIO_CONTEXT.currentTime - this._startTime;
-        this._isPlaying && this.source.stop();
-        const source = AUDIO_CONTEXT.createBufferSource();
-        source.buffer = this.source.buffer;
-        source.loop = this.source.loop;
-        source.onended = this.source.onended;
-        source.connect(this.amplitudeNode);
-        this.source = source;
+        this._isPlaying && sourceNode.stop();
         this._isPlaying = false;
+
+        const newSourceNode = this._createSourceNode(this.options);
+        newSourceNode.connect(amplitudeNode);
+        this._nodes.sourceNode = newSourceNode;
     }
 
     _onEnd () {
         this.emit('end', this);
     }
 
-    _onAnimationTimerTick () {
-        const currentTime = Date.now();
-        const {startValue, endValue, startTime, endTime} = this._animation;
-        const animationProgress = Math.min(1, (currentTime - startTime) / (endTime - startTime));
-        const currentValue = startValue + (endValue - startValue) * animationProgress;
-        this.setVolume(currentValue);
-
-        this._animation.timer = null;
-        if (animationProgress < 1) {
-            this._setTimeout();
-        } else if (currentValue === 0 && this._isPaused) {
-            this._stop();
-        }
+    _onTimerTick () {
+        this._isPaused && this._stop();
     }
 }

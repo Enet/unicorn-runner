@@ -47,8 +47,8 @@ export default class PlayerEntity extends UnicornEntity {
             loop: true,
             amplitude: 0.1,
             fadeOutOnPause: {},
-            fadeInOnPlay: {duration: 4000}
-        }).setVolume(0);
+            fadeInOnPlay: {duration: 1500}
+        });
     }
 
     entityWillUpdate (deltaTime) {
