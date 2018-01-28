@@ -58,7 +58,7 @@ export default class StoneEntity extends Entity {
         const {organism} = body.entity;
         this.level.createSound('StoneCollision', {
             position: this.body.center,
-            volumeFactor: 0.5
+            amplitude: 0.5
         }).play();
         if (!organism) {
             return;

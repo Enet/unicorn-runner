@@ -1,18 +1,31 @@
 import EventEmitter from 'events';
+import {
+    AUDIO_CONTEXT
+} from './constants.js';
 
 export default class Sound extends EventEmitter {
     play () {
         if (!this._isPaused) {
             return this;
         }
+
         if (this._isStopped) {
-            this.audio.currentTime = 0;
-            this.audio.volume = this._volumeFactor;
+            this.setVolume(1);
             this._clearTimeout();
+            this._currentTime = 0;
         }
+
+        if (this.options.fadeInOnPlay) {
+            this.fadeIn(this.options.fadeInOnPlay);
+        }
+        this._play();
+
         this._isPaused = false;
         this._isStopped = false;
-        this._onPlay();
+        this._isPlaying = true;
+
+        const {onPlay} = this.options;
+        onPlay && onPlay();
         return this;
     }
 
@@ -20,8 +33,16 @@ export default class Sound extends EventEmitter {
         if (this._isPaused) {
             return this;
         }
+
         this._isPaused = true;
-        this._onPause();
+        if (this.options.fadeOutOnPause) {
+            this.fadeOut(this.options.fadeOutOnPause);
+        } else {
+            this._stop();
+        }
+
+        const {onPause} = this.options;
+        onPause && onPause();
         return this;
     }
 
@@ -29,9 +50,17 @@ export default class Sound extends EventEmitter {
         if (this._isStopped) {
             return this;
         }
+
         this._isPaused = true;
         this._isStopped = true;
-        this._onStop();
+        if (this.options.fadeOutOnPause) {
+            this.fadeOut(this.options.fadeOutOnPause);
+        } else {
+            this._stop();
+        }
+
+        const {onStop} = this.options;
+        onStop && onStop();
         return this;
     }
 
@@ -53,7 +82,7 @@ export default class Sound extends EventEmitter {
         }
 
         const startTime = Date.now();
-        this._animation.startValue = this._volumeValue;
+        this._animation.startValue = this.volumeNode.gain.value;
         this._animation.endValue = to;
         this._animation.startTime = startTime;
         this._animation.endTime = startTime + duration;
@@ -72,27 +101,45 @@ export default class Sound extends EventEmitter {
         return this.fadeTo(options);
     }
 
+    getPlaybackRate () {
+        return this.source.playbackRate.value;
+    }
+
+    setPlaybackRate (playbackRate=1) {
+        this.source.playbackRate.value = +playbackRate;
+        return this;
+    }
+
     getVolume () {
-        return this._volumeValue;
+        return this.volumeNode.gain.value;
     }
 
     setVolume (volume) {
         volume = Math.max(0, Math.min(1, +volume));
-        this._volumeValue = volume;
-        this.audio.volume = this._volumeFactor * volume;
+        this.volumeNode.gain.value = volume;
         return this;
     }
 
-    constructor (uri, {volumeFactor=1, loop=false}) {
+    constructor (buffer, {amplitude=1, loop=false}) {
         super();
         this._onAnimationTimerTick = this._onAnimationTimerTick.bind(this);
 
-        const audio = new Audio(uri.src);
-        audio.onended = this._onEnd.bind(this);
-        audio.volume = +volumeFactor;
-        audio.loop = !!loop;
+        const source = AUDIO_CONTEXT.createBufferSource();
+        source.buffer = buffer;
+        source.loop = !!loop;
+        source.onended = this._onEnd.bind(this);
 
-        this.audio = audio;
+        const amplitudeNode = AUDIO_CONTEXT.createGain();
+        amplitudeNode.gain.value = +amplitude;
+
+        const volumeNode = AUDIO_CONTEXT.createGain();
+        volumeNode.gain.value = 1;
+
+        source.connect(amplitudeNode);
+        amplitudeNode.connect(volumeNode);
+        volumeNode.connect(AUDIO_CONTEXT.destination);
+        Object.assign(this, {source, amplitudeNode, volumeNode});
+
         this.options = arguments[1];
 
         this._animation = {
@@ -102,10 +149,11 @@ export default class Sound extends EventEmitter {
             startTime: null,
             endTime: null
         };
-        this._volumeFactor = +volumeFactor;
-        this._volumeValue = 1;
+        this._startTime = 0;
+        this._currentTime = 0;
         this._isPaused = true;
         this._isStopped = true;
+        this._isPlaying = false;
     }
 
     _clearTimeout () {
@@ -120,33 +168,24 @@ export default class Sound extends EventEmitter {
         this._animation.timer = setTimeout(this._onAnimationTimerTick);
     }
 
-    _onPlay () {
-        if (this.options.fadeInOnPlay) {
-            this.fadeIn(this.options.fadeInOnPlay);
+    _play () {
+        if (this._isPlaying) {
+            return;
         }
-        this.audio.play();
-        const {onPlay} = this.options;
-        onPlay && onPlay();
+        this._startTime = AUDIO_CONTEXT.currentTime - this._currentTime;
+        this.source.start(this._currentTime);
     }
 
-    _onPause () {
-        if (this.options.fadeOutOnPause) {
-            this.fadeOut(this.options.fadeOutOnPause);
-        } else {
-            this.audio.pause();
-        }
-        const {onPause} = this.options;
-        onPause && onPause();
-    }
-
-    _onStop () {
-        if (this.options.fadeOutOnPause) {
-            this.fadeOut(this.options.fadeOutOnPause);
-        } else {
-            this.audio.pause();
-        }
-        const {onStop} = this.options;
-        onStop && onStop();
+    _stop () {
+        this._currentTime = AUDIO_CONTEXT.currentTime - this._startTime;
+        this._isPlaying && this.source.stop();
+        const source = AUDIO_CONTEXT.createBufferSource();
+        source.buffer = this.source.buffer;
+        source.loop = this.source.loop;
+        source.onended = this.source.onended;
+        source.connect(this.amplitudeNode);
+        this.source = source;
+        this._isPlaying = false;
     }
 
     _onEnd () {
@@ -164,7 +203,7 @@ export default class Sound extends EventEmitter {
         if (animationProgress < 1) {
             this._setTimeout();
         } else if (currentValue === 0 && this._isPaused) {
-            this.audio.pause();
+            this._stop();
         }
     }
 }

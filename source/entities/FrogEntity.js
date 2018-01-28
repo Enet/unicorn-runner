@@ -160,7 +160,7 @@ export default class FrogEntity extends Entity {
         const dx = player.body.center.x - this.body.center.x;
         if (frameId === 1) {
             this.level.createSound('FrogFight', {
-                volumeFactor: 0.5,
+                amplitude: 0.5,
                 position: this.body.center
             }).play();
         } else if (frameId === 8 && Math.abs(dx) < damageDistance) {

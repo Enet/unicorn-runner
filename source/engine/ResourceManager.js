@@ -1,3 +1,7 @@
+import {
+    AUDIO_CONTEXT
+} from './constants.js';
+
 function fetchImages (rawImages) {
     return Promise.all(Object.keys(rawImages).map((imageName) => {
         return new Promise((resolve, reject) => {
@@ -13,10 +17,17 @@ function fetchImages (rawImages) {
 function fetchSounds (rawSounds) {
     return Promise.all(Object.keys(rawSounds).map((soundName) => {
         return new Promise((resolve, reject) => {
-            const audio = new Audio(rawSounds[soundName]);
-            audio.oncanplaythrough = () => resolve(audio);
-            audio.name = soundName;
-            audio.onerror = reject;
+            const request = new XMLHttpRequest();
+            request.open('GET', rawSounds[soundName], true);
+            request.responseType = 'arraybuffer';
+            request.onerror = reject;
+            request.onload = () => {
+                AUDIO_CONTEXT.decodeAudioData(request.response, (buffer) => {
+                    buffer.name = soundName;
+                    resolve(buffer);
+                }, reject);
+            };
+            request.send();
         });
     }));
 }
@@ -46,17 +57,15 @@ export default class ResourceManager {
         return this._sounds[soundName];
     }
 
-    _cacheNodes (nodes, cache) {
-        const items = {};
-        nodes.forEach((node) => {
-            items[node.name] = node;
+    _cacheResources (resources, cache) {
+        resources.forEach((resource) => {
+            cache[resource.name] = resource;
         });
-        Object.assign(cache, items);
     }
 
-    _onReady ([imageNodes, soundNodes]) {
-        this._cacheNodes(imageNodes, this._images);
-        this._cacheNodes(soundNodes, this._sounds);
+    _onReady ([imageNodes, soundBuffers]) {
+        this._cacheResources(imageNodes, this._images);
+        this._cacheResources(soundBuffers, this._sounds);
     }
 
     _onError (error) {

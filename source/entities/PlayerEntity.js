@@ -28,13 +28,13 @@ export default class PlayerEntity extends UnicornEntity {
         super.entityWillMount(...arguments);
         this._walkSound = this.level.createSound('PlayerWalk', {
             loop: true,
-            volumeFactor: 0.2,
+            amplitude: 0.2,
             fadeOutOnPause: {},
             fadeInOnPlay: {}
         });
         this._runSound = this.level.createSound('PlayerRun', {
             loop: true,
-            volumeFactor: 0.5,
+            amplitude: 0.5,
             fadeOutOnPause: {},
             fadeInOnPlay: {}
         });
@@ -45,7 +45,7 @@ export default class PlayerEntity extends UnicornEntity {
         });
         this._fallSound = this.level.createSound('PlayerFall', {
             loop: true,
-            volumeFactor: 0.1,
+            amplitude: 0.1,
             fadeOutOnPause: {},
             fadeInOnPlay: {duration: 4000}
         }).setVolume(0);
@@ -244,7 +244,7 @@ export default class PlayerEntity extends UnicornEntity {
         this._flySound.stop();
         this._fallSound.stop();
         this.level.createSound('PlayerDie', {
-            volumeFactor: 0.5
+            amplitude: 0.5
         }).play();
     }
 
@@ -259,7 +259,7 @@ export default class PlayerEntity extends UnicornEntity {
         this._stopFall();
 
         this.level.createSound('PlayerJump', {
-            volumeFactor: 0.25
+            amplitude: 0.25
         }).play();
     }
 

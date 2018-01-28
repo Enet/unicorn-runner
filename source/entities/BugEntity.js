@@ -57,7 +57,7 @@ export default class BugEntity extends Entity {
         body.move(new Vector2(-5, -5));
         this.level.createSound('BugFight', {
             position: this.body.center,
-            volumeFactor: 0.5
+            amplitude: 0.5
         }).play();
     }
 
@@ -66,7 +66,7 @@ export default class BugEntity extends Entity {
         this.fadeOut.start();
         this.level.createSound('BugDie', {
             position: this.body.center,
-            volumeFactor: 0.5
+            amplitude: 0.5
         }).play();
     }
 

@@ -1,6 +1,6 @@
 export default {
     meta: {
-        music: 'MusicCity',
+        /*music: 'MusicCity',*/
         background: 'City',
         bounds: [-300, 6000, 700, -300]
     },

@@ -152,14 +152,14 @@ export default class Level {
 
     createSound (name, options={}) {
         if (!this.settings.sound) {
-            options.volumeFactor = 0;
+            options.amplitude = 0;
         }
 
         const {manager} = this;
         const sound = new Sound(manager.getSound(name), options);
         sound.position = options.position;
         sound.name = name;
-        sound.audio.playbackRate = this._playbackRate;
+        sound.setPlaybackRate(this._playbackRate);
 
         this._setVolumeByPosition(sound);
         this.sounds.add(sound);
@@ -245,8 +245,8 @@ export default class Level {
     _setPlaybackRate (playbackRate) {
         this._playbackRate = playbackRate;
         this.sounds.forEach((sound) => {
-            sound.audio.playbackRate = playbackRate;
-            this._musicSound.playbackRate = playbackRate;
+            sound.setPlaybackRate(playbackRate);
+            this._musicSound.setPlaybackRate(playbackRate);
         });
     }
 
@@ -347,7 +347,7 @@ export default class Level {
         }
         const musicSound = this.createSound(meta.music, {
             loop: true,
-            volumeFactor: 0.25,
+            amplitude: 0.25,
             fadeOutOnPause: {}
         });
         this._musicSound = musicSound;
