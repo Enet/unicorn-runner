@@ -125,7 +125,7 @@ export default class PlayerEntity extends UnicornEntity {
             } else {
                 animationName = 'jump';
             }
-        } else if (!this.fight.isStopped()) {
+        } else if (!this.fight.isStopped() || this._isFightAnimation) {
             animationName = 'fight';
         } else if (!this.run.isStopped()) {
             const visualVelocityX = this.visualDirection.getVelocity().x;
@@ -155,6 +155,7 @@ export default class PlayerEntity extends UnicornEntity {
     _createSprite () {
         const sprite = super._createSprite(...arguments);
         sprite.animations.get('fight').on('start', this._onFightAnimationStart.bind(this));
+        sprite.animations.get('fight').on('end', this._onFightAnimationEnd.bind(this));
         sprite.animations.get('jump').on('end', this._onJumpAnimationEnd.bind(this));
         sprite.animations.get('die').once('end', this._onDieAnimationEnd.bind(this));
         return sprite;
@@ -225,6 +226,11 @@ export default class PlayerEntity extends UnicornEntity {
         this._fightSound && this._fightSound.fadeOut();
         const fightSound = this.level.createSound('PlayerFight');
         this._fightSound = fightSound.play();
+        this._isFightAnimation = true;
+    }
+
+    _onFightAnimationEnd () {
+        this._isFightAnimation = false;
     }
 
     _onFightStart () {
