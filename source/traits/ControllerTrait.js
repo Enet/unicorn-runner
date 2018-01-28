@@ -34,6 +34,9 @@ export default class ControllerTrait extends Trait {
             const x = +right - left;
             const y = +down - up;
             player.fly.setGravityDirection(x, y);
+            player.run.stop();
+            player.jump.stop();
+            player.fight.stop();
         }
     }
 
