@@ -223,10 +223,13 @@ export default class PlayerEntity extends UnicornEntity {
     }
 
     _onFightAnimationStart () {
+        this._isFightAnimation = true;
+
         this._fightSound && this._fightSound.fadeOut();
         const fightSound = this.level.createSound('PlayerFight');
         this._fightSound = fightSound.play();
-        this._isFightAnimation = true;
+
+        this.body.move(new Vector2(this.run.getDirection(), 0));
     }
 
     _onFightAnimationEnd () {

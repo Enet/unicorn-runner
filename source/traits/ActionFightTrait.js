@@ -5,7 +5,8 @@ import {
 import ActionTrait from 'traits/ActionTrait.js';
 import {
     FIGHT_DAMAGE,
-    FIGHT_SHIFT
+    FIGHT_SHIFT,
+    FIGHT_WAITING_TIME
 } from 'constants.js';
 
 export default class ActionFightTrait extends ActionTrait {
@@ -15,12 +16,16 @@ export default class ActionFightTrait extends ActionTrait {
 
     traitWillMount ({damage=FIGHT_DAMAGE}) {
         super.traitWillMount(...arguments);
-        this._impulse = new Vector2(FIGHT_SHIFT, 0);
+        this._impulse = new Vector2(FIGHT_SHIFT, -FIGHT_SHIFT);
         this._damage = +damage;
+        this._prevFightTime = -FIGHT_WAITING_TIME;
     }
 
     traitCollision (body) {
         if (this._isStopped) {
+            return;
+        }
+        if (this._lifeTime - this._prevFightTime < FIGHT_WAITING_TIME) {
             return;
         }
 
@@ -33,6 +38,7 @@ export default class ActionFightTrait extends ActionTrait {
         const direction = body.center.x > entity.body.center.x ? 1 : -1;
         this._impulse.x = direction * Math.abs(this._impulse.x);
         body.move(this._impulse);
+        this._prevFightTime = this._lifeTime;
 
         if (!body.entity.organism || body.entity.organism.isDead()) {
             return;

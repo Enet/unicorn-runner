@@ -36,7 +36,7 @@ export default {
         from: [100, 300],
         to: [700, 300]
     }, {
-        name: 'Rainbow',
+        name: 'Frog',
         position: [800, 200],
         range: [300, 800]
     }] || [{

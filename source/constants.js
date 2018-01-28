@@ -10,7 +10,8 @@ export const CAMERA_OFFSET = new Vector2(500, 300);
 
 export const RUN_SPEED = 0.1;
 export const FIGHT_DAMAGE = 10;
-export const FIGHT_SHIFT = 0.1;
+export const FIGHT_SHIFT = 5;
+export const FIGHT_WAITING_TIME = 1000;
 export const FLY_GRAVITY = 300;
 export const JUMP_IMPULSE_POWER = 0.75;
 export const JUMP_IMPULSE_TIME = 300;
