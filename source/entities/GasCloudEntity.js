@@ -21,10 +21,9 @@ export default class GasCloudEntity extends StaticEntity {
 
     entityDidMount () {
         super.entityDidMount(...arguments);
-        this.level.playSound({
-            name: 'gas',
+        this.level.createSound('GasCloud', {
             position: this.body.center
-        });
+        }).play();
     }
 
     render (context, camera) {

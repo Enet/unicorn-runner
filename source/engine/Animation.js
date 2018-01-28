@@ -11,7 +11,7 @@ export default class Animation extends EventEmitter {
     frame (time) {
         const {frames, delay} = this;
         if (time < 0) {
-            time -= time * frames.length * delay;
+            time -= (time - 1 | 0) * frames.length * delay;
         }
         const frameIndex = Math.floor(time / delay) % frames.length;
         const frameName = frames[frameIndex];

@@ -8,4 +8,8 @@ export default class FastMotionEntity extends EffectEntity {
     _getEffectName () {
         return 'fast';
     }
+
+    _getDuration () {
+        return super._getDuration() * 2;
+    }
 }

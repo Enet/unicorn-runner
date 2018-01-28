@@ -31,6 +31,19 @@ export default class FruitFly extends Entity {
         return new Vector2(this._getDirection(), 1);
     }
 
+    entityDidMount () {
+        super.entityDidMount(...arguments);
+        this._idleSound = this.level.createSound('FruitFlyIdle', {
+            position: this.body.center,
+            loop: true
+        });
+    }
+
+    entityWillUnmount () {
+        super.entityWillUnmount(...arguments);
+        this.level.removeSound(this._idleSound);
+    }
+
     _getDirection () {
         const {player} = this.level;
         return 2 * (this.body.center.x > player.body.center.x) - 1;
@@ -76,6 +89,8 @@ export default class FruitFly extends Entity {
         }
         this.traits.remove(this.trigger);
         this.motion.start();
+        this.level.createSound('FruitFlyActivate').play();
+        this._idleSound.play();
 
         const trigger = new TriggerContactTrait({
             maxActivationCount: Infinity,
@@ -105,6 +120,9 @@ export default class FruitFly extends Entity {
     _onDie () {
         this.score && this.score.use();
         this.fadeOut.start();
+        this.level.createSound('FruitFlyDie', {
+            position: this.body.center
+        }).play();
     }
 
     _onFadeOutEnd () {

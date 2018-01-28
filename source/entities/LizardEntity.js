@@ -19,7 +19,7 @@ import {
 
 const LIZARD_DAMAGE = 10;
 const LIZARD_FIGHT_DISTANCE = 150;
-const LIZARD_FIGHT_WAITING_TIME = 1000;
+const LIZARD_FIGHT_WAITING_TIME = 2000;
 
 export default class LizardEntity extends Entity {
     get angle () {
@@ -37,6 +37,22 @@ export default class LizardEntity extends Entity {
         return new Vector2(direction, 1);
     }
 
+    entityDidMount () {
+        super.entityDidMount(...arguments);
+        this._idleSound = this.level.createSound('LizardIdle', {
+            loop: true,
+            position: this.body.center,
+            fadeInOnPlay: {},
+            fadeOutOnPlay: {}
+        });
+        this._walkSound = this.level.createSound('LizardWalk', {
+            loop: true,
+            position: this.body.center,
+            fadeInOnPlay: {},
+            fadeOutOnPlay: {}
+        }).play();
+    }
+
     entityWillUpdate (deltaTime) {
         super.entityWillUpdate(...arguments);
         const particleSystem = this._particleSystem;
@@ -52,10 +68,20 @@ export default class LizardEntity extends Entity {
         if (!isReadyToFight && !this.fight.isStopped()) {
             this.motion.start();
             this.fight.stop();
+            this._walkSound.play();
+            this._idleSound.pause();
         } else if (isReadyToFight && this.fight.isStopped()) {
             this.motion.stop();
             this.fight.start();
+            this._walkSound.pause();
+            this._idleSound.play();
         }
+    }
+
+    entityWillUnmount () {
+        super.entityWillUnmount(...arguments);
+        this.level.removeSound(this._walkSound);
+        this.level.removeSound(this._idleSound);
     }
 
     _getImageName () {
@@ -139,12 +165,19 @@ export default class LizardEntity extends Entity {
         this.level.scene.add(particleSystem);
         this._particleSystem = particleSystem;
 
+        this.level.createSound('LizardFight', {
+            position: this.body.center
+        }).play();
+
         this._prevFightTime = this._lifeTime;
     }
 
     _onDie () {
         this.score.use();
         this.fadeOut.start();
+        this.level.createSound('LizardDie', {
+            position: this.body.center
+        }).play();
     }
 
     _onFadeOutEnd () {

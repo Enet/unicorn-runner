@@ -24,31 +24,61 @@ export default class PlayerEntity extends UnicornEntity {
         return new Vector2(-direction, 1);
     }
 
+    entityWillMount () {
+        super.entityWillMount(...arguments);
+        this._walkSound = this.level.createSound('PlayerWalk', {
+            loop: true,
+            volumeFactor: 0.2,
+            fadeOutOnPause: {},
+            fadeInOnPlay: {}
+        });
+        this._runSound = this.level.createSound('PlayerRun', {
+            loop: true,
+            volumeFactor: 0.5,
+            fadeOutOnPause: {},
+            fadeInOnPlay: {}
+        });
+        this._flySound = this.level.createSound('PlayerFly', {
+            loop: true,
+            fadeOutOnPause: {},
+            fadeInOnPlay: {}
+        });
+        this._fallSound = this.level.createSound('PlayerFall', {
+            loop: true,
+            volumeFactor: 0.1,
+            fadeOutOnPause: {},
+            fadeInOnPlay: {duration: 4000}
+        }).setVolume(0);
+    }
+
     entityWillUpdate (deltaTime) {
         super.entityWillUpdate(...arguments);
 
+        if (this.organism.isDead()) {
+            return;
+        }
+
         if (this.jump.isJumping()) {
-            this.level.stopSound({key: 'run'});
-            this.level.stopSound({key: 'walk'});
+            this._walkSound.pause();
+            this._runSound.pause();
 
             if (!this._isJumpStarted) {
-                this._isFalling = true;
+                this._startFall();
             }
         } else {
-            this._isFalling = false;
             this._isJumpStarted = false;
+            this._stopFall();
 
             const velocity = Math.abs(this.visualDirection.getVelocity().x);
             if (velocity < 1) {
-                this.level.stopSound({key: 'run'});
-                this.level.stopSound({key: 'walk'});
+                this._walkSound.pause();
+                this._runSound.pause();
+            } else if (velocity < 4) {
+                this._runSound.pause();
+                this._walkSound.play();
             } else {
-                const name = velocity < 4 ? 'walk' : 'run';
-                this.level.loopSound({
-                    name,
-                    volume: velocity < 4 ? 0.05 : 0.5,
-                    key: 'run'
-                });
+                this._runSound.play();
+                this._walkSound.pause();
             }
         }
     }
@@ -56,16 +86,28 @@ export default class PlayerEntity extends UnicornEntity {
     entityCollision (body) {
         if (this.jump.isJumping() &&
             Math.abs(body.getVelocity().y) > 1 &&
-            this.jump.getNoCollisionTime() > 100) {
-            console.log(body.getVelocity().y, this.jump.getNoCollisionTime());
-            this.level.playSound({
-                name: 'landing'
-            });
+            this.jump.getNoCollisionTime() > 100 &&
+            !this._landingSound) {
+            const landingSound = this.level.createSound('PlayerLanding');
+            landingSound.once('end', this._onLandingSoundEnd.bind(this));
+            this._landingSound = landingSound.play();
         }
         super.entityCollision(...arguments);
     }
 
+    entityWillUnmount () {
+        super.entityWillUnmount(...arguments);
+        this.level.removeSound(this._walkSound);
+        this.level.removeSound(this._runSound);
+        this.level.removeSound(this._fallSound);
+        this.level.removeSound(this._flySound);
+    }
+
     _getFrame () {
+        if (!this.controller) {
+            return 'die-10';
+        }
+
         let animationName;
         const isRealJump = false ||
             this._isFalling ||
@@ -86,21 +128,23 @@ export default class PlayerEntity extends UnicornEntity {
         } else if (!this.fight.isStopped()) {
             animationName = 'fight';
         } else if (!this.run.isStopped()) {
-            if (Math.abs(this.visualDirection.getVelocity().x) < 4) {
-                this._lifeTime = this.body.center.x * 3;
+            const visualVelocityX = this.visualDirection.getVelocity().x;
+            if (Math.abs(visualVelocityX) < 4) {
+                this._lifeTime = Math.sign(visualVelocityX) * this.body.center.x * 3;
                 animationName = 'walk';
             } else {
-                this._lifeTime = this.body.center.x * 2;
+                this._lifeTime = Math.sign(visualVelocityX) * this.body.center.x * 2;
                 animationName = 'run';
             }
         } else {
-            if (Math.abs(this.visualDirection.getVelocity().x) < 0.5) {
+            const visualVelocityX = this.visualDirection.getVelocity().x;
+            if (Math.abs(visualVelocityX) < 0.5) {
                 if (this._prevAnimationName !== 'default') {
                     this._lifeTime = 0;
                 }
                 animationName = 'default';
             } else {
-                this._lifeTime = this.body.center.x * 4;
+                this._lifeTime = Math.sign(visualVelocityX) * this.body.center.x * 4;
                 animationName = 'walk';
             }
         }
@@ -141,10 +185,25 @@ export default class PlayerEntity extends UnicornEntity {
         ];
     }
 
+    _startFall () {
+        if (this.organism.isDead()) {
+            return;
+        }
+
+        this._isFalling = true;
+        this._fallSound.play();
+    }
+
+    _stopFall () {
+        this._isFalling = false;
+        this._fallSound.pause();
+    }
+
     _onFlyStart () {
         this._lifeTime = 0;
         this.rainbow.setGravityDirection(this._prevDirection, 0);
         this.rainbow.start();
+        this._flySound.play();
     }
 
     _onFlyChange () {
@@ -155,6 +214,7 @@ export default class PlayerEntity extends UnicornEntity {
     _onFlyStop () {
         this.rainbow.stop();
         this.run.start(this._prevDirection);
+        this._flySound.pause();
     }
 
     _onHealthChange ({health}) {
@@ -162,10 +222,9 @@ export default class PlayerEntity extends UnicornEntity {
     }
 
     _onFightAnimationStart () {
-        this.level.playSound({
-            name: 'fight',
-            key: 'fight'
-        });
+        this._fightSound && this._fightSound.fadeOut();
+        const fightSound = this.level.createSound('PlayerFight');
+        this._fightSound = fightSound.play();
     }
 
     _onFightStart () {
@@ -179,27 +238,36 @@ export default class PlayerEntity extends UnicornEntity {
 
     _onDie () {
         this._lifeTime = 0;
-        this.level.playSound({
-            name: 'die',
-            volume: 0.5
-        });
+        this.traits.remove(this.picker);
+        this._walkSound.stop();
+        this._runSound.stop();
+        this._flySound.stop();
+        this._fallSound.stop();
+        this.level.createSound('PlayerDie', {
+            volumeFactor: 0.5
+        }).play();
     }
 
     _onDieAnimationEnd () {
+        this.traits.remove(this.controller);
         this.level.loseGame();
     }
 
     _onJumpStart () {
         this._lifeTime = 0;
-        this._isFalling = false;
         this._isJumpStarted = true;
-        this.level.playSound({
-            name: 'jump',
-            volume: 0.25
-        });
+        this._stopFall();
+
+        this.level.createSound('PlayerJump', {
+            volumeFactor: 0.25
+        }).play();
     }
 
     _onJumpAnimationEnd () {
-        this._isFalling = true;
+        this._startFall();
+    }
+
+    _onLandingSoundEnd () {
+        this._landingSound = null;
     }
 }

@@ -8,6 +8,20 @@ import BoxEntity from 'entities/BoxEntity.js';
 import MotionLiftTrait from 'traits/MotionLiftTrait.js';
 
 export default class PlatformEntity extends BoxEntity {
+    entityDidMount () {
+        super.entityDidMount(...arguments);
+        this._scrapeSound = null;
+        this._platformSound = this.level.createSound('Platform', {
+            loop: true,
+            position: this.body.center
+        }).play();
+    }
+
+    entityWillUnmount () {
+        super.entityWillUnmount(...arguments);
+        this.level.removeSound(this._platformSound);
+    }
+
     _createBody (options) {
         const body = super._createBody(options, StaticBoxBody);
         body.update = BoxBody.prototype.update;
@@ -23,5 +37,9 @@ export default class PlatformEntity extends BoxEntity {
                 speed: settings.speed
             })
         ];
+    }
+
+    _playCollisionSound () {
+
     }
 }

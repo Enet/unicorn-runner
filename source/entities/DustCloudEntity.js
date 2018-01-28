@@ -34,6 +34,10 @@ export default class DustCloudEntity extends StaticEntity {
         this.sprite.animations
             .get('default')
             .once('end', this._onAnimationEnd.bind(this));
+
+        this.level.createSound('DustCloud', {
+            position: this.body.center
+        }).play();
     }
 
     entityWillUpdate (deltaTime) {

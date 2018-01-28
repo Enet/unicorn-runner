@@ -18,14 +18,21 @@ import {
 let uniqueTimerId = 0;
 
 export default class Level {
-    constructor (data, {manager, scene, callbacks}) {
+    constructor (data, {manager, scene, settings, callbacks}) {
         this.manager = manager;
         this.scene = scene;
+        this.settings = settings;
         this.callbacks = callbacks;
         this.entities = new Set();
         this.effects = new Set();
+        this.sounds = new Set();
         this.timers = new Map();
-        this.sounds = new Map();
+
+        this._score = 0;
+        this._timeFactor = 0;
+        this._isStopped = false;
+        this._elapsedTime = 0;
+        this._playbackRate = 1;
 
         this._initBounds(...arguments);
         this._initWorld(...arguments);
@@ -33,15 +40,16 @@ export default class Level {
         this._initStaticBackground(...arguments);
         this._initLavaBackground(...arguments);
         this._initTileBackground(...arguments);
-        this._initEntities(...arguments);
         this._initPlayer(...arguments);
+        this._initEntities(...arguments);
         this._initMusic(...arguments);
+    }
 
-        this._score = 0;
-        this._slowFactor = 0;
-        this._fastFactor = 0;
-        this._isStopped = false;
-        this._elapsedTime = 0;
+    destructor () {
+        this.sounds.forEach((sound) => {
+            sound.setVolume(0);
+            sound.stop();
+        });
     }
 
     addEntity (entity) {
@@ -63,12 +71,16 @@ export default class Level {
 
     addEffect (name) {
         const {effects} = this;
-        if ((name === 'slow' && effects.has('fast')) ||
-            (name === 'fast' && effects.has('slow'))) {
-            effects.delete('slow');
-            effects.delete('fast');
+        if (name === 'slow' && effects.has('fast')) {
+            this.removeEffect('fast');
+        } else if (name === 'fast' && effects.has('slow')) {
+            this.removeEffect('slow');
         } else {
-            name === 'fly' && this.player.fly.start();
+            if (name === 'fly') {
+                this.player.fly.start();
+            } else {
+                this._setPlaybackRate(name === 'fast' ? 2 : 0.5);
+            }
             effects.add(name);
         }
         this.callbacks.onEffectChange(effects);
@@ -77,7 +89,11 @@ export default class Level {
     removeEffect (name) {
         const {effects} = this;
         effects.delete(name);
-        name === 'fly' && this.player.fly.stop();
+        if (name === 'fly') {
+            this.player.fly.stop();
+        } else {
+            this._setPlaybackRate(1);
+        }
         this.callbacks.onEffectChange(effects);
     }
 
@@ -92,13 +108,22 @@ export default class Level {
     }
 
     loseGame () {
-        this._isStopped = true;
-        this.callbacks.onGameLose();
+        this._musicSound.stop();
+        this.createSound('LevelLose')
+            .play()
+            .once('end', this._onGameLose.bind(this));
     }
 
     winGame () {
-        this._isStopped = true;
-        this.callbacks.onGameWin();
+        if (this.player.organism.isDead()) {
+            return;
+        }
+        if (this._winSound) {
+            return;
+        }
+        this._winSound = this.createSound('LevelWin')
+            .play()
+            .once('end', this._onGameWin.bind(this));
     }
 
     placePlayer () {
@@ -123,48 +148,32 @@ export default class Level {
         this.callbacks.onHealthChange(Math.floor(health));
     }
 
-    loopSound ({name, position, key, volume}) {
-        let sound = this.sounds.get(key);
-        const {player} = this;
-
-        if (sound && sound.name === name) {
-            sound.audio.paused && sound.play();
-        } else {
-            sound && sound.pause();
-            const {manager} = this;
-
-            sound = new Sound(manager.getSound(name), {
-                autoPlay: true
-            });
-            sound.name = name;
-            this.sounds.set(key, sound);
+    createSound (name, options={}) {
+        if (!this.settings.sound) {
+            options.volumeFactor = 0;
         }
 
-        if (typeof volume !== 'number') {
-            position = position || player.body.center;
-            const distance = player.body.center.subtract(position).length();
-            volume = 1 - distance * 0.001;
+        const {manager} = this;
+        const sound = new Sound(manager.getSound(name), options);
+        sound.position = options.position;
+        sound.name = name;
+        sound.audio.playbackRate = this._playbackRate;
+
+        this._setVolumeByPosition(sound);
+        this.sounds.add(sound);
+
+        if (!options.loop) {
+            sound.once('end', this._onSoundEnd.bind(this));
         }
-        sound.setVolume(volume);
+        return sound;
     }
 
-    stopSound ({key}) {
-        const sound = this.sounds.get(key);
-        sound && sound.pause();
-    }
-
-    playSound ({name, position, volume}) {
-        const {manager, player} = this;
-        if (typeof volume !== 'number') {
-            position = position || player.body.center;
-            const distance = player.body.center.subtract(position).length();
-            volume = 1 - distance * 0.001;
+    removeSound (sound) {
+        if (!sound) {
+            return;
         }
-
-        new Sound(manager.getSound(name), {
-            autoPlay: true,
-            volume
-        });
+        sound.stop();
+        this.sounds.delete(sound);
     }
 
     update (deltaTime) {
@@ -173,7 +182,7 @@ export default class Level {
         }
 
         const {effects} = this;
-        if (effects.has('slow') && ++this._slowFactor % 2) {
+        if (effects.has('slow') && ++this._timeFactor % 2) {
             return;
         }
 
@@ -201,10 +210,12 @@ export default class Level {
             entity.entityDidUpdate();
         });
 
+        this.sounds.forEach(sound => this._setVolumeByPosition(sound));
+
         this._play();
         this._elapsedTime += deltaTime;
 
-        if (effects.has('fast') && ++this._fastFactor % 2) {
+        if (effects.has('fast') && ++this._timeFactor % 2) {
             return this.update(deltaTime);
         }
     }
@@ -218,6 +229,23 @@ export default class Level {
         if (player.body.center.x + player.size.width / 2 >= bounds.right - 100) {
             this.winGame();
         }
+    }
+
+    _setVolumeByPosition (sound) {
+        if (!sound.position) {
+            return;
+        }
+        const {player} = this;
+        const volume = 1 - player.body.center.subtract(sound.position).length() * 0.002;
+        sound.setVolume(volume);
+    }
+
+    _setPlaybackRate (playbackRate) {
+        this._playbackRate = playbackRate;
+        this.sounds.forEach((sound) => {
+            sound.audio.playbackRate = playbackRate;
+            this._musicSound.playbackRate = playbackRate;
+        });
     }
 
     _initBounds ({meta}) {
@@ -311,12 +339,30 @@ export default class Level {
         return player;
     }
 
-    _initMusic (data) {
-        return;
-        const {manager} = this;
-        new Sound(manager.getSound('0'), {
-            autoPlay: true,
-            loop: true
+    _initMusic ({meta}) {
+        if (!meta.music) {
+            return;
+        }
+        const musicSound = this.createSound(meta.music, {
+            loop: true,
+            volumeFactor: 0.25,
+            fadeOutOnPause: {}
         });
+        this._musicSound = musicSound;
+        this.settings.music && musicSound.play();
+    }
+
+    _onSoundEnd (sound) {
+        this.removeSound(sound);
+    }
+
+    _onGameWin () {
+        this._isStopped = true;
+        this.callbacks.onGameWin();
+    }
+
+    _onGameLose () {
+        this._isStopped = true;
+        this.callbacks.onGameLose();
     }
 }

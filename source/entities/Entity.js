@@ -87,10 +87,6 @@ export default class Entity extends Renderable {
             if (this.body.center.y > this.level.bounds.bottom - LAVA_HEIGHT) {
                 this._isDrowned = true;
                 this._addLavaSplash();
-                this.level.playSound({
-                    name: 'splash' + (Math.random() * 4 | 0),
-                    position: this.body.center
-                });
             }
         }
     }
@@ -190,6 +186,12 @@ export default class Entity extends Renderable {
     }
 
     _addLavaSplash () {
+        const {level} = this;
+        const splashNumber = Math.random() * 4 | 0;
+        level.createSound('Splash' + splashNumber, {
+            position: this.body.center
+        }).play();
+
         const {width, height} = this.size;
         const volume = width * height;
         const lavaSplash = new ParticleSystem({
@@ -207,7 +209,7 @@ export default class Entity extends Renderable {
             startColor: COLOR_ORANGE,
             mode: 'exclusion'
         });
-        this.level.scene.add(lavaSplash);
+        level.scene.add(lavaSplash);
         this._lavaSplash = lavaSplash;
     }
 

@@ -16,11 +16,15 @@ import {
 } from 'constants.js';
 
 const BIRD_DROP_PERIOD = 1000;
-const BIRD_DROP_PROBABILITY = 0.002;
+const BIRD_DROP_PROBABILITY = 0.005;
 
 export default class BirdEntity extends Entity {
     entityWillUpdate () {
         super.entityWillUpdate(...arguments);
+
+        if (!this.organism.isDead() && Math.random() > 0.02) {
+            this._doCroak();
+        }
 
         if (this._lifeTime - this._prevDropTime < BIRD_DROP_PERIOD) {
             return;
@@ -35,6 +39,9 @@ export default class BirdEntity extends Entity {
         const {x, y} = this.body.center;
         const drop = new DropEntity({x, y, level, parent});
         this.level.addEntity(drop);
+        this.level.createSound('BirdFight', {
+            position: this.body.center
+        }).play();
     }
 
     _getImageName () {
@@ -48,6 +55,16 @@ export default class BirdEntity extends Entity {
     _getFrame () {
         const animationName = this.organism.isDead() ? 'die' : 'default';
         return super._getFrame(animationName);
+    }
+
+    _doCroak () {
+        if (this._croakSound) {
+            return;
+        }
+
+        this._croakSound = this.level.createSound('BirdIdle', {
+            position: this.body.center
+        }).play().once('end', this._onCroakSoundEnd.bind(this));
     }
 
     _createSprite () {
@@ -90,12 +107,18 @@ export default class BirdEntity extends Entity {
     _onDie () {
         this._lifeTime = 0;
         this.score.use();
-        this.level.playSound({
-            name: 'bird'
-        });
+
+        this._croakSound.fadeOut();
+        this.level.createSound('BirdDie', {
+            position: this.body.center
+        }).play();
     }
 
     _onDieAnimationEnd () {
         this.level.removeEntity(this);
+    }
+
+    _onCroakSoundEnd () {
+        this._croakSound = null;
     }
 }

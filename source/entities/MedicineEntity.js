@@ -40,6 +40,9 @@ export default class MedicineEntity extends Entity {
     _onPick ({organism}) {
         this.medicine.use(organism);
         this.fallDown.start();
+        this.level.createSound('Medicine', {
+            position: this.body.center
+        }).play();
     }
 
     _onFallDownEnd () {

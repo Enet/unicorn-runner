@@ -77,13 +77,26 @@ export default class SpiderEntity extends Entity {
     }
 
     entityDidMount () {
-        super.entityDidMount();
+        super.entityDidMount(...arguments);
         this.level.addEntity(this._rope);
+        this._idleSound = this.level.createSound('SpiderIdle', {
+            loop: true,
+            position: this.body.center,
+            fadeOutOnPause: {}
+        }).play();
+    }
+
+    entityWillUnmount () {
+        super.entityWillUnmount(...arguments);
+        this.level.removeSound(this._idleSound);
     }
 
     _startFight () {
         this._fightTime = this._lifeTime;
         this.fight.start();
+        this.level.createSound('SpiderFight', {
+            position: this.body.center
+        }).play();
     }
 
     _stopFight () {
@@ -146,6 +159,9 @@ export default class SpiderEntity extends Entity {
         const coin = new CoinEntity({level, x, y});
         level.addEntity(coin);
         level.changeScore(-nominal);
+        level.createSound('CoinLost', {
+            position: this.body.center
+        }).play();
     }
 
     _onContact (body) {
@@ -168,6 +184,9 @@ export default class SpiderEntity extends Entity {
     _onDie () {
         this.score.use();
         this.fadeOut.start();
+        this.level.createSound('SpiderDie', {
+            position: this.body.center
+        }).play();
     }
 
     _onFadeOutEnd () {

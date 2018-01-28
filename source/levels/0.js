@@ -1,7 +1,8 @@
 export default {
     meta: {
+        music: 'Music0',
         background: 'City',
-        bounds: [-300, 3000, 700, -300]
+        bounds: [-300, 6000, 700, -300]
     },
     tiles: [{
         ranges: [
@@ -12,7 +13,7 @@ export default {
             [38, 48, 4, 5],
             [51, 53, 4, 5],
             [55, 57, 6, 7],
-            [60, 61, 6, 7],
+            [60, 68, 6, 7],
             [64, 6, 8, 9],
             [73, 83, 5, 6],
             [87, 89, 8, 9],
@@ -30,21 +31,18 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Bird',
-        position: [300, 200],
-        range: [300, 600]
-    }, {
         name: 'Box',
-        position: [300, 330]
+        position: [250, 50],
+        from: [100, 300],
+        to: [700, 300]
     }, {
-        name: 'Coin10',
-        position: [300, 300]
+        name: 'Coin100',
+        position: [800, 300],
+        range: [300, 800]
     }, {
-        name: 'Coin50',
-        position: [350, 330]
-    }, {
-        name: 'Coin10',
-        position: [400, 370]
+        name: 'Spider',
+        position: [500, 200],
+        reaction: 20
     }] || [{
         name: 'Spider',
         position: [350, 50],

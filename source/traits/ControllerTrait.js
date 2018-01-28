@@ -8,7 +8,7 @@ export default class ControllerTrait extends Trait {
     setState (deltaState) {
         Object.assign(this._state, deltaState);
         const {up, down, left, right} = this._state;
-        const {player} = this.level;
+        const player = this.entity;
 
         if (player.fly.isStopped()) {
             if (right) {
@@ -55,5 +55,13 @@ export default class ControllerTrait extends Trait {
         if (!entity.run || !entity.jump || !entity.fight || !entity.fly) {
             throw 'ControllerTrait does not support this character!';
         }
+    }
+
+    traitWillUnmount () {
+        const player = this.entity;
+        player.run.stop();
+        player.fight.stop();
+        player.jump.stop();
+        player.fly.setGravityDirection(0, 0);
     }
 }

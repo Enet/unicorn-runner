@@ -44,6 +44,31 @@ export default class HorLaserEntity extends StaticEntity {
     entityWillMount () {
         super.entityWillMount(...arguments);
         this._defaultSize = this.size;
+        this._idleSound = this.level.createSound('LaserIdle', {
+            loop: true,
+            volumeFactor: 0.2,
+            position: this.body.center
+        }).play();
+        this._fightSound = this.level.createSound('LaserFight', {
+            loop: true,
+            fadeInOnPlay: {},
+            fadeOutOnPause: {}
+        });
+    }
+
+    entityWillUpdate () {
+        super.entityWillUpdate(...arguments);
+        if (this._contact) {
+            this._contact = false;
+        } else {
+            this._fightSound.pause();
+        }
+    }
+
+    entityWillUnmount () {
+        super.entityWillUnmount(...arguments);
+        this.level.removeSound(this._idleSound);
+        this.level.removeSound(this._fightSound);
     }
 
     _getSize () {
@@ -72,5 +97,7 @@ export default class HorLaserEntity extends StaticEntity {
             return;
         }
         body.entity.organism.changeHealth(-LASER_DAMAGE);
+        this._contact = true;
+        this._fightSound.play();
     }
 }

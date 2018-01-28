@@ -55,11 +55,19 @@ export default class BugEntity extends Entity {
 
         body.entity.organism.changeHealth(-BUG_DAMAGE);
         body.move(new Vector2(-5, -5));
+        this.level.createSound('BugFight', {
+            position: this.body.center,
+            volumeFactor: 0.5
+        }).play();
     }
 
     _onDie () {
         this.score.use();
         this.fadeOut.start();
+        this.level.createSound('BugDie', {
+            position: this.body.center,
+            volumeFactor: 0.5
+        }).play();
     }
 
     _onFadeOutEnd () {

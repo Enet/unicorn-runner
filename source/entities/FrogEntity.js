@@ -143,6 +143,9 @@ export default class FrogEntity extends Entity {
     _onJumpStart () {
         this._lifeTime = 0;
         this._isJumpAnimation = true;
+        this.level.createSound('FrogJump', {
+            position: this.body.center
+        }).play();
     }
 
     _onJumpAnimationEnd () {
@@ -155,7 +158,12 @@ export default class FrogEntity extends Entity {
         const {player} = this.level;
         const damageDistance = (player.size.width + this.size.width) * 0.5 + FROG_DAMAGE_DISTANCE;
         const dx = player.body.center.x - this.body.center.x;
-        if (frameId === 8 && Math.abs(dx) < damageDistance) {
+        if (frameId === 1) {
+            this.level.createSound('FrogFight', {
+                volumeFactor: 0.5,
+                position: this.body.center
+            }).play();
+        } else if (frameId === 8 && Math.abs(dx) < damageDistance) {
             player.organism.changeHealth(-FROG_DAMAGE);
             player.body.move(new Vector2(Math.sign(dx) * 2, 0));
         }
@@ -172,6 +180,9 @@ export default class FrogEntity extends Entity {
     _onDie () {
         this.score.use();
         this.fadeOut.start();
+        this.level.createSound('FrogDie', {
+            position: this.body.center
+        }).play();
     }
 
     _onFadeOutEnd () {

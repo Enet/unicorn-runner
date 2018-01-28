@@ -49,6 +49,9 @@ export default class GasMushroomEntity extends MushroomEntity {
     _onDie () {
         this.score.use();
         this.fadeOut.start();
+        this.level.createSound('MushroomDie', {
+            position: this.body.center
+        }).play();
     }
 
     _onFadeOutEnd () {

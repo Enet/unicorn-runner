@@ -25,6 +25,12 @@ import {
 } from 'resources.js';
 
 export default class UnicornGame extends Game {
+    destructor () {
+        super.destructor(...arguments);
+        const {level} = this._game;
+        level.destructor();
+    }
+
     _createManager () {
         return new UnicornResourceManager();
     }
@@ -46,6 +52,11 @@ export default class UnicornGame extends Game {
     }
 
     _controlPlayer () {
+        const {player} = this._game.level;
+        if (!player.controller) {
+            return;
+        }
+
         const keyboard = this._keyboard;
         const newState = {
             up: keyboard.isPressed(KEY_UP, KEY_W, KEY_SPACE),
@@ -53,8 +64,6 @@ export default class UnicornGame extends Game {
             left: keyboard.isPressed(KEY_LEFT, KEY_A),
             right: keyboard.isPressed(KEY_RIGHT, KEY_D)
         };
-
-        const {player} = this._game.level;
         player.controller.setState(newState);
     }
 
@@ -69,7 +78,7 @@ export default class UnicornGame extends Game {
         const camera = new Camera({width, height});
         const scene = new Scene();
         const level = new Level(levels[step], {
-            manager, scene, callbacks
+            manager, scene, settings, callbacks
         });
 
         scene.add(camera);

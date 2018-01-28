@@ -54,8 +54,9 @@ export default class TrapEntity extends Entity {
     _onExplode ({body}) {
         this._trapTime = this._lifeTime;
         body.entity.organism.changeHealth(-TRAP_DAMAGE);
-        this.level.playSound({
-            name: 'trap'
-        });
+
+        this.level.createSound('Trap', {
+            position: this.body.center
+        }).play();
     }
 }
