@@ -1,6 +1,6 @@
 export default {
     meta: {
-        music: 'Music0',
+        music: 'MusicCity',
         background: 'City',
         bounds: [-300, 6000, 700, -300]
     },
@@ -36,13 +36,9 @@ export default {
         from: [100, 300],
         to: [700, 300]
     }, {
-        name: 'Coin100',
-        position: [800, 300],
+        name: 'Bird',
+        position: [800, 200],
         range: [300, 800]
-    }, {
-        name: 'Spider',
-        position: [500, 200],
-        reaction: 20
     }] || [{
         name: 'Spider',
         position: [350, 50],

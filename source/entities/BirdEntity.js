@@ -61,9 +61,13 @@ export default class BirdEntity extends Entity {
         if (this._croakSound) {
             return;
         }
+        if (this.organism.isDead()) {
+            return;
+        }
 
         this._croakSound = this.level.createSound('BirdIdle', {
-            position: this.body.center
+            position: this.body.center,
+            fadeOutOnPause: {duration: 50}
         }).play().once('end', this._onCroakSoundEnd.bind(this));
     }
 
@@ -108,7 +112,7 @@ export default class BirdEntity extends Entity {
         this._lifeTime = 0;
         this.score.use();
 
-        this._croakSound.fadeOut();
+        this._croakSound.pause();
         this.level.createSound('BirdDie', {
             position: this.body.center
         }).play();

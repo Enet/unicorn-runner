@@ -108,7 +108,9 @@ export default class Level {
     }
 
     loseGame () {
-        this._musicSound.stop();
+        if (this._musicSound) {
+            this._musicSound.stop();
+        }
         this.createSound('LevelLose')
             .play()
             .once('end', this._onGameLose.bind(this));
