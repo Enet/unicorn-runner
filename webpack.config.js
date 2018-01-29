@@ -1,3 +1,5 @@
+/* global module, __dirname */
+
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -10,7 +12,7 @@ module.exports = {
     },
 
     entry: {
-        index: path.resolve('source', 'index.js')
+        index: path.resolve('source', 'index.jsx')
     },
 
     output: {
@@ -22,11 +24,11 @@ module.exports = {
     module: {
         rules: [{
             enforce: 'pre',
-            test: /\.js$/,
+            test: /\.jsx?$/,
             exclude: /node_modules/,
             use: 'eslint-loader'
         }, {
-            test: /\.js$/,
+            test: /\.jsx?$/,
             use: 'babel-loader'
         }, {
             enforce: 'pre',

@@ -7,7 +7,8 @@
         "require": true
     },
     "extends": [
-        "eslint:recommended"
+        "eslint:recommended",
+        "plugin:react/recommended"
     ],
     "parser": "babel-eslint",
     "parserOptions": {
@@ -24,8 +25,14 @@
             "node": {
                 "paths": ["source", "node_modules"]
             }
+        },
+        "react": {
+            "pragma": "Tcaer"
         }
     },
+    "plugins": [
+        "react"
+    ],
     "rules": {
         "indent": ["error", 4, {"SwitchCase": 1}],
         "linebreak-style": ["error", "unix"],
@@ -40,6 +47,8 @@
         "no-use-before-define": ["error", {"variables": true, "classes": true, "functions": false}],
         "no-unused-vars": ["error", {"vars": "all", "args": "none"}],
         "no-console": ["warn"],
-        "no-debugger": ["warn"]
+        "no-debugger": ["warn"],
+        "react/prop-types": ["off"],
+        "react/no-deprecated": ["off"]
     }
 }
