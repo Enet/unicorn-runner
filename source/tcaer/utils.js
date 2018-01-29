@@ -105,7 +105,8 @@ export function createNodeFromVnode (vnode, context) {
     if (isVnodePrimitive(vnode)) {
         return document.createTextNode(vnode + '');
     } else if (Component.isPrototypeOf(vnode.type)) {
-        component = new vnode.type(props, children, context);
+        component = new vnode.type();
+        component.update(props, children, context);
         component.componentWillMount();
         const componentVnode = component.render();
         component.prevComponentVnode = componentVnode;
@@ -164,8 +165,7 @@ export function renderVnode (newVnode, prevVnode, parentNode, context, index=0) 
         const componentIndex = prevNode.componentIndex || 0;
         const component = prevNode.components[componentIndex];
         if (component instanceof newVnode.type) {
-            component.props = newVnode.props;
-            component.children = newVnode.children;
+            component.update(newVnode.props, newVnode.children, context);
             component.componentWillUpdate(newVnode.props);
         }
         const newComponentVnode = component.render();

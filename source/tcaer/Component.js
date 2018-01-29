@@ -3,11 +3,8 @@ import {
 } from './utils.js';
 
 export default class Component {
-    constructor (props, children, context) {
+    constructor () {
         this.forceUpdate = this.forceUpdate.bind(this);
-        this.props = props;
-        this.children = children;
-        this.context = context;
         this.state = {};
     }
 
@@ -15,10 +12,17 @@ export default class Component {
 
     }
 
+    update (props, children, context) {
+        this.props = props;
+        this.children = children;
+        this.context = context;
+    }
+
     forceUpdate () {
         const {node} = this;
         const {parentNode} = node;
         const index = Array.from(parentNode.childNodes).indexOf(node);
+        this.update(this.props, this.children, this.context);
         const newComponentVnode = this.render();
         renderVnode(
             newComponentVnode,

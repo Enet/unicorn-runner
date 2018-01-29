@@ -12,4 +12,8 @@ export default class BackgroundScreen extends Screen {
 
         return <section className={className} />
     }
+
+    _onEscapeKeyDown () {
+
+    }
 }

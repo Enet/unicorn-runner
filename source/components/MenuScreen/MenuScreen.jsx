@@ -1,9 +1,15 @@
 import Tcaer from 'tcaer';
+import {
+    connect
+} from 'xuder';
+
 import Screen from 'components/Screen/Screen.jsx';
 
 import './MenuScreen.styl';
 
-export default class MenuScreen extends Screen {
+export default connect((state) => {
+    return {};
+}, class MenuScreen extends Screen {
     render () {
         const className = [
             ...this._getClassName(),
@@ -18,10 +24,10 @@ export default class MenuScreen extends Screen {
                 Помоги единорогу отдать кредит и поднять бабла.
             </p>
             <ul className="menu-screen__list">
-                <li className="menu-screen__item">
+                <li className="menu-screen__item" onClick={this._onButtonClick.bind(this, 'map')}>
                     Начать игру
                 </li>
-                <li className="menu-screen__item">
+                <li className="menu-screen__item" onClick={this._onButtonClick.bind(this, 'settings')}>
                     Настройки
                 </li>
                 <li className="menu-screen__item">
@@ -35,4 +41,11 @@ export default class MenuScreen extends Screen {
             </ul>
         </section>
     }
-}
+
+    _onButtonClick (screenName) {
+        this.props.dispatch({
+            type: 'SCREEN_CHANGE',
+            payload: screenName
+        });
+    }
+});

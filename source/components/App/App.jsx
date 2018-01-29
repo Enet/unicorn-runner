@@ -15,16 +15,16 @@ import WinnerScreen from 'components/WinnerScreen/WinnerScreen.jsx';
 import './App.styl';
 
 export default connect((state) => {
-    return {zzz: state};
+    return state;
 }, class App extends Tcaer.Component {
     render () {
-        const {screen} = this.state;
+        const {screen} = this.props;
         const className = [
             `app`,
             `app_screen_${screen}`
         ];
 
-        return <main className={className} id="app">
+        return <main className={className}>
             <GameScreen active={screen === 'game'} />
             <BackgroundScreen active={screen !== 'game'} />
             <PauseScreen active={screen === 'pause'} />
@@ -33,20 +33,6 @@ export default connect((state) => {
             <MapScreen active={screen === 'map'} />
             <MenuScreen active={screen === 'menu'} />
             <SettingsScreen active={screen === 'settings'} />
-            zzz={this.props.zzz}
         </main>
-    }
-
-    componentWillMount () {
-        this.state.screen = 'menu';
-    }
-
-    componentDidMount () {
-        this.props.dispatch((getState, dispatch) => {
-            dispatch({type: 'plus'});
-            setTimeout(() => {
-                dispatch({type: 'plus'});
-            }, 2000);
-        });
     }
 });

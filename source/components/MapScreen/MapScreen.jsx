@@ -14,21 +14,49 @@ export default class MapScreen extends Screen {
             <h2 className="map-screen__header">
                 Карта
             </h2>
-            <div className="map-screen__step">
+            <div
+                className="map-screen__step"
+                onClick={this._onStepClick.bind(this, 0)}>
                 0
             </div>
-            <div className="map-screen__step">
+            <div
+                className="map-screen__step"
+                onClick={this._onStepClick.bind(this, 1)}>
                 1
             </div>
-            <div className="map-screen__step">
+            <div
+                className="map-screen__step"
+                onClick={this._onStepClick.bind(this, 2)}>
                 2
             </div>
-            <div className="map-screen__step">
+            <div
+                className="map-screen__step"
+                onClick={this._onStepClick.bind(this, 3)}>
                 3
             </div>
-            <span className="map-screen__back-button">
+            <span
+                className="map-screen__back-button"
+                onClick={this._onBackButtonClick.bind(this)}>
                 Назад
             </span>
         </section>
+    }
+
+    _onStepClick (payload) {
+        this.props.dispatch({
+            type: 'GAME_SELECT_STEP',
+            payload
+        });
+        this.props.dispatch({
+            type: 'SCREEN_CHANGE',
+            payload: 'game'
+        });
+    }
+
+    _onBackButtonClick () {
+        this.props.dispatch({
+            type: 'SCREEN_CHANGE',
+            payload: 'menu'
+        });
     }
 }
