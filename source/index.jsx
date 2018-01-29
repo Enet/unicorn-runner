@@ -1,6 +1,9 @@
 import 'styles/index.styl';
 
 import Tcaer from 'tcaer';
+import Store from 'xuder';
+import App from 'components/App/App.jsx';
+
 import UnicornGame from 'UnicornGame.js';
 import {
     KEY_ESCAPE
@@ -171,52 +174,11 @@ document.addEventListener('change', onDocumentChange);
 
 setAppScreen('map');
 
-class Hii extends Tcaer.Component {
-    render () {
-        return <span>12345</span>
+const store = new Store(function (state=0, action) {
+    if (action.type === 'plus') {
+        return state + 1;
     }
+    return state;
+}, 7);
+Tcaer.render(<App />, document.getElementById('tcaer'), {store});
 
-    componentWillMount () {
-        console.log('hii');
-    }
-
-    componentWillUnmount () {
-        console.log('hii bye');
-    }
-}
-
-class MyAsdf extends Tcaer.Component {
-    render () {
-        return <div>
-            MY {this.state.hello ? [1, 2, 3] : <Hii />} ASDF!!!
-            <b>{this.props.x}</b>
-        </div>
-    }
-
-    componentWillMount () {
-        console.log('will mount');
-    }
-
-    componentDidMount () {
-        console.log('did mount');
-        setTimeout(() => {
-            this.setState({
-                hello: 'world'
-            });
-        }, 2000);
-    }
-
-    componentWillUpdate (nextProps) {
-        console.log('will update', nextProps);
-    }
-
-    componentDidUpdate (prevProps) {
-        console.log('did update', prevProps);
-    }
-
-    componentWillUnmount () {
-        console.log('unmount');
-    }
-}
-
-Tcaer.render(<MyAsdf x={123} />, document.getElementById('tcaer'));

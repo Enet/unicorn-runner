@@ -1,31 +1,21 @@
 import Component from './Component.js';
 import {
-    isVnodeString,
-    renderElement
+    normalizeChildren,
+    renderVnode
 } from './utils.js';
 
 export default class Tcaer {
-    static createElement (type, props, ...rawChildren) {
+    static createElement (type, props, ...children) {
         props = props || {};
         const key = props.key;
         delete props.key;
 
-        const children = [];
-        rawChildren.forEach((rawChild) => {
-            if (!rawChild && !isVnodeString(rawChild)) {
-                return;
-            }
-            if (rawChild instanceof Array === false) {
-                rawChild = [rawChild];
-            }
-            rawChild.forEach(c => children.push(c));
-        });
-
+        children = normalizeChildren(children);
         return {type, props, key, children};
     }
 
-    static render (treeVnode, containerNode) {
-        renderElement(containerNode, treeVnode, null);
+    static render (treeVnode, containerNode, context) {
+        renderVnode(treeVnode, null, containerNode, context);
     }
 }
 

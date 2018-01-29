@@ -7,7 +7,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
     context: __dirname,
 
+    devtool: 'eval',
+
     resolve: {
+        extensions: ['.js', '.jsx'],
         modules: ['source', 'node_modules']
     },
 

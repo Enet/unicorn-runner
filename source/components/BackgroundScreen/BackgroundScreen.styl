@@ -1,0 +1,13 @@
+.background-screen
+    opacity: 1
+    visibility: visible
+    background: linear-gradient(-45deg, lighten(red, 50%) 20%, lighten(red, 50%) 20.01%, lighten(orange, 50%) 40%, lighten(orange, 50%) 40.01%, lighten(green, 80%) 90%, lighten(green, 80%) 90.01%, lighten(blue, 80%))
+
+    &::before
+        content: ''
+        display: block
+        height: 100%
+        width: 100%
+        opacity: 0.25
+        background-image: repeating-linear-gradient(45deg, white 0px, white 200px, transparent 201px, transparent 300px)
+        background-size: 100%
