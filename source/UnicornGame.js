@@ -31,6 +31,14 @@ export default class UnicornGame extends Game {
         level.destructor();
     }
 
+    resize ({width, height}) {
+        const {context, camera} = this._game;
+        context.canvas.width = width;
+        context.canvas.height = height;
+        camera.size.width = width;
+        camera.size.height = height;
+    }
+
     _createManager () {
         return new UnicornResourceManager();
     }
@@ -47,8 +55,8 @@ export default class UnicornGame extends Game {
     _centerCamera () {
         const {camera, level} = this._game;
         const {player} = level;
-        camera.position.x = player.body.center.x - CAMERA_OFFSET.x;
-        camera.position.y = player.body.center.y - CAMERA_OFFSET.y;
+        camera.position.x = player.body.center.x - 0.5 * camera.size.width;
+        camera.position.y = player.body.center.y - 0.5 * camera.size.height;
     }
 
     _controlPlayer () {
@@ -70,15 +78,17 @@ export default class UnicornGame extends Game {
         player.controller.setState(newState);
     }
 
-    _onManagerReady ({debug, context, step, settings, ...callbacks}) {
+    _onManagerReady ({debug, context, size, step, settings, ...callbacks}) {
         super._onManagerReady(...arguments);
+        const {width, height} = size;
         const scale = `scale(${settings.mirror ? -1 : 1}, 1)`;
         context.canvas.style.transform = scale;
+        context.canvas.width = width;
+        context.canvas.height = height;
 
-        const {width, height} = context.canvas;
         const manager = this._manager;
         const renderer = new Renderer(context);
-        const camera = new Camera({width, height});
+        const camera = new Camera(size);
         const scene = new Scene();
         scene.add(camera);
 
@@ -86,7 +96,7 @@ export default class UnicornGame extends Game {
             manager, scene, settings, callbacks
         });
 
-        this._game = {renderer, scene, camera, level};
+        this._game = {context, renderer, scene, camera, level};
         if (debug) {
             this._debugger = new Debugger(level.world, camera, context);
         }
