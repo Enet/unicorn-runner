@@ -35,7 +35,7 @@ export default function (state=defaultState, action) {
     if (action.type === 'GAME_SELECT_STEP') {
         return {
             ...state,
-            step: +action.payload,
+            step: +action.payload || state.step,
             inited: true,
             paused: false
         };

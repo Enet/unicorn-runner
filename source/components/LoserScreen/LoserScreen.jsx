@@ -35,6 +35,9 @@ export default class LoserScreen extends Screen {
             type: 'GAME_RESET'
         });
         this.props.dispatch({
+            type: 'GAME_SELECT_STEP'
+        });
+        this.props.dispatch({
             type: 'SCREEN_CHANGE',
             payload: 'game'
         });
