@@ -17,26 +17,36 @@ export default class MapScreen extends Screen {
                 Карта
             </h2>
             <div
+                dataHover={true}
+                dataClick={true}
                 className="map-screen__step"
                 onClick={this._onStepClick.bind(this, 0)}>
                 0
             </div>
             <div
+                dataHover={true}
+                dataClick={true}
                 className="map-screen__step"
                 onClick={this._onStepClick.bind(this, 1)}>
                 1
             </div>
             <div
+                dataHover={true}
+                dataClick={true}
                 className="map-screen__step"
                 onClick={this._onStepClick.bind(this, 2)}>
                 2
             </div>
             <div
+                dataHover={true}
+                dataClick={true}
                 className="map-screen__step"
                 onClick={this._onStepClick.bind(this, 3)}>
                 3
             </div>
             <span
+                dataHover={true}
+                dataClick={true}
                 className="map-screen__back-button"
                 onClick={this._onBackButtonClick}>
                 Назад

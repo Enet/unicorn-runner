@@ -21,8 +21,20 @@ export default function (state=defaultState, action) {
         return state;
     }
 
+    if (action.type === 'SOUND_HOVER') {
+        play(manager, 'MenuHover');
+    }
+
+    if (action.type === 'SOUND_CLICK') {
+        play(manager, 'MenuClick');
+    }
+
     if (action.type === 'SETTING_CHANGE') {
         play(manager, 'MenuClick');
+    }
+
+    if (action.type === 'SCREEN_CHANGE') {
+        play(manager, 'MenuTransition');
     }
 
     return state;

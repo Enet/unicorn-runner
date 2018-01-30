@@ -35,6 +35,8 @@ export default class SettingsScreen extends Screen {
                 </Checkbox>
             })}
             <span
+                dataClick={true}
+                dataHover={true}
                 className="settings-screen__back-button"
                 onClick={this._onBackButtonClick}>
                 Назад

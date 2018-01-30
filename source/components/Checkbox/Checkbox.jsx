@@ -7,6 +7,7 @@ export default class Checkbox extends Tcaer.Component {
     render () {
         return <label className="checkbox">
             <input
+                dataHover={true}
                 onChange={this._onChange}
                 checked={!!this.props.value}
                 type="checkbox"

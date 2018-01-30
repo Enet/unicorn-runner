@@ -33,7 +33,22 @@ export function isEventProp (propName) {
     return /^on/.test(propName);
 }
 
+export function toEventName (propName) {
+    return propName.substr(2).toLowerCase();
+}
+
+export function isDataProp (propName) {
+    return /^data/.test(propName);
+}
+
+export function toDataName (propName) {
+    return propName.replace(/([A-Z])/g, '-$1').toLowerCase();
+}
+
 export function setProp (node, propName, propValue) {
+    if (isDataProp(propName)) {
+        propName = toDataName(propName);
+    }
     if (propName === 'className') {
         if (propValue instanceof Array) {
             propValue = propValue.join(' ');
@@ -53,7 +68,7 @@ export function setProp (node, propName, propValue) {
             node[propName] = false;
         }
     } else if (isEventProp(propName)) {
-        const eventName = propName.slice(2).toLowerCase();
+        const eventName = toEventName(propName);
         node.addEventListener(eventName, propValue);
     } else {
         node.setAttribute(propName, propValue);
@@ -61,6 +76,9 @@ export function setProp (node, propName, propValue) {
 }
 
 export function removeProp (node, propName, propValue) {
+    if (isDataProp(propName)) {
+        propName = toDataName(propName);
+    }
     if (propName === 'className') {
         node.removeAttribute('class');
     } else if (propName === 'ref') {
@@ -69,7 +87,7 @@ export function removeProp (node, propName, propValue) {
         node.removeAttribute(propName);
         node[propName] = false;
     } else if (isEventProp(propName)) {
-        const eventName = propName.slice(2).toLowerCase();
+        const eventName = toEventName(propName);
         node.removeEventListener(eventName, propValue);
     } else {
         node.removeAttribute(propName);

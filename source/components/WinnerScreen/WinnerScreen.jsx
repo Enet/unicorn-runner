@@ -16,7 +16,12 @@ export default class WinnerScreen extends Screen {
 
         return <section className={className}>
             <h2>Победа!</h2>
-            <span onClick={this._onNextButtonClick}>Далее</span>
+            <span
+                dataHover={true}
+                dataClick={true}
+                onClick={this._onNextButtonClick}>
+                Далее
+            </span>
         </section>
     }
 

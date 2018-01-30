@@ -23,13 +23,24 @@ export default class MenuScreen extends Screen {
                 Помоги единорогу отдать кредит и поднять бабла.
             </p>
             <ul className="menu-screen__list">
-                <li className="menu-screen__item" onClick={this._onButtonClick.bind(this, 'map')}>
+                <li
+                    className="menu-screen__item"
+                    onClick={this._onButtonClick.bind(this, 'map')}
+                    dataClick={true}
+                    dataHover={true}>
                     Начать игру
                 </li>
-                <li className="menu-screen__item" onClick={this._onButtonClick.bind(this, 'settings')}>
+                <li
+                    className="menu-screen__item"
+                    onClick={this._onButtonClick.bind(this, 'settings')}
+                    dataClick={true}
+                    dataHover={true}>
                     Настройки
                 </li>
-                <li className="menu-screen__item">
+                <li
+                    className="menu-screen__item"
+                    dataClick={true}
+                    dataHover={true}>
                     <a
                         href="https://www.tinkoff.ru/loans/mortgage/"
                         rel="noopener noreferrer"
@@ -46,5 +57,9 @@ export default class MenuScreen extends Screen {
             type: 'SCREEN_CHANGE',
             payload: screenName
         });
+    }
+
+    _onEscapeKeyDown () {
+
     }
 }

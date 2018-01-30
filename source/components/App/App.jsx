@@ -51,18 +51,31 @@ export default class App extends Tcaer.Component {
     }
 
     componentDidMount () {
+        document.addEventListener('click', this._onClick);
+        document.addEventListener('mouseover', this._onMouseOver);
+        document.addEventListener('mouseout', this._onMouseOut);
+
         const manager = new ResourceManager();
         manager.fetchResources(resources).then(this._onManagerReady);
         this._manager = manager;
     }
 
     componentDidUpdate () {
+        if (!this._musicSound) {
+            return;
+        }
         const {settings, game} = this.props;
         if (settings.music && game.paused) {
             this._musicSound.play();
         } else {
             this._musicSound.pause();
         }
+    }
+
+    componentWillUnmount () {
+        document.removeEventListener('click', this._onClick);
+        document.removeEventListener('mouseover', this._onMouseOver);
+        document.removeEventListener('mouseout', this._onMouseOut);
     }
 
     @autobind
@@ -81,6 +94,47 @@ export default class App extends Tcaer.Component {
         this.props.dispatch({
             type: 'SOUND_MANAGER_READY',
             payload: manager
+        });
+    }
+
+    @autobind
+    _onMouseOver (event) {
+        if (this._hoverNode) {
+            return;
+        }
+        const target = event.target.closest('[data-hover]');
+        if (!target) {
+            return;
+        }
+
+        this._hoverNode = target;
+        this.props.dispatch({
+            type: 'SOUND_HOVER'
+        });
+    }
+
+    @autobind
+    _onMouseOut (event) {
+        if (!this._hoverNode) {
+            return;
+        }
+
+        let {relatedTarget} = event;
+        if (relatedTarget && this._hoverNode.contains(relatedTarget)) {
+            return;
+        }
+
+        this._hoverNode = null;
+    }
+
+    @autobind
+    _onClick (event) {
+        if (!event.target.hasAttribute ||
+            !event.target.hasAttribute('data-click')) {
+            return;
+        }
+        this.props.dispatch({
+            type: 'SOUND_CLICK'
         });
     }
 }

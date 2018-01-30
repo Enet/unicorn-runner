@@ -14,11 +14,15 @@ export default class PauseScreen extends Screen {
                 Пауза
             </h2>
             <span
+                dataHover={true}
+                dataClick={true}
                 className="pause-screen__back-button"
                 onClick={this._onResumeButtonClick}>
                 Назад
             </span>
             <span
+                dataHover={true}
+                dataClick={true}
                 className="pause-screen__menu-button"
                 onClick={this._onMenuButtonClick}>
                 Меню

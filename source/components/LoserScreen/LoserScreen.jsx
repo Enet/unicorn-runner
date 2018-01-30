@@ -16,8 +16,18 @@ export default class LoserScreen extends Screen {
 
         return <section className={className}>
             <h2>Неудача!</h2>
-            <span onClick={this._onBackButtonClick}>В меню</span>
-            <span onClick={this._onRepeatButtonClick}>Попробовать ещё</span>
+            <span
+                dataHover={true}
+                dataClick={true}
+                onClick={this._onBackButtonClick}>
+                В меню
+            </span>
+            <span
+                dataHover={true}
+                dataClick={true}
+                onClick={this._onRepeatButtonClick}>
+                Попробовать ещё
+            </span>
         </section>
     }
 
