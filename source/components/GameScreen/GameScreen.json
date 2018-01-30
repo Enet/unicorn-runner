@@ -1,0 +1,14 @@
+{
+    "ru": {
+        "header1": "Тинькофф",
+        "header2": "Финтех",
+        "score": "Деньги",
+        "health": "Здоровье"
+    },
+    "en": {
+        "header1": "Tinkoff",
+        "header2": "Fintech",
+        "score": "Money",
+        "health": "Health"
+    }
+}

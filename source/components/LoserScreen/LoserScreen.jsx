@@ -5,6 +5,11 @@ import {
 } from 'xuder';
 
 import Screen from 'components/Screen/Screen.jsx';
+import I18n from 'utils/I18n.js';
+
+import dictionary from './LoserScreen.json';
+
+const i18n = new I18n(dictionary);
 
 @connect()
 export default class LoserScreen extends Screen {
@@ -15,18 +20,20 @@ export default class LoserScreen extends Screen {
         ];
 
         return <section className={className}>
-            <h2>Неудача!</h2>
+            <h2>
+                {i18n.get(this, 'fail')}
+            </h2>
             <span
                 dataHover={true}
                 dataClick={true}
                 onClick={this._onBackButtonClick}>
-                В меню
+                {i18n.get(this, 'menu')}
             </span>
             <span
                 dataHover={true}
                 dataClick={true}
                 onClick={this._onRepeatButtonClick}>
-                Попробовать ещё
+                {i18n.get(this, 'repeat')}
             </span>
         </section>
     }

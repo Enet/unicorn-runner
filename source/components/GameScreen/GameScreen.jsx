@@ -9,10 +9,14 @@ import Score from 'components/Score/Score.jsx';
 import Health from 'components/Health/Health.jsx';
 import Effects from 'components/Effects/Effects.jsx';
 import Game from 'components/Game/Game.jsx';
+import I18n from 'utils/I18n.js';
 
+import dictionary from './GameScreen.json';
 import './GameScreen.styl';
 
-@connect(state => state)
+const i18n = new I18n(dictionary);
+
+@connect(({game, settings}) => ({game, settings}))
 export default class GameScreen extends Screen {
     render () {
         const {game} = this.props;
@@ -25,10 +29,16 @@ export default class GameScreen extends Screen {
             {game.inited ? this.renderGame() : null}
 
             <h2 className="game-screen__header">
-                Тинькофф<br />Финтех
+                {i18n.get(this, 'header1')}
+                <br />
+                {i18n.get(this, 'header2')}
             </h2>
-            <Score value={game.score} />
-            <Health value={game.health} />
+            <Score value={game.score}>
+                {i18n.get(this, 'score')}
+            </Score>
+            <Health value={game.health}>
+                {i18n.get(this, 'health')}
+            </Health>
             <Effects value={game.effects} />
         </section>
     }

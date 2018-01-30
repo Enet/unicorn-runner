@@ -6,12 +6,12 @@ import {
 
 import Screen from 'components/Screen/Screen.jsx';
 import Checkbox from 'components/Checkbox/Checkbox.jsx';
+import I18n from 'utils/I18n.js';
 
-const dictionary = {
-    sound: 'Звук',
-    music: 'Музыка',
-    mirror: 'Для левшей'
-};
+import dictionary from './SettingsScreen.json';
+
+const i18n = new I18n(dictionary);
+const settingNames = ['sound', 'music', 'mirror'];
 
 @connect(({settings}) => settings)
 export default class SettingsScreen extends Screen {
@@ -23,15 +23,15 @@ export default class SettingsScreen extends Screen {
 
         return <section className={className}>
             <h2 className="settings-screen__header">
-                Настройки
+                {i18n.get(this, 'header')}
             </h2>
-            {Object.keys(dictionary).map((settingName) => {
+            {settingNames.map((settingName) => {
                 return <Checkbox
                     key={settingName}
                     value={this.props[settingName]}
                     onChange={this._onSettingChange.bind(this, settingName)}
                     name={settingName}>
-                    {dictionary[settingName]}
+                    {i18n.get(this, settingName)}
                 </Checkbox>
             })}
             <span
@@ -39,7 +39,7 @@ export default class SettingsScreen extends Screen {
                 dataHover={true}
                 className="settings-screen__back-button"
                 onClick={this._onBackButtonClick}>
-                Назад
+                {i18n.get(this, 'back')}
             </span>
         </section>
     }

@@ -4,8 +4,12 @@ import {
 } from 'xuder';
 
 import Screen from 'components/Screen/Screen.jsx';
+import I18n from 'utils/I18n.js';
 
+import dictionary from './MenuScreen.json';
 import './MenuScreen.styl';
+
+const i18n = new I18n(dictionary);
 
 @connect()
 export default class MenuScreen extends Screen {
@@ -17,10 +21,10 @@ export default class MenuScreen extends Screen {
 
         return <section className={className}>
             <h1 className="menu-screen__header">
-                Unicorn
+                {i18n.get(this, 'header')}
             </h1>
             <p className="menu-screen__description">
-                Помоги единорогу отдать кредит и поднять бабла.
+                {i18n.get(this, 'description')}
             </p>
             <ul className="menu-screen__list">
                 <li
@@ -28,14 +32,14 @@ export default class MenuScreen extends Screen {
                     onClick={this._onButtonClick.bind(this, 'map')}
                     dataClick={true}
                     dataHover={true}>
-                    Начать игру
+                    {i18n.get(this, 'map')}
                 </li>
                 <li
                     className="menu-screen__item"
                     onClick={this._onButtonClick.bind(this, 'settings')}
                     dataClick={true}
                     dataHover={true}>
-                    Настройки
+                    {i18n.get(this, 'settings')}
                 </li>
                 <li
                     className="menu-screen__item"
@@ -45,7 +49,7 @@ export default class MenuScreen extends Screen {
                         href="https://www.tinkoff.ru/loans/mortgage/"
                         rel="noopener noreferrer"
                         target="_blank">
-                        Взять ипотеку
+                        {i18n.get(this, 'mortgage')}
                     </a>
                 </li>
             </ul>

@@ -1,0 +1,12 @@
+{
+    "ru": {
+        "header": "Пауза",
+        "resume": "Продолжить",
+        "menu": "Меню"
+    },
+    "en": {
+        "header": "Pause",
+        "resume": "Resume",
+        "menu": "Menu"
+    }
+}

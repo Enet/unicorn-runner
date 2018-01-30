@@ -1,0 +1,12 @@
+{
+    "ru": {
+        "fail": "Неудача!",
+        "menu": "Меню",
+        "repeat": "Ещё раз"
+    },
+    "en": {
+        "fail": "Failure!",
+        "menu": "Menu",
+        "repeat": "Try Again"
+    }
+}

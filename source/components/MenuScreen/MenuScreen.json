@@ -1,0 +1,16 @@
+{
+    "ru": {
+        "header": "Единорог",
+        "description": "Помоги единорогу отдать кредит и поднять бабла.",
+        "map": "Начать игру",
+        "settings": "Настройки",
+        "mortgage": "Взять ипотеку"
+    },
+    "en": {
+        "header": "Unicorn",
+        "description": "Help unicorn to return the credit and earn some money.",
+        "map": "Play Game",
+        "settings": "Settings",
+        "mortgage": "Mortgage"
+    }
+}

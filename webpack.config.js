@@ -47,6 +47,9 @@ module.exports = {
             test: /\.yaml$/,
             use: ['json-loader', 'yaml-loader']
         }, {
+            test: /\.json$/,
+            use: ['json-loader']
+        }, {
             test: /\.(?:gif|png|jpe?g)$/i,
             use: [{
                 loader: 'url-loader',

@@ -121,9 +121,7 @@ export function createTextNodeFromVnode (vnode, context) {
 
 export function createComponentFromVnode (vnode, context) {
     const {props, children} = vnode;
-    const component = new vnode.type();
-
-    component['@@updateComponentState'](props, children, context);
+    const component = new vnode.type(props, children, context);
     component.componentWillMount();
 
     const newComponentVnode = component.render();

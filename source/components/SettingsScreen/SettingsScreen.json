@@ -1,0 +1,16 @@
+{
+    "ru": {
+        "header": "Настройки",
+        "back": "Назад",
+        "music": "Музыка",
+        "sound": "Звук",
+        "mirror": "Для левшей"
+    },
+    "en": {
+        "header": "Settings",
+        "back": "Back",
+        "music": "Music",
+        "sound": "Sound",
+        "mirror": "Left-Handed"
+    }
+}

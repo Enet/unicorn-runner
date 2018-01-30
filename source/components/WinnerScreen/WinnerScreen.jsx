@@ -5,6 +5,11 @@ import {
 } from 'xuder';
 
 import Screen from 'components/Screen/Screen.jsx';
+import I18n from 'utils/I18n.js';
+
+import dictionary from './WinnerScreen.json';
+
+const i18n = new I18n(dictionary);
 
 @connect()
 export default class WinnerScreen extends Screen {
@@ -15,12 +20,14 @@ export default class WinnerScreen extends Screen {
         ];
 
         return <section className={className}>
-            <h2>Победа!</h2>
+            <h2>
+                {i18n.get(this, 'victory')}
+            </h2>
             <span
                 dataHover={true}
                 dataClick={true}
                 onClick={this._onNextButtonClick}>
-                Далее
+                {i18n.get(this, 'next')}
             </span>
         </section>
     }

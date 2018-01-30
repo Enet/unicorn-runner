@@ -42,6 +42,10 @@ export default class Component {
         this['@@vnode'] = newComponentVnode;
     }
 
+    constructor () {
+        this['@@updateComponentState'](...arguments);
+    }
+
     render () {
 
     }

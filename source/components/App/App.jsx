@@ -31,6 +31,11 @@ Object.keys(sounds).forEach((soundName) => {
 
 @connect(state => state)
 export default class App extends Tcaer.Component {
+    constructor () {
+        super(...arguments);
+        this.context.locale = this.props.locale;
+    }
+
     render () {
         const {screen} = this.props;
         const className = [
@@ -58,6 +63,12 @@ export default class App extends Tcaer.Component {
         const manager = new ResourceManager();
         manager.fetchResources(resources).then(this._onManagerReady);
         this._manager = manager;
+    }
+
+    componentWillUpdate (nextProps) {
+        if (this.context.locale !== nextProps.locale) {
+            this.context.locale = nextProps.locale;
+        }
     }
 
     componentDidUpdate () {

@@ -2,8 +2,12 @@ import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
 
 import Screen from 'components/Screen/Screen.jsx';
+import I18n from 'utils/I18n.js';
 
+import dictionary from './MapScreen.json';
 import './MapScreen.styl';
+
+const i18n = new I18n(dictionary);
 
 export default class MapScreen extends Screen {
     render () {
@@ -14,7 +18,7 @@ export default class MapScreen extends Screen {
 
         return <section className={className}>
             <h2 className="map-screen__header">
-                Карта
+                {i18n.get(this, 'header')}
             </h2>
             <div
                 dataHover={true}
@@ -49,7 +53,7 @@ export default class MapScreen extends Screen {
                 dataClick={true}
                 className="map-screen__back-button"
                 onClick={this._onBackButtonClick}>
-                Назад
+                {i18n.get(this, 'back')}
             </span>
         </section>
     }
