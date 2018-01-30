@@ -117,6 +117,7 @@ export default class Sound extends EventEmitter {
     setVolume (value) {
         const {volumeNode} = this._nodes;
         value = Math.max(0, Math.min(1, +value));
+        volumeNode.gain.cancelScheduledValues(AUDIO_CONTEXT.currentTime);
         volumeNode.gain.value = value;
         return this;
     }
