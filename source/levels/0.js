@@ -1,7 +1,7 @@
 export default {
     meta: {
-        /*music: 'MusicCity',*/
-        background: 'City',
+        music: 'MusicCity',
+        background: 'Night',
         bounds: [-300, 6000, 700, -300]
     },
     tiles: [{

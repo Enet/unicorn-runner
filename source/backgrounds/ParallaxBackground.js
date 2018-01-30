@@ -40,6 +40,10 @@ export default class ParallaxBackground extends Background {
         return {x, y};
     }
 
+    _shouldRenderLayer (i, r) {
+        return true;
+    }
+
     _renderGradient (context, camera) {
         const stops = this._getGradient();
         if (!stops) {
@@ -66,18 +70,14 @@ export default class ParallaxBackground extends Background {
             const {widthX, widthX6, naturalHeight} = image;
 
             for (let r = 0, rl = 3; r < rl; r++) {
-                if (!i && r) {
+                if (!this._shouldRenderLayer(i, r)) {
                     continue;
                 }
-
-                let {x, y} = this._getPosition(context, camera, {
-                    x: -camera.position.x * i * PARALLAX_SHIFT_X - widthX6 + OFFSET_X,
-                    y: height - naturalHeight - (camera.position.y * i - halfHeight) * PARALLAX_SHIFT_Y + OFFSET_Y,
-                    i
-                });
-
-                x = (x + widthX[r + 1]) % widthX[rl] + widthX[rl - 1] | 0;
-                y = y | 0;
+                let x = -camera.position.x * i * PARALLAX_SHIFT_X - widthX6 + OFFSET_X;
+                let y = height - naturalHeight - (camera.position.y * i - halfHeight) * PARALLAX_SHIFT_Y + OFFSET_Y;
+                const position = this._getPosition(context, camera, {x, y, i, r});
+                x = (position.x + widthX[r + 1]) % widthX[rl] + widthX[rl - 1] | 0;
+                y = position.y | 0;
                 context.drawImage(image, x, y | 0);
             }
         }

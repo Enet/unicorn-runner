@@ -1,5 +1,7 @@
 import ParallaxBackground from 'backgrounds/ParallaxBackground.js';
 
+const COLOR_NIGHT = '#110d12';
+
 export default class NightBackground extends ParallaxBackground {
     _getImageNames () {
         return {
@@ -7,6 +9,16 @@ export default class NightBackground extends ParallaxBackground {
             1: 'Night1',
             2: 'Night2'
         };
+    }
+
+    _getGradient () {
+        return {
+            0: COLOR_NIGHT
+        };
+    }
+
+    _shouldRenderLayer (i, r) {
+        return i || !r;
     }
 
     _getPosition (context, camera, {x, y, i}) {
