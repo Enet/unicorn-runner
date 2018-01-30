@@ -7,7 +7,6 @@ import Debugger from 'engine/Debugger.js';
 import UnicornResourceManager from 'UnicornResourceManager.js';
 import Level from 'Level.js';
 import {
-    CAMERA_OFFSET,
     KEY_SPACE,
     KEY_UP,
     KEY_DOWN,
