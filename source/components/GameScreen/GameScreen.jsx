@@ -1,4 +1,5 @@
 import Tcaer from 'tcaer';
+import autobind from 'tcaer/autobind';
 import {
     connect
 } from 'xuder';
@@ -11,9 +12,8 @@ import Game from 'components/Game/Game.jsx';
 
 import './GameScreen.styl';
 
-export default connect((state) => {
-    return state;
-}, class GameScreen extends Screen {
+@connect(state => state)
+export default class GameScreen extends Screen {
     render () {
         const {game} = this.props;
         const className = [
@@ -41,11 +41,11 @@ export default connect((state) => {
             step={game.step}
             paused={game.paused}
             debug={false}
-            onScoreChange={this._onScoreChange.bind(this)}
-            onHealthChange={this._onHealthChange.bind(this)}
-            onEffectChange={this._onEffectChange.bind(this)}
-            onGameLose={this._onGameLose.bind(this)}
-            onGameWin={this._onGameWin.bind(this)} />
+            onScoreChange={this._onScoreChange}
+            onHealthChange={this._onHealthChange}
+            onEffectChange={this._onEffectChange}
+            onGameLose={this._onGameLose}
+            onGameWin={this._onGameWin} />
     }
 
     _onEscapeKeyDown () {
@@ -58,6 +58,7 @@ export default connect((state) => {
         });
     }
 
+    @autobind
     _onScoreChange (payload) {
         this.props.dispatch({
             type: 'GAME_SCORE_CHANGE',
@@ -65,6 +66,7 @@ export default connect((state) => {
         });
     }
 
+    @autobind
     _onHealthChange (payload) {
         this.props.dispatch({
             type: 'GAME_HEALTH_CHANGE',
@@ -72,6 +74,7 @@ export default connect((state) => {
         });
     }
 
+    @autobind
     _onEffectChange (effects) {
         this.props.dispatch({
             type: 'GAME_EFFECT_CHANGE',
@@ -79,6 +82,7 @@ export default connect((state) => {
         });
     }
 
+    @autobind
     _onGameLose () {
         this.props.dispatch({
             type: 'GAME_RESET'
@@ -89,6 +93,7 @@ export default connect((state) => {
         });
     }
 
+    @autobind
     _onGameWin () {
         this.props.dispatch({
             type: 'GAME_RESET'
@@ -98,4 +103,4 @@ export default connect((state) => {
             payload: 'winner'
         });
     }
-});
+}

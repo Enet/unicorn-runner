@@ -1,4 +1,5 @@
 import Tcaer from 'tcaer';
+import autobind from 'tcaer/autobind';
 import Screen from 'components/Screen/Screen.jsx';
 
 export default class PauseScreen extends Screen {
@@ -14,12 +15,12 @@ export default class PauseScreen extends Screen {
             </h2>
             <span
                 className="pause-screen__back-button"
-                onClick={this._onResumeButtonClick.bind(this)}>
+                onClick={this._onResumeButtonClick}>
                 Назад
             </span>
             <span
                 className="pause-screen__menu-button"
-                onClick={this._onMenuButtonClick.bind(this)}>
+                onClick={this._onMenuButtonClick}>
                 Меню
             </span>
         </section>
@@ -29,6 +30,7 @@ export default class PauseScreen extends Screen {
         this._onResumeButtonClick();
     }
 
+    @autobind
     _onResumeButtonClick () {
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
@@ -39,6 +41,7 @@ export default class PauseScreen extends Screen {
         });
     }
 
+    @autobind
     _onMenuButtonClick () {
         this.props.dispatch({
             type: 'SCREEN_CHANGE',

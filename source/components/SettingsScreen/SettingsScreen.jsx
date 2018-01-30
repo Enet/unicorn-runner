@@ -1,4 +1,5 @@
 import Tcaer from 'tcaer';
+import autobind from 'tcaer/autobind';
 import {
     connect
 } from 'xuder';
@@ -12,9 +13,8 @@ const dictionary = {
     mirror: 'Для левшей'
 };
 
-export default connect((state) => {
-    return state.settings;
-}, class SettingsScreen extends Screen {
+@connect(({settings}) => settings)
+export default class SettingsScreen extends Screen {
     render () {
         const className = [
             ...this._getClassName(),
@@ -36,7 +36,7 @@ export default connect((state) => {
             })}
             <span
                 className="settings-screen__back-button"
-                onClick={this._onBackButtonClick.bind(this)}>
+                onClick={this._onBackButtonClick}>
                 Назад
             </span>
         </section>
@@ -50,10 +50,11 @@ export default connect((state) => {
         });
     }
 
+    @autobind
     _onBackButtonClick () {
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
             payload: 'menu'
         });
     }
-});
+}

@@ -2,8 +2,10 @@ import {
     renderVnode,
     enqueueTask
 } from './utils.js';
+import autobind from './autobind.js';
 
 export default class Component {
+    @autobind
     '@@updateComponentState' (props, children, context) {
         props = props || this.props;
         children = children || this.children;
@@ -11,6 +13,7 @@ export default class Component {
         Object.assign(this, {props, children, context});
     }
 
+    @autobind
     '@@renderComponentVnode' () {
         const node = this['@@node'];
         const {parentNode} = node;
@@ -28,8 +31,6 @@ export default class Component {
     }
 
     constructor () {
-        this['@@updateComponentState'] = this['@@updateComponentState'].bind(this);
-        this['@@renderComponentVnode'] = this['@@renderComponentVnode'].bind(this);
         this.state = {};
     }
 

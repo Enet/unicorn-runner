@@ -1,4 +1,6 @@
 import Tcaer from 'tcaer';
+import autobind from 'tcaer/autobind';
+
 import Screen from 'components/Screen/Screen.jsx';
 
 import './MapScreen.styl';
@@ -36,7 +38,7 @@ export default class MapScreen extends Screen {
             </div>
             <span
                 className="map-screen__back-button"
-                onClick={this._onBackButtonClick.bind(this)}>
+                onClick={this._onBackButtonClick}>
                 Назад
             </span>
         </section>
@@ -53,6 +55,7 @@ export default class MapScreen extends Screen {
         });
     }
 
+    @autobind
     _onBackButtonClick () {
         this.props.dispatch({
             type: 'SCREEN_CHANGE',

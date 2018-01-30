@@ -1,4 +1,5 @@
 import Tcaer from 'tcaer';
+import autobind from 'tcaer/autobind';
 import {
     connect
 } from 'xuder';
@@ -9,12 +10,9 @@ import {
 
 import './Screen.styl';
 
-export default connect((state) => {
-    return {};
-}, class Screen extends Tcaer.Component {
+@connect()
+export default class Screen extends Tcaer.Component {
     componentDidMount () {
-        this._onKeyDown = this._onKeyDown.bind(this);
-        this._onEscapeKeyDown = this._onEscapeKeyDown.bind(this);
         document.addEventListener('keydown', this._onKeyDown);
     }
 
@@ -29,6 +27,7 @@ export default connect((state) => {
         ];
     }
 
+    @autobind
     _onKeyDown (event) {
         if (!this.props.active) {
             return;
@@ -39,10 +38,11 @@ export default connect((state) => {
         this._onEscapeKeyDown();
     }
 
+    @autobind
     _onEscapeKeyDown () {
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
             payload: 'menu'
         });
     }
-});
+}

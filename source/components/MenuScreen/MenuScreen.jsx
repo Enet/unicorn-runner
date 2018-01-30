@@ -7,9 +7,8 @@ import Screen from 'components/Screen/Screen.jsx';
 
 import './MenuScreen.styl';
 
-export default connect((state) => {
-    return {};
-}, class MenuScreen extends Screen {
+@connect()
+export default class MenuScreen extends Screen {
     render () {
         const className = [
             ...this._getClassName(),
@@ -48,4 +47,4 @@ export default connect((state) => {
             payload: screenName
         });
     }
-});
+}

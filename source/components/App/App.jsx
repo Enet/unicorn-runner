@@ -14,9 +14,8 @@ import WinnerScreen from 'components/WinnerScreen/WinnerScreen.jsx';
 
 import './App.styl';
 
-export default connect((state) => {
-    return state;
-}, class App extends Tcaer.Component {
+@connect(state => state)
+export default class App extends Tcaer.Component {
     render () {
         const {screen} = this.props;
         const className = [
@@ -35,4 +34,4 @@ export default connect((state) => {
             <SettingsScreen active={screen === 'settings'} />
         </main>
     }
-});
+}

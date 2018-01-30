@@ -1,9 +1,9 @@
 import EventEmitter from 'events';
+import autobind from 'tcaer/autobind';
 
 export default class Store extends EventEmitter {
     constructor (rootReducer, initialState={}) {
         super();
-        this.dispatch = this.dispatch.bind(this);
         this.state = initialState;
         this._rootReducer = rootReducer;
 
@@ -12,6 +12,7 @@ export default class Store extends EventEmitter {
         });
     }
 
+    @autobind
     dispatch (action) {
         const prevState = this.state;
         if (typeof action === 'function') {

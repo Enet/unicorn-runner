@@ -1,13 +1,13 @@
 import Tcaer from 'tcaer';
+import autobind from 'tcaer/autobind';
 import {
     connect
 } from 'xuder';
 
 import Screen from 'components/Screen/Screen.jsx';
 
-export default connect((state) => {
-    return {};
-}, class LoserScreen extends Screen {
+@connect()
+export default class LoserScreen extends Screen {
     render () {
         const className = [
             ...this._getClassName(),
@@ -16,11 +16,12 @@ export default connect((state) => {
 
         return <section className={className}>
             <h2>Неудача!</h2>
-            <span onClick={this._onBackButtonClick.bind(this)}>В меню</span>
-            <span onClick={this._onRepeatButtonClick.bind(this)}>Попробовать ещё</span>
+            <span onClick={this._onBackButtonClick}>В меню</span>
+            <span onClick={this._onRepeatButtonClick}>Попробовать ещё</span>
         </section>
     }
 
+    @autobind
     _onBackButtonClick () {
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
@@ -28,6 +29,7 @@ export default connect((state) => {
         });
     }
 
+    @autobind
     _onRepeatButtonClick () {
         this.props.dispatch({
             type: 'GAME_RESET'
@@ -37,4 +39,4 @@ export default connect((state) => {
             payload: 'game'
         });
     }
-});
+}
