@@ -52,7 +52,7 @@ export default class UnicornGame extends Game {
     }
 
     _controlPlayer () {
-        const {player} = this._game.level;
+        const {player, settings} = this._game.level;
         if (!player.controller) {
             return;
         }
@@ -64,6 +64,9 @@ export default class UnicornGame extends Game {
             left: keyboard.isPressed(KEY_LEFT, KEY_A),
             right: keyboard.isPressed(KEY_RIGHT, KEY_D)
         };
+        if (settings.mirror) {
+            [newState.left, newState.right] = [newState.right, newState.left];
+        }
         player.controller.setState(newState);
     }
 
