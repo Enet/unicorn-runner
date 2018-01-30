@@ -197,7 +197,6 @@ export function renderVnode (newVnode, prevVnode, parentNode, context, index=0) 
                 newVnode.children,
                 context
             );
-            component.componentWillUpdate(newVnode.props);
         }
 
         const newComponentVnode = component.render();
@@ -212,11 +211,6 @@ export function renderVnode (newVnode, prevVnode, parentNode, context, index=0) 
         );
         component['@@vnode'] = newComponentVnode;
         prevNode['@@index'] = componentIndex;
-
-        if (component instanceof newVnode.type) {
-            component.componentDidUpdate(prevVnode.props);
-        }
-
     } else if (newVnode.type) {
 
         updateNode(prevNode, newVnode.props, prevVnode.props);

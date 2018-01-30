@@ -10,7 +10,19 @@ export default class Component {
         props = props || this.props;
         children = children || this.children;
         context = context || this.context;
-        Object.assign(this, {props, children, context});
+        const {state} = this;
+        const prevProps = this.props;
+        const prevChildren = this.children;
+        const prevContext = this.context;
+
+        if (this.state) {
+            this.componentWillUpdate(props, children, state, context);
+            Object.assign(this, {props, children, context});
+            this.componentDidUpdate(prevProps, prevChildren, state, prevContext);
+        } else {
+            this.state = {};
+            Object.assign(this, {props, children, context});
+        }
     }
 
     @autobind
@@ -30,10 +42,6 @@ export default class Component {
         this['@@vnode'] = newComponentVnode;
     }
 
-    constructor () {
-        this.state = {};
-    }
-
     render () {
 
     }
@@ -45,9 +53,15 @@ export default class Component {
 
     setState (deltaState={}) {
         enqueueTask(() => {
+            const {props, children, state, context} = this;
+            const prevState = state;
+            const newState = {...prevState};
             for (let d in deltaState) {
-                this.state[d] = deltaState[d];
+                newState[d] = deltaState[d];
             }
+            this.componentWillUpdate(props, children, newState, context);
+            this.state = newState;
+            this.componentWillUpdate(props, children, prevState, context);
         });
         enqueueTask(this['@@renderComponentVnode']);
     }
