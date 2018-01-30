@@ -15,24 +15,14 @@ export default connect((state) => {
     return state;
 }, class GameScreen extends Screen {
     render () {
-        const {game, settings} = this.props;
+        const {game} = this.props;
         const className = [
             ...this._getClassName(),
             `game-screen`
         ];
 
         return <section className={className}>
-            <Game
-                settings={settings}
-                key={game.key + ':' + game.step}
-                step={game.step}
-                paused={game.paused}
-                debug={false}
-                onScoreChange={this._onScoreChange.bind(this)}
-                onHealthChange={this._onHealthChange.bind(this)}
-                onEffectChange={this._onEffectChange.bind(this)}
-                onGameLose={this._onGameLose.bind(this)}
-                onGameWin={this._onGameWin.bind(this)} />
+            {game.inited ? this.renderGame() : null}
 
             <h2 className="game-screen__header">
                 Тинькофф<br />Финтех
@@ -41,6 +31,21 @@ export default connect((state) => {
             <Health value={game.health} />
             <Effects value={game.effects} />
         </section>
+    }
+
+    renderGame () {
+        const {game, settings} = this.props;
+        return <Game
+            settings={settings}
+            key={game.key + ':' + game.step}
+            step={game.step}
+            paused={game.paused}
+            debug={false}
+            onScoreChange={this._onScoreChange.bind(this)}
+            onHealthChange={this._onHealthChange.bind(this)}
+            onEffectChange={this._onEffectChange.bind(this)}
+            onGameLose={this._onGameLose.bind(this)}
+            onGameWin={this._onGameWin.bind(this)} />
     }
 
     _onEscapeKeyDown () {

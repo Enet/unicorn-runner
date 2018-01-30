@@ -20,7 +20,6 @@ export default class Game extends Tcaer.Component {
     componentDidMount () {
         super.componentDidMount(...arguments);
         this._game = this._createGame();
-        this.componentDidUpdate();
     }
 
     componentDidUpdate () {

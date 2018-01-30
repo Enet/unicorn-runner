@@ -23,6 +23,9 @@ export default class Game {
     }
 
     resume () {
+        if (!this._isPaused) {
+            return;
+        }
         this._isPaused = false;
         requestAnimationFrame(this._onAnimationFrame);
     }

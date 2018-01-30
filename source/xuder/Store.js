@@ -4,9 +4,9 @@ export default class Store extends EventEmitter {
     constructor (rootReducer, initialState={}) {
         super();
         this.dispatch = this.dispatch.bind(this);
-
-        this._rootReducer = rootReducer;
         this.state = initialState;
+        this._rootReducer = rootReducer;
+
         this.dispatch({
             type: '@@xuder/INIT'
         });
@@ -19,7 +19,7 @@ export default class Store extends EventEmitter {
             return;
         }
 
-        const newState = this._rootReducer(this.state, action);
+        const newState = this._rootReducer(prevState, action);
         this.state = newState;
         this.emit('change', prevState, newState);
     }

@@ -1,5 +1,6 @@
 const defaultState = {
     debug: true,
+    inited: false,
     paused: true,
     key: 0,
     step: 0,
@@ -35,6 +36,7 @@ export default function (state=defaultState, action) {
         return {
             ...state,
             step: +action.payload,
+            inited: true,
             paused: false
         };
     }

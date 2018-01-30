@@ -1,10 +1,35 @@
 import {
-    renderVnode
+    renderVnode,
+    enqueueTask
 } from './utils.js';
 
 export default class Component {
+    '@@updateComponentState' (props, children, context) {
+        props = props || this.props;
+        children = children || this.children;
+        context = context || this.context;
+        Object.assign(this, {props, children, context});
+    }
+
+    '@@renderComponentVnode' () {
+        const node = this['@@node'];
+        const {parentNode} = node;
+        const index = Array.from(parentNode.childNodes).indexOf(node);
+        const newComponentVnode = this.render();
+        const prevComponentVnode = this['@@vnode'];
+        renderVnode(
+            newComponentVnode,
+            prevComponentVnode,
+            parentNode,
+            this.context,
+            index
+        );
+        this['@@vnode'] = newComponentVnode;
+    }
+
     constructor () {
-        this.forceUpdate = this.forceUpdate.bind(this);
+        this['@@updateComponentState'] = this['@@updateComponentState'].bind(this);
+        this['@@renderComponentVnode'] = this['@@renderComponentVnode'].bind(this);
         this.state = {};
     }
 
@@ -12,35 +37,18 @@ export default class Component {
 
     }
 
-    update (props, children, context) {
-        this.props = props;
-        this.children = children;
-        this.context = context;
-    }
-
     forceUpdate () {
-        const {node} = this;
-        const {parentNode} = node;
-        const index = Array.from(parentNode.childNodes).indexOf(node);
-        this.update(this.props, this.children, this.context);
-        const newComponentVnode = this.render();
-        renderVnode(
-            newComponentVnode,
-            this.prevComponentVnode,
-            parentNode,
-            this.context,
-            index
-        );
-        this.prevComponentVnode = newComponentVnode;
+        this['@@updateComponentState']();
+        this['@@renderComponentVnode']();
     }
 
-    setState (deltaState) {
-        requestAnimationFrame(() => {
+    setState (deltaState={}) {
+        enqueueTask(() => {
             for (let d in deltaState) {
                 this.state[d] = deltaState[d];
             }
-            this.forceUpdate();
         });
+        enqueueTask(this['@@renderComponentVnode']);
     }
 
     componentWillMount () {

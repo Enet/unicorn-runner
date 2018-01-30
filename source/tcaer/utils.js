@@ -85,7 +85,7 @@ export function updateProp (node, propName, newPropValue, prevPropValue) {
     }
 }
 
-export function updateElement (node, newProps, prevProps) {
+export function updateNode (node, newProps, prevProps) {
     prevProps = prevProps || {};
     const allProps = {...newProps, ...prevProps};
     Object.keys(allProps).forEach((propName) => {
@@ -97,27 +97,31 @@ export function updateElement (node, newProps, prevProps) {
     });
 }
 
-export function createNodeFromVnode (vnode, context) {
-    let component;
-    let node;
+export function createTextNodeFromVnode (vnode, context) {
+    return document.createTextNode(vnode + '');
+}
+
+export function createComponentFromVnode (vnode, context) {
     const {props, children} = vnode;
+    const component = new vnode.type();
 
-    if (isVnodePrimitive(vnode)) {
-        return document.createTextNode(vnode + '');
-    } else if (Component.isPrototypeOf(vnode.type)) {
-        component = new vnode.type();
-        component.update(props, children, context);
-        component.componentWillMount();
-        const componentVnode = component.render();
-        component.prevComponentVnode = componentVnode;
-        node = createNodeFromVnode(componentVnode, context);
-        node.components.unshift(component);
-        component.node = node;
-        return node;
-    }
+    component['@@updateComponentState'](props, children, context);
+    component.componentWillMount();
 
-    node = document.createElement(vnode.type);
-    node.components = [];
+    const newComponentVnode = component.render();
+    component['@@vnode'] = newComponentVnode;
+
+    const node = createTreeFromVnode(newComponentVnode, context);
+    component['@@node'] = node;
+    node['@@components'].unshift(component);
+    return node;
+}
+
+export function createNodeFromVnode (vnode, context) {
+    const {props, children} = vnode;
+    const node = document.createElement(vnode.type);
+    node['@@components'] = [];
+    node['@@index'] = 0;
 
     Object.keys(props).forEach((propName) => {
         const propValue = props[propName];
@@ -125,21 +129,33 @@ export function createNodeFromVnode (vnode, context) {
     });
 
     children
-        .map(child => createNodeFromVnode(child, context))
+        .map(child => createTreeFromVnode(child, context))
         .forEach(childNode => node.appendChild(childNode));
 
     return node;
 }
 
+export function createTreeFromVnode (vnode, context) {
+    if (isVnodePrimitive(vnode)) {
+        return createTextNodeFromVnode(vnode, context);
+    } else if (Component.isPrototypeOf(vnode.type)) {
+        return createComponentFromVnode(vnode, context);
+    } else {
+        return createNodeFromVnode(vnode, context);
+    }
+}
+
 export function mountComponentsToNodes (node) {
-    node.components && node.components.slice().reverse().forEach((component) => {
+    const components = node['@@components'];
+    components && components.slice().reverse().forEach((component) => {
         component.componentDidMount();
     });
     node.childNodes.forEach(childNode => mountComponentsToNodes(childNode));
 }
 
 export function unmountComponentsFromNodes (node) {
-    node.components && node.components.forEach((component) => {
+    const components = node['@@components'];
+    components && components.forEach((component) => {
         component.componentWillUnmount();
     });
     node.childNodes.forEach(childNode => unmountComponentsFromNodes(childNode));
@@ -149,35 +165,61 @@ export function renderVnode (newVnode, prevVnode, parentNode, context, index=0) 
     const prevNode = parentNode.childNodes[index];
 
     if (!prevVnode && !isVnodePrimitive(prevVnode)) {
-        const newNode = createNodeFromVnode(newVnode, context);
+
+        const newNode = createTreeFromVnode(newVnode, context);
         parentNode.appendChild(newNode);
         mountComponentsToNodes(newNode);
+
     } else if (!newVnode && !isVnodePrimitive(newVnode)) {
+
         unmountComponentsFromNodes(prevNode);
         const commentNode = document.createComment('');
         parentNode.replaceChild(commentNode, prevNode);
+        enqueueTask(() => {
+            commentNode.parentNode.removeChild(commentNode);
+        });
+
     } else if (isVnodeChanged(newVnode, prevVnode)) {
-        const newNode = createNodeFromVnode(newVnode, context);
+
+        const newNode = createTreeFromVnode(newVnode, context);
         unmountComponentsFromNodes(prevNode);
         parentNode.replaceChild(newNode, prevNode);
         mountComponentsToNodes(newNode);
+
     } else if (Component.isPrototypeOf(newVnode.type)) {
-        const componentIndex = prevNode.componentIndex || 0;
-        const component = prevNode.components[componentIndex];
+
+        const componentIndex = prevNode['@@index'];
+        const component = prevNode['@@components'][componentIndex];
+
         if (component instanceof newVnode.type) {
-            component.update(newVnode.props, newVnode.children, context);
+            component['@@updateComponentState'](
+                newVnode.props,
+                newVnode.children,
+                context
+            );
             component.componentWillUpdate(newVnode.props);
         }
+
         const newComponentVnode = component.render();
-        prevNode.componentIndex = componentIndex + 1;
-        renderVnode(newComponentVnode, component.prevComponentVnode, parentNode, context, index);
-        component.prevComponentVnode = newComponentVnode;
-        prevNode.componentIndex = componentIndex;
+        const prevComponentVnode = component['@@vnode'];
+        prevNode['@@index'] = componentIndex + 1;
+        renderVnode(
+            newComponentVnode,
+            prevComponentVnode,
+            parentNode,
+            context,
+            index
+        );
+        component['@@vnode'] = newComponentVnode;
+        prevNode['@@index'] = componentIndex;
+
         if (component instanceof newVnode.type) {
             component.componentDidUpdate(prevVnode.props);
         }
+
     } else if (newVnode.type) {
-        updateElement(prevNode, newVnode.props, prevVnode.props);
+
+        updateNode(prevNode, newVnode.props, prevVnode.props);
 
         const newChildrenCount = newVnode.children.length;
         const prevChildrenCount = prevVnode.children.length;
@@ -191,5 +233,20 @@ export function renderVnode (newVnode, prevVnode, parentNode, context, index=0) 
                 c
             );
         }
+
+    }
+}
+
+const tasks = new Set();
+let frame = null;
+export function enqueueTask (task) {
+    tasks.delete(task);
+    tasks.add(task);
+    if (!frame) {
+        frame = requestAnimationFrame(() => {
+            tasks.forEach(task => task());
+            tasks.clear();
+            frame = null;
+        });
     }
 }
