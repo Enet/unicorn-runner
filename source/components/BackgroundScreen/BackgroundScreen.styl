@@ -1,5 +1,21 @@
 .background-screen
-    background: linear-gradient(-45deg, lighten(red, 50%) 20%, lighten(red, 50%) 20.01%, lighten(orange, 50%) 40%, lighten(orange, 50%) 40.01%, lighten(green, 80%) 90%, lighten(green, 80%) 90.01%, lighten(blue, 80%))
+    background: $ui.color.seashell
+
+    &::before,
+    &::after
+        content: ''
+        display: block
+        height: 100%
+        width: 100%
+        opacity: 0.25
+        background-size: 100%
+
+    &::before
+        background-image: repeating-linear-gradient(45deg, white 0px, white 200px, transparent 201px, transparent 300px)
+
+    &::after
+        absolute: top 0 left 0
+        background-image: repeating-linear-gradient(-45deg, white 0px, white 200px, transparent 201px, transparent 300px)
 
     &__canvas
         absolute: top 0 left 0
@@ -8,13 +24,3 @@
         pointer-events: none
         z-index: 10
         mix-blend-mode: screen
-
-    &::before
-        content: ''
-        display: block
-        height: 100%
-        width: 100%
-        opacity: 0.25
-        background-image: repeating-linear-gradient(45deg, white 0px, white 200px, transparent 201px, transparent 300px)
-        background-size: 100%
-

@@ -1,3 +1,25 @@
 .locale
-    absolute: bottom 0 right 0
+    absolute: bottom 0 left 50%
+    transform: translateX(-50%)
     z-index: 10
+
+    &__button
+        position: relative
+        z-index: 1
+
+    &__space
+        display: inline-block
+        width: 30px
+
+    &__circle
+        width: 48px
+        height: @width
+        absolute: top 0 left 20%
+        transform: translateX(-0.5 * @width)
+        border-radius: 50%
+        background: $ui.color.pink
+        transition: left $ui.transition.default
+
+    &_en
+        .locale__circle
+            left: 80%

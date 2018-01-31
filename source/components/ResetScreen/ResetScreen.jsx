@@ -1,54 +1,55 @@
 import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
-import {
-    connect
-} from 'xuder';
-
 import Screen from 'components/Screen/Screen.jsx';
 import Button from 'components/Button/Button.jsx';
 import I18n from 'utils/I18n.js';
 
-import dictionary from './WinnerScreen.json';
-import './WinnerScreen.styl';
+import dictionary from './ResetScreen.json';
+import './ResetScreen.styl';
 
 const i18n = new I18n(dictionary);
 
-@connect()
-export default class WinnerScreen extends Screen {
+export default class ResetScreen extends Screen {
     render () {
         const className = [
             ...this._getClassName(),
-            `winner-screen`
+            `reset-screen`
         ];
 
         return <section className={className}>
-            <h2 className="winner-screen__header">
-                {i18n.get(this, 'victory')}
+            <h2 className="reset-screen__header">
+                {i18n.get(this, 'header')}
             </h2>
-            <nav className="winner-screen__menu">
+            <nav className="reset-screen__menu">
                 <Button
-                    onClick={this._onMenuButtonClick}>
-                    {i18n.get(this, 'menu')}
+                    onClick={this._onYesButtonClick}>
+                    {i18n.get(this, 'yes')}
                 </Button>
                 <br />
                 <Button
-                    onClick={this._onNextButtonClick}>
-                    {i18n.get(this, 'next')}
+                    onClick={this._onNoButtonClick}>
+                    {i18n.get(this, 'no')}
                 </Button>
             </nav>
         </section>
     }
 
-    @autobind
-    _onMenuButtonClick () {
-        this.props.dispatch({
-            type: 'SCREEN_CHANGE',
-            payload: 'menu'
-        });
+    _onEscapeKeyDown () {
+        this._onAnswer();
     }
 
     @autobind
-    _onNextButtonClick () {
+    _onYesButtonClick () {
+        this._onAnswer();
+    }
+
+    @autobind
+    _onNoButtonClick () {
+        this._onAnswer();
+    }
+
+    @autobind
+    _onAnswer () {
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
             payload: 'map'

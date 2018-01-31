@@ -1,10 +1,12 @@
 {
     "ru": {
         "victory": "Победа!",
+        "menu": "Выйти в меню",
         "next": "Далее"
     },
     "en": {
         "victory": "Victory!",
+        "menu": "Main Menu",
         "next": "Next"
     }
 }

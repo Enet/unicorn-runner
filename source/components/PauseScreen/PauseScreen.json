@@ -2,11 +2,11 @@
     "ru": {
         "header": "Пауза",
         "resume": "Продолжить",
-        "menu": "Меню"
+        "quit": "Выйти в меню"
     },
     "en": {
         "header": "Pause",
         "resume": "Resume",
-        "menu": "Menu"
+        "quit": "Quit Game"
     }
 }

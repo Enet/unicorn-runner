@@ -1,14 +1,14 @@
 {
     "ru": {
-        "header": "Единорог",
-        "description": "Помоги единорогу отдать кредит и поднять бабла.",
+        "header1": "Единорог",
+        "header2": "на пробежке",
         "map": "Начать игру",
         "settings": "Настройки",
         "mortgage": "Взять ипотеку"
     },
     "en": {
-        "header": "Unicorn",
-        "description": "Help unicorn to return the credit and earn some money.",
+        "header1": "Unicorn",
+        "header2": "morning jog",
         "map": "Play Game",
         "settings": "Settings",
         "mortgage": "Mortgage"

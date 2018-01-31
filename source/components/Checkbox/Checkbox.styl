@@ -1,0 +1,30 @@
+.checkbox
+    display: block
+    font-size: 48px
+    color: $ui.color.blue
+    cursor: pointer
+    transition: color $ui.transition.fast
+
+    &__input
+        width: 0
+        height: 0
+        position: absolute
+        visibility: hidden
+        pointer-events: none
+
+        &:not(:checked) + .checkbox__circle
+            color: transparent
+
+    &__circle
+        float: right
+        width: 48px
+        height: @width
+        border-radius: 50%
+        background: $ui.color.pink
+        vertical-align: top
+        line-height: 1.4
+        text-align: center
+        transition: color $ui.transition.default
+
+    &:hover
+        color: $ui.color.ultraviolet

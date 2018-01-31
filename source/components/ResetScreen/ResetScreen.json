@@ -1,0 +1,12 @@
+{
+    "ru": {
+        "header": "Сброс",
+        "yes": "Да, конечно!",
+        "no": "Нет, нет, нет..."
+    },
+    "en": {
+        "header": "Reset",
+        "yes": "Yes, of course!",
+        "no": "No, no, no..."
+    }
+}

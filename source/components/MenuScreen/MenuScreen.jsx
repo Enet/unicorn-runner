@@ -4,6 +4,7 @@ import {
 } from 'xuder';
 
 import Screen from 'components/Screen/Screen.jsx';
+import Button from 'components/Button/Button.jsx';
 import I18n from 'utils/I18n.js';
 
 import dictionary from './MenuScreen.json';
@@ -21,38 +22,30 @@ export default class MenuScreen extends Screen {
 
         return <section className={className}>
             <h1 className="menu-screen__header">
-                {i18n.get(this, 'header')}
+                {i18n.get(this, 'header1')}
             </h1>
-            <p className="menu-screen__description">
-                {i18n.get(this, 'description')}
-            </p>
-            <ul className="menu-screen__list">
-                <li
-                    className="menu-screen__item"
-                    onClick={this._onButtonClick.bind(this, 'map')}
-                    dataClick={true}
-                    dataHover={true}>
+            <h2 className="menu-screen__subheader">
+                {i18n.get(this, 'header2')}
+            </h2>
+            <nav className="menu-screen__menu">
+                <Button onClick={this._onButtonClick.bind(this, 'map')}>
                     {i18n.get(this, 'map')}
-                </li>
-                <li
-                    className="menu-screen__item"
-                    onClick={this._onButtonClick.bind(this, 'settings')}
-                    dataClick={true}
-                    dataHover={true}>
+                </Button>
+                <br />
+                <Button onClick={this._onButtonClick.bind(this, 'settings')}>
                     {i18n.get(this, 'settings')}
-                </li>
-                <li
-                    className="menu-screen__item"
-                    dataClick={true}
-                    dataHover={true}>
+                </Button>
+                <br />
+                <Button>
                     <a
+                        className="menu-screen__link"
                         href="https://www.tinkoff.ru/loans/mortgage/"
                         rel="noopener noreferrer"
                         target="_blank">
                         {i18n.get(this, 'mortgage')}
                     </a>
-                </li>
-            </ul>
+                </Button>
+            </nav>
         </section>
     }
 

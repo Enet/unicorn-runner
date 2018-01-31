@@ -1,12 +1,12 @@
 {
     "ru": {
         "fail": "Неудача!",
-        "menu": "Меню",
+        "quit": "Выйти в меню",
         "repeat": "Ещё раз"
     },
     "en": {
         "fail": "Failure!",
-        "menu": "Menu",
+        "quit": "Main Menu",
         "repeat": "Try Again"
     }
 }

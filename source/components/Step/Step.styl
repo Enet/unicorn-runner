@@ -1,0 +1,12 @@
+.step
+    display: inline-block
+    transition: transform $ui.transition.fast, filter $ui.transition.default
+
+    &_disabled_true
+        filter: grayscale(1)
+
+    &_disabled_false
+        cursor: pointer
+
+        &:hover
+            transform: rotate(10deg) scale(1.1)

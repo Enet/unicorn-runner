@@ -1,10 +1,14 @@
 {
     "ru": {
         "header": "Карта",
-        "back": "Назад"
+        "description": "Помоги единорогу отдать кредит!",
+        "back": "Назад",
+        "reset": "Сброс"
     },
     "en": {
         "header": "Map",
-        "back": "Back"
+        "description": "Help the unicorn to return a credit!",
+        "back": "Back",
+        "reset": "Reset"
     }
 }

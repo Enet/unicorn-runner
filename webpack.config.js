@@ -79,7 +79,10 @@ module.exports = {
             options: {
                 stylus: {
                     use: [require('nib')()],
-                    import: ['~nib/lib/nib/index.styl']
+                    import: [
+                        '~nib/lib/nib/index.styl',
+                        path.resolve(__dirname, 'source', 'styles', 'ui.styl')
+                    ]
                 }
             }
         })

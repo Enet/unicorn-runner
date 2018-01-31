@@ -5,13 +5,14 @@ import {
 } from 'xuder';
 
 import Screen from 'components/Screen/Screen.jsx';
+import Button from 'components/Button/Button.jsx';
 import Checkbox from 'components/Checkbox/Checkbox.jsx';
 import I18n from 'utils/I18n.js';
 
 import dictionary from './SettingsScreen.json';
+import './SettingsScreen.styl';
 
 const i18n = new I18n(dictionary);
-const settingNames = ['sound', 'music', 'mirror'];
 
 @connect(({settings}) => settings)
 export default class SettingsScreen extends Screen {
@@ -25,23 +26,27 @@ export default class SettingsScreen extends Screen {
             <h2 className="settings-screen__header">
                 {i18n.get(this, 'header')}
             </h2>
-            {settingNames.map((settingName) => {
-                return <Checkbox
-                    key={settingName}
-                    value={this.props[settingName]}
-                    onChange={this._onSettingChange.bind(this, settingName)}
-                    name={settingName}>
-                    {i18n.get(this, settingName)}
-                </Checkbox>
-            })}
-            <span
-                dataClick={true}
-                dataHover={true}
+            <div className="settings-screen__list">
+                {this.renderCheckbox('sound')}
+                {this.renderCheckbox('music')}
+                {this.renderCheckbox('mirror')}
+            </div>
+            <Button
                 className="settings-screen__back-button"
                 onClick={this._onBackButtonClick}>
                 {i18n.get(this, 'back')}
-            </span>
+            </Button>
         </section>
+    }
+
+    renderCheckbox (settingName) {
+        return <Checkbox
+            key={settingName}
+            value={this.props[settingName]}
+            onChange={this._onSettingChange.bind(this, settingName)}
+            name={settingName}>
+            {i18n.get(this, settingName)}
+        </Checkbox>
     }
 
     _onSettingChange (settingName, event) {
