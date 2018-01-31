@@ -7,6 +7,7 @@ export default class Store extends EventEmitter {
         this.state = initialState;
         this._rootReducer = rootReducer;
 
+        this.setMaxListeners(100);
         this.dispatch({
             type: '@@xuder/INIT'
         });

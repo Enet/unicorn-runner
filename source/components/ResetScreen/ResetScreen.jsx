@@ -20,6 +20,9 @@ export default class ResetScreen extends Screen {
             <h2 className="reset-screen__header">
                 {i18n.get(this, 'header')}
             </h2>
+            <p className="reset-screen__description">
+                {i18n.get(this, 'description')}
+            </p>
             <nav className="reset-screen__menu">
                 <Button
                     onClick={this._onYesButtonClick}>
@@ -40,6 +43,9 @@ export default class ResetScreen extends Screen {
 
     @autobind
     _onYesButtonClick () {
+        this.props.dispatch({
+            type: 'STEP_RESET'
+        });
         this._onAnswer();
     }
 

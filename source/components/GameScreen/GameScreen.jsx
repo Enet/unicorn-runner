@@ -104,7 +104,12 @@ export default class GameScreen extends Screen {
     }
 
     @autobind
-    _onGameWin () {
+    _onGameWin ({score}) {
+        this.props.dispatch({
+            type: 'STEP_COMPLETE',
+            payload: score,
+            step: this.props.game.step
+        });
         this.props.dispatch({
             type: 'GAME_RESET'
         });

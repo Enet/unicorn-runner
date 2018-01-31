@@ -363,7 +363,8 @@ export default class Level {
 
     _onGameWin () {
         this._isStopped = true;
-        this.callbacks.onGameWin();
+        const score = this._score;
+        this.callbacks.onGameWin({score});
     }
 
     _onGameLose () {

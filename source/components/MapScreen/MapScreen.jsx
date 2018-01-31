@@ -1,5 +1,8 @@
 import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
+import {
+    connect
+} from 'xuder';
 
 import Screen from 'components/Screen/Screen.jsx';
 import Step from 'components/Step/Step.jsx';
@@ -16,8 +19,11 @@ import './MapScreen.styl';
 
 const i18n = new I18n(dictionary);
 
+@connect(({step}) => step)
 export default class MapScreen extends Screen {
     render () {
+        const {step0, step1, step2, step3, progress} = this.props;
+        const score = step0 + step1 + step2 + step3;
         const className = [
             ...this._getClassName(),
             `map-screen`
@@ -31,27 +37,27 @@ export default class MapScreen extends Screen {
                 {i18n.get(this, 'description')}
             </p>
             <Button className="map-screen__score-button">
-                0$ из 10000$
+                {score}$ из 10000$
             </Button>
             <div className="map-screen__map">
                 <Step
                     image={step0Image}
-                    disabled={false}
+                    disabled={progress < 0}
                     className="map-screen__step"
                     onClick={this._onStepClick.bind(this, 0)} />
                 <Step
                     image={step1Image}
-                    disabled={false}
+                    disabled={progress < 1}
                     className="map-screen__step"
                     onClick={this._onStepClick.bind(this, 1)} />
                 <Step
                     image={step2Image}
-                    disabled={true}
+                    disabled={progress < 2}
                     className="map-screen__step"
                     onClick={this._onStepClick.bind(this, 2)} />
                 <Step
                     image={step3Image}
-                    disabled={true}
+                    disabled={progress < 3}
                     className="map-screen__step"
                     onClick={this._onStepClick.bind(this, 3)} />
             </div>

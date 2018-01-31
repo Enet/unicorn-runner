@@ -28,11 +28,13 @@ export default function connect (mapStateToProps) {
             componentWillMount () {
                 const {store} = this.context;
                 store.addListener('change', this._onStoreChange);
+                super.componentWillMount(...arguments);
             }
 
             componentWillUnmount () {
                 const {store} = this.context;
                 store.removeListener('change', this._onStoreChange);
+                super.componentWillUnmount(...arguments);
             }
 
             @autobind

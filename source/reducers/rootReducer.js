@@ -5,6 +5,7 @@ import screenReducer from 'reducers/screenReducer.js';
 import settingsReducer from 'reducers/settingsReducer.js';
 import gameReducer from 'reducers/gameReducer.js';
 import localeReducer from 'reducers/localeReducer.js';
+import stepReducer from 'reducers/stepReducer.js';
 import soundReducer from 'reducers/soundReducer.js';
 
 export default combineReducers({
@@ -12,5 +13,6 @@ export default combineReducers({
     settings: settingsReducer,
     game: gameReducer,
     locale: localeReducer,
+    step: stepReducer,
     sound: soundReducer
 });
