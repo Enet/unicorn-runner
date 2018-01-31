@@ -49,6 +49,7 @@ export default class BackgroundScreen extends Screen {
                 value={this.context.locale}
                 onChange={this._onLocaleChange} />
             <canvas
+                hidden={this.props.game.inited}
                 className="background-screen__canvas"
                 ref={this._onCanvasRef} />
         </section>
@@ -72,7 +73,7 @@ export default class BackgroundScreen extends Screen {
     }
 
     componentDidUpdate (prevProps) {
-        if (!prevProps.game.paused && this.props.game.paused) {
+        if (!prevProps.active && this.props.active) {
             this._frame = requestAnimationFrame(this._onAnimationFrame);
         }
     }

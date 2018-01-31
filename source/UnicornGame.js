@@ -30,7 +30,12 @@ export default class UnicornGame extends Game {
         level.destructor();
     }
 
-    resize ({width, height}) {
+    resize (size) {
+        this._size = size;
+        if (!this._game) {
+            return;
+        }
+        const {width, height} = size;
         const {context, camera} = this._game;
         context.canvas.width = width;
         context.canvas.height = height;
@@ -54,8 +59,13 @@ export default class UnicornGame extends Game {
     _centerCamera () {
         const {camera, level} = this._game;
         const {player} = level;
-        camera.position.x = player.body.center.x - 0.5 * camera.size.width;
-        camera.position.y = player.body.center.y - 0.5 * camera.size.height;
+        const x = player.body.center.x - 0.5 * camera.size.width;
+        const y = Math.min(
+            level.bounds.bottom,
+            player.body.center.y + 0.5 * camera.size.height
+        ) - camera.size.height;
+        camera.position.x = x;
+        camera.position.y = y;
     }
 
     _controlPlayer () {
@@ -79,6 +89,8 @@ export default class UnicornGame extends Game {
 
     _onManagerReady ({debug, context, size, step, settings, ...callbacks}) {
         super._onManagerReady(...arguments);
+
+        size = this._size || size;
         const {width, height} = size;
         const scale = `scale(${settings.mirror ? -1 : 1}, 1)`;
         context.canvas.style.transform = scale;
