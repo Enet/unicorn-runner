@@ -29,8 +29,8 @@ const defaults = {
 
 export default class ParticleSystem extends Renderable {
     get position () {
-        const {position, offset} = this.options;
-        return position.add(offset);
+        const {center, offset} = this.options;
+        return center.add(offset);
     }
 
     get mode () {
@@ -87,7 +87,7 @@ export default class ParticleSystem extends Renderable {
         this._amountAccumulator = 0;
 
         this.options = this._initOptions(options);
-        options.position = options.position || new Vector2(0, 0);
+        options.center = options.center || new Vector2(0, 0);
         options.offset = options.offset || new Vector2(0, 0);
         options.startColor = options.startColor || COLOR_WHITE;
         options.endColor = options.endColor || options.startColor;
@@ -102,6 +102,7 @@ export default class ParticleSystem extends Renderable {
     }
 
     _createParticle ({
+        position,
         velocity, velocityError, gravity,
         direction, directionError,
         lifeTime, lifeTimeError,
@@ -110,7 +111,7 @@ export default class ParticleSystem extends Renderable {
         alpha, alphaError, alphaSpeed,
         processParticleOptions
     }) {
-        const position = new Vector2(0, 0);
+        position = position ? position.clone() : new Vector2(0, 0);
         velocity = this._getRandomValue(velocity, velocityError);
         direction = this._getRandomValue(direction, directionError, Math.PI);
         lifeTime = this._getRandomValue(lifeTime, lifeTimeError);

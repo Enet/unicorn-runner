@@ -195,7 +195,7 @@ export default class Entity extends Renderable {
         const {width, height} = this.size;
         const volume = width * height;
         const lavaSplash = new ParticleSystem({
-            position: this.body.center.add(new Vector2(0, height * 0.5)),
+            center: this.body.center.add(new Vector2(0, height * 0.5)),
             index: 1500,
             direction: -0.5 * Math.PI,
             directionError: 50,

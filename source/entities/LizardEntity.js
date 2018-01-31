@@ -150,7 +150,7 @@ export default class LizardEntity extends Entity {
 
         const line = player.body.center.subtract(this.body.center);
         const particleSystem = new ParticleSystem({
-            position: this.body.center,
+            center: this.body.center,
             direction: Math.atan2(line.y, line.x),
             directionError: 5,
             amountSpeed: 100,

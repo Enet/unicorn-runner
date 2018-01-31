@@ -14,7 +14,7 @@ export default class DustCloudEntity extends StaticEntity {
     entityDidMount () {
         super.entityDidMount();
         const particleSystem = new ParticleSystem({
-            position: this.body.center,
+            center: this.body.center,
             direction: this.angle - Math.PI * 0.5,
             directionError: 50,
             size: 2,
