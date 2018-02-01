@@ -37,10 +37,23 @@
         opacity: 1
         visibility: visible
 
+@media screen and (max-height: 900px)
+    .screen
+        &__content
+            top: -1.5 * $ui.size.base
+
 @media screen and (max-width: $ui.breakpoint.tablet)
     .screen
         &__subheader
             font-size: 1rem
+            padding-top: 0
+
+@media screen and (max-width: $ui.breakpoint.shovel)
+    .screen
+        &__header
+            padding-top: 1rem
+
+        &__subheader
             padding-top: 0
 
 @media screen and (max-width: $ui.breakpoint.iphone)
