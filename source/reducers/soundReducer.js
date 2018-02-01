@@ -1,4 +1,5 @@
 import Sound from 'engine/Sound.js';
+import loadSettings from 'utils/loadSettings.js';
 
 function play (manager, soundName, options={}) {
     new Sound({
@@ -8,16 +9,27 @@ function play (manager, soundName, options={}) {
 }
 
 const defaultState = {
-    manager: null
+    manager: null,
+    sound: loadSettings({sound: true}).sound
 };
 
 export default function (state=defaultState, action) {
     if (action.type === 'SOUND_MANAGER_READY') {
-        return {manager: action.payload};
+        return {
+            ...state,
+            manager: action.payload
+        };
+    }
+
+    if (action.type === 'SETTING_CHANGE' && action.name === 'sound') {
+        state = {
+            ...state,
+            sound: !!action.value
+        };
     }
 
     const {manager} = state;
-    if (!manager) {
+    if (!manager || !state.sound) {
         return state;
     }
 
