@@ -16,6 +16,9 @@ export default class OrganismTrait extends Trait {
         if (this.isDead()) {
             return;
         }
+        if (this.level.isStopped()) {
+            return;
+        }
 
         let health = this._health;
         const {options} = this;

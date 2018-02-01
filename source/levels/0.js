@@ -2,7 +2,7 @@ export default {
     meta: {
         music: 'MusicMountains',
         background: 'Mountains',
-        bounds: [-300, 3000, 700, -300]
+        bounds: [-300, 2400, 700, -300]
     },
     tiles: [{
         ranges: [

@@ -111,7 +111,7 @@ export default class Level {
         if (this._musicSound) {
             this._musicSound.stop();
         }
-        this.createSound('LevelLose')
+        this._loseSound = this.createSound('LevelLose')
             .play()
             .once('end', this._onGameLose.bind(this));
     }
@@ -120,7 +120,7 @@ export default class Level {
         if (this.player.organism.isDead()) {
             return;
         }
-        if (this._winSound) {
+        if (this.isStopped()) {
             return;
         }
         this._winSound = this.createSound('LevelWin')
@@ -134,7 +134,7 @@ export default class Level {
     }
 
     isStopped () {
-        return this._isStopped;
+        return this._isStopped || !!this._winSound || !!this._loseSound;
     }
 
     getScore () {
