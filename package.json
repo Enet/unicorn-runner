@@ -28,13 +28,13 @@
   "name": "unicorn-runner",
   "version": "2.0.0",
   "description": "Tinkoff Fintech Game by enet",
-  "main": "source/index.js",
+  "main": "source/index.jsx",
   "repository": "git@github.com:Enet/unicorn-runner.git",
   "author": "Stepan Zhevak <enet@protonmail.ch>",
-  "license": "GPL-3.0",
+  "license": "SEE LICENSE IN LICENSE.md",
   "private": false,
   "scripts": {
-    "clean": "rm -rf ./output/bundles ./output/images",
+    "clean": "rm -rf ./output/bundles ./output/images ./output/menu ./output/sounds",
     "build": "yarn clean && yarn webpack -p --config webpack.config.js",
     "watch": "yarn webpack --watch --config webpack.config.js",
     "start": "yarn webpack-dev-server --config webpack.config.js"
