@@ -7,6 +7,17 @@
         display: none
         font-size: 0
 
+@media screen and (max-height: 800px)
+    .map-screen
+        &__map
+            margin: 0.5rem 0 0
+
+@media screen and (max-height: 640px)
+    .map-screen
+        &__subheader
+            visibility: hidden
+            font-size: 0
+
 @media screen and (max-width: $ui.breakpoint.tablet)
     .map-screen
         &__map
