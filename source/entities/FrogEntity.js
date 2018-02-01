@@ -56,6 +56,7 @@ export default class FrogEntity extends Entity {
         const {player} = this.level;
         const dx = player.body.center.x - this.body.center.x;
         const isReadyToFight = true &&
+            !this.organism.isDead() &&
             Math.abs(dx) < FROG_FIGHT_DISTANCE &&
             player.body.center.y - player.size.height * 0.5 < this.body.center.y &&
             player.body.center.y + player.size.height * 0.5 > this.body.center.y;
