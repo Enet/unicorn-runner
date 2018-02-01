@@ -1,12 +1,24 @@
 .game-screen
-    &__header
+    &__header,
+    &__portfolio
         absolute: top 30px left 30px
         color: $ui.color.black
         font-size: 24px
         text-align: left
         text-decoration: none
-        text-shadow 2px 2px 0 #fff, -2px -2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff
+
+    &__header
+        transition: text-shadow $ui.transition.fast
+        text-shadow: 2px 2px 0 $ui.color.white, -2px -2px 0 $ui.color.white, -2px 2px 0 $ui.color.white, 2px -2px 0 $ui.color.white
+
+        &:hover
+            text-shadow: 2px 2px 0 $ui.color.yellow, -2px -2px 0 $ui.color.yellow, -2px 2px 0 $ui.color.yellow, 2px -2px 0 $ui.color.yellow
+
+    &__portfolio
+        top: auto
+        bottom: 30px
+        text-shadow: 2px 2px 0 $ui.color.white, -2px -2px 0 $ui.color.white, -2px 2px 0 $ui.color.white, 2px -2px 0 $ui.color.white
         transition: color $ui.transition.fast
 
         &:hover
-            color: $ui.color.violet
+            color: $ui.color.aqua

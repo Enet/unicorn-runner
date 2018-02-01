@@ -34,9 +34,18 @@ export default class GameScreen extends Screen {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="game-screen__header">
-                {i18n.get(this, 'header1')}
+                {i18n.get(this, 'tinkoff')}
                 <br />
-                {i18n.get(this, 'header2')}
+                {i18n.get(this, 'fintech')}
+            </a>
+            <a
+                href="https://zhevak.name"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="game-screen__portfolio">
+                {i18n.get(this, 'stepan')}
+                <br />
+                {i18n.get(this, 'zhevak')}
             </a>
             <Score value={game.score}>
                 {i18n.get(this, 'score')}

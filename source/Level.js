@@ -204,8 +204,8 @@ export default class Level {
             return;
         }
 
-        const {effects} = this;
-        if (this._playbackRate < 1 && ++this._timeFactor % 2) {
+        const playbackRate = this._playbackRate;
+        if (playbackRate < 1 && ++this._timeFactor % 2) {
             return;
         }
 
@@ -242,7 +242,7 @@ export default class Level {
 
         this._elapsedTime += deltaTime;
 
-        if (this._playbackRate > 1 && ++this._timeFactor % 2) {
+        if (playbackRate > 1 && ++this._timeFactor % 2) {
             return this.update(deltaTime);
         }
     }

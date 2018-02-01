@@ -1,13 +1,17 @@
 {
     "ru": {
-        "header1": "Тинькофф",
-        "header2": "Финтех",
+        "tinkoff": "Тинькофф",
+        "fintech": "Финтех",
+        "stepan": "Степан",
+        "zhevak": "Жевак",
         "score": "Деньги",
         "health": "Здоровье"
     },
     "en": {
-        "header1": "Tinkoff",
-        "header2": "Fintech",
+        "tinkoff": "Tinkoff",
+        "fintech": "Fintech",
+        "stepan": "Stepan",
+        "zhevak": "Zhevak",
         "score": "Money",
         "health": "Health"
     }
