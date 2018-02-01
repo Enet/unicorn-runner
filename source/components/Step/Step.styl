@@ -26,3 +26,8 @@ $image-size = 200px
 @media screen and (max-width: $ui.breakpoint.tablet)
     .step
         width: 50%
+
+@media screen and (max-width: $ui.breakpoint.shovel) and (max-height: 640px)
+    .step
+        &__image
+            width: 0.625 * $image-size

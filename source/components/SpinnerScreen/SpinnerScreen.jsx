@@ -44,8 +44,6 @@ export default class SpinnerScreen extends Screen {
 
     componentWillUnmount () {
         clearTimeout(this._initTimer);
-        clearTimeout(this._resumeTimer);
-        clearTimeout(this._screenTimer);
     }
 
     _onEscapeKeyDown () {
@@ -57,22 +55,8 @@ export default class SpinnerScreen extends Screen {
         this.props.dispatch({
             type: 'GAME_INIT'
         });
-        this._resumeTimer = setTimeout(this._onResumeTimerTick, DELAY);
-    }
-
-    @autobind
-    _onResumeTimerTick () {
         this.props.dispatch({
             type: 'GAME_RESUME'
-        });
-        this._screenTimer = setTimeout(this._onScreenTimerTick, DELAY);
-    }
-
-    @autobind
-    _onScreenTimerTick () {
-        this.props.dispatch({
-            type: 'SCREEN_CHANGE',
-            payload: 'game'
         });
     }
 }

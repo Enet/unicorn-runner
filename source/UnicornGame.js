@@ -133,6 +133,9 @@ export default class UnicornGame extends Game {
         if (debug) {
             this._debugger = new Debugger(level.world, camera, context);
         }
+
+        const {onGameReady} = callbacks;
+        onGameReady && onGameReady();
     }
 
     _onUpdate (deltaTime) {

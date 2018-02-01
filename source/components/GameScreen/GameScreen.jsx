@@ -80,6 +80,7 @@ export default class GameScreen extends Screen {
             onEffectChange={this._onEffectChange}
             onShowInfo={this._onShowInfo}
             onHideInfo={this._onHideInfo}
+            onGameReady={this._onGameReady}
             onGameLose={this._onGameLose}
             onGameWin={this._onGameWin} />
     }
@@ -151,6 +152,14 @@ export default class GameScreen extends Screen {
         this.props.dispatch({
             type: 'GAME_EFFECT_CHANGE',
             payload: Array.from(effects.values())
+        });
+    }
+
+    @autobind
+    _onGameReady () {
+        this.props.dispatch({
+            type: 'SCREEN_CHANGE',
+            payload: 'game'
         });
     }
 
