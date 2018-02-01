@@ -70,7 +70,7 @@ export default class PlayerEntity extends UnicornEntity {
             this._stopFall();
 
             const velocity = Math.abs(this.visualDirection.getVelocity().x);
-            if (velocity < 1) {
+            if (velocity < 1 || !this.fight.isStopped()) {
                 this._walkSound.pause();
                 this._runSound.pause();
             } else if (velocity < 4) {
@@ -228,12 +228,11 @@ export default class PlayerEntity extends UnicornEntity {
         this._fightSound && this._fightSound.fadeOut();
         const fightSound = this.level.createSound('PlayerFight');
         this._fightSound = fightSound.play();
-
-        this.body.move(new Vector2(this.run.getDirection(), 0));
     }
 
     _onFightAnimationEnd () {
         this._isFightAnimation = false;
+        this.body.move(new Vector2(this.run.getDirection() * 0.5, 0));
     }
 
     _onFightStart () {
