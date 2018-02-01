@@ -12,6 +12,7 @@ import {
 
 import GameScreen from 'components/GameScreen/GameScreen.jsx';
 import BackgroundScreen from 'components/BackgroundScreen/BackgroundScreen.jsx';
+import SpinnerScreen from 'components/SpinnerScreen/SpinnerScreen.jsx';
 import MapScreen from 'components/MapScreen/MapScreen.jsx';
 import MenuScreen from 'components/MenuScreen/MenuScreen.jsx';
 import SettingsScreen from 'components/SettingsScreen/SettingsScreen.jsx';
@@ -47,6 +48,7 @@ export default class App extends Tcaer.Component {
         return <main className={className}>
             <GameScreen active={screen === 'game'} />
             <BackgroundScreen active={screen !== 'game'} />
+            <SpinnerScreen active={screen === 'spinner'} />
             <PauseScreen active={screen === 'pause'} />
             <LoserScreen active={screen === 'loser'} />
             <WinnerScreen active={screen === 'winner'} />

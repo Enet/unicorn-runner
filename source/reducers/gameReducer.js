@@ -24,6 +24,13 @@ export default function (state=defaultState, action) {
         };
     }
 
+    if (action.type === 'GAME_INIT') {
+        return {
+            ...state,
+            inited: true
+        };
+    }
+
     if (action.type === 'GAME_RESET') {
         return {
             ...defaultState,
@@ -33,15 +40,9 @@ export default function (state=defaultState, action) {
     }
 
     if (action.type === 'GAME_SELECT_STEP') {
-        const step = typeof action.payload === 'number' ?
-            action.payload :
-            state.step;
-
         return {
             ...state,
-            step,
-            inited: true,
-            paused: false
+            step: +action.payload
         };
     }
 

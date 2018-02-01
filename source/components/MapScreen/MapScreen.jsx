@@ -82,7 +82,7 @@ export default class MapScreen extends Screen {
         });
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
-            payload: 'game'
+            payload: 'spinner'
         });
     }
 

@@ -27,6 +27,9 @@ export default class Game {
             return;
         }
         this._isPaused = false;
+        if (!this._keyboard) {
+            return;
+        }
         requestAnimationFrame(this._onAnimationFrame);
     }
 
@@ -52,7 +55,7 @@ export default class Game {
         this._canvas = canvas;
         this._lastTime = 0;
         this._accumulatedTime = 0;
-        requestAnimationFrame(this._onAnimationFrame);
+        !this._isPaused && requestAnimationFrame(this._onAnimationFrame);
     }
 
     _onAnimationFrame (currentTime) {

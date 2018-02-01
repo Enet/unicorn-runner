@@ -1,6 +1,6 @@
 const defaultState = 'menu';
 const availableScreenNames = [
-    'game', 'pause', 'loser', 'winner', 'map', 'menu', 'settings', 'reset'
+    'game', 'pause', 'loser', 'winner', 'map', 'menu', 'settings', 'reset', 'spinner'
 ];
 
 export default function (state=defaultState, action) {
