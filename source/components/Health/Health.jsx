@@ -8,9 +8,11 @@ export default class Health extends Tcaer.Component {
             <p className="health__label">
                 {this.children}
             </p>
-            <p className="health__value">
-                {this.props.value}
-            </p>
+            <div className="health__container">
+                <div
+                    className="health__value"
+                    style={`width: ${this.props.value}%`} />
+            </div>
         </div>
     }
 }

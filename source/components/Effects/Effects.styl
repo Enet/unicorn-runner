@@ -1,2 +1,16 @@
 .effects
-    absolute: bottom 0 left 0
+    absolute: top 30px left 50%
+    width: 0
+    height: 48px
+
+    &__effect
+        absolute: top 0 left 0
+
+        &:first-child
+            transform: translateX(-125%)
+
+        &:last-child
+            transform: translateX(25%)
+
+        &:first-child:last-child
+            transform: translateX(-50%)

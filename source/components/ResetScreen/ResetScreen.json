@@ -7,7 +7,7 @@
     },
     "en": {
         "header": "Reset",
-        "description": "Do you really want to reset game progress?",
+        "description": "Do you really want to reset your game progress?",
         "yes": "Yes, of course!",
         "no": "No, no, no..."
     }

@@ -3,12 +3,14 @@
         "header": "Карта",
         "description": "Помоги единорогу отдать кредит!",
         "back": "Назад",
-        "reset": "Сброс"
+        "reset": "Сброс",
+        "of": "из"
     },
     "en": {
         "header": "Map",
         "description": "Help the unicorn to return a credit!",
         "back": "Back",
-        "reset": "Reset"
+        "reset": "Reset",
+        "of": "of"
     }
 }

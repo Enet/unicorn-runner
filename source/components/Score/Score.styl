@@ -1,6 +1,8 @@
 .score
-    absolute: top 30px right 50px
+    width: 100px
+    absolute: top 30px right 30px
     text-align: center
+    text-shadow: 2px 2px 0 $ui.color.white, -2px -2px 0 $ui.color.white, -2px 2px 0 $ui.color.white, 2px -2px 0 $ui.color.white
 
     &__label
         margin: 0
@@ -8,3 +10,13 @@
     &__value
         margin: 0
         font-size: 32px
+        color: $ui.color.black
+        transition: color $ui.transition.slow
+
+    &_trend_down
+        .score__value
+            color: mix($ui.color.black, $ui.color.red)
+
+    &_trend_up
+        .score__value
+            color: mix($ui.color.black, $ui.color.green)

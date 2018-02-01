@@ -28,11 +28,15 @@ export default class GameScreen extends Screen {
         return <section className={className}>
             {game.inited ? this.renderGame() : null}
 
-            <h2 className="game-screen__header">
+            <a
+                href="https://fintech.tinkoff.ru"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="game-screen__header">
                 {i18n.get(this, 'header1')}
                 <br />
                 {i18n.get(this, 'header2')}
-            </h2>
+            </a>
             <Score value={game.score}>
                 {i18n.get(this, 'score')}
             </Score>

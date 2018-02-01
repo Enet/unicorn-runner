@@ -62,7 +62,7 @@ export default function (state=defaultState, action) {
     if (action.type === 'GAME_EFFECT_CHANGE') {
         return {
             ...state,
-            effects: action.effects
+            effects: action.payload
         };
     }
 

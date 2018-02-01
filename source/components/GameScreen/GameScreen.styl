@@ -1,6 +1,12 @@
 .game-screen
     &__header
         absolute: top 30px left 30px
-        opacity: 0.4
-        margin: 0
-        padding: 0
+        color: $ui.color.black
+        font-size: 24px
+        text-align: left
+        text-decoration: none
+        text-shadow 2px 2px 0 #fff, -2px -2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff
+        transition: color $ui.transition.fast
+
+        &:hover
+            color: $ui.color.violet

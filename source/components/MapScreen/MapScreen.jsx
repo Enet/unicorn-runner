@@ -36,8 +36,8 @@ export default class MapScreen extends Screen {
             <p className="map-screen__description">
                 {i18n.get(this, 'description')}
             </p>
-            <Button className="map-screen__score-button">
-                {score}$ из 10000$
+            <Button disabled={true} className="map-screen__score-button">
+                {score}$ {i18n.get(this, 'of')} 10000$
             </Button>
             <div className="map-screen__map">
                 <Step

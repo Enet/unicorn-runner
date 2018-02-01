@@ -31,8 +31,18 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Coin100',
+        name: 'SlowMotion',
         position: [250, 50],
+        from: [100, 300],
+        to: [700, 300]
+    }, {
+        name: 'FastMotion',
+        position: [450, 50],
+        from: [100, 300],
+        to: [700, 300]
+    }, {
+        name: 'Rainbow',
+        position: [600, 50],
         from: [100, 300],
         to: [700, 300]
     }, {

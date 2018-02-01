@@ -65,7 +65,7 @@ export default class Component {
             }
             this.componentWillUpdate(props, children, newState, context);
             this.state = newState;
-            this.componentWillUpdate(props, children, prevState, context);
+            this.componentDidUpdate(props, children, prevState, context);
         });
         enqueueTask(this['@@renderComponentVnode']);
     }

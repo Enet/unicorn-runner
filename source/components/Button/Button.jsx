@@ -5,15 +5,17 @@ import './Button.styl';
 
 export default class Button extends Tcaer.Component {
     render () {
+        const {disabled} = this.props;
         const className = [
             this.props.className || '',
-            `button`
+            `button`,
+            `button_disabled_${!!disabled}`
         ];
 
         return <div
             className={className}
-            dataClick={true}
-            dataHover={true}
+            dataClick={!disabled}
+            dataHover={!disabled}
             onClick={this._onClick}>
             {this.children}
         </div>
@@ -21,6 +23,9 @@ export default class Button extends Tcaer.Component {
 
     @autobind
     _onClick (event) {
+        if (this.props.disabled) {
+            return;
+        }
         this.props.onClick && this.props.onClick(event);
     }
 }

@@ -2,8 +2,10 @@
     display: inline-block
     font-size: 48px
     color: $ui.color.blue
-    cursor: pointer
     transition: color $ui.transition.fast
 
-    &:hover
-        color: $ui.color.ultraviolet
+    &_disabled_false
+        cursor: pointer
+
+        &:hover
+            color: $ui.color.ultraviolet
