@@ -9,7 +9,7 @@ const transform = {
 };
 
 export default function loadSettings (defaultSettings={}, type='boolean') {
-    const settings = defaultSettings;
+    const settings = {...defaultSettings};
     for (let s in settings) {
         let setting = settings[s];
         try {

@@ -3,7 +3,8 @@ const transform = {
         return value ? '1' : '';
     },
     number: (value) => {
-        return +value || 0;
+        value = +value;
+        return isNaN(value) ? 0 : value;
     }
 };
 

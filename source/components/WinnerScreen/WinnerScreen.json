@@ -1,11 +1,13 @@
 {
     "ru": {
-        "victory": "Победа!",
+        "header": "Победа!",
+        "description": "Ура! Единорог отдал свой кредит.",
         "menu": "Выйти в меню",
         "next": "Далее"
     },
     "en": {
-        "victory": "Victory!",
+        "header": "Victory!",
+        "description": "Yeah! The unicorn has returned his credit.",
         "menu": "Main Menu",
         "next": "Next"
     }

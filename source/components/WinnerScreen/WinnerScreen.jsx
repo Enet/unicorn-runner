@@ -13,7 +13,7 @@ import './WinnerScreen.styl';
 
 const i18n = new I18n(dictionary);
 
-@connect()
+@connect(({step}) => step)
 export default class WinnerScreen extends Screen {
     render () {
         const className = [
@@ -23,8 +23,11 @@ export default class WinnerScreen extends Screen {
 
         return <section className={className}>
             <h2 className="winner-screen__header">
-                {i18n.get(this, 'victory')}
+                {i18n.get(this, 'header')}
             </h2>
+            <p className="winner-screen__description">
+                {this._isGameCompleted() ? i18n.get(this, 'description') : <span>&nbsp;</span>}
+            </p>
             <nav className="winner-screen__menu">
                 <Button
                     onClick={this._onMenuButtonClick}>
@@ -39,8 +42,22 @@ export default class WinnerScreen extends Screen {
         </section>
     }
 
+    _isGameCompleted () {
+        return this.props.progress > 3;
+    }
+
+    _conditionalReset () {
+        if (!this._isGameCompleted()) {
+            return;
+        }
+        this.props.dispatch({
+            type: 'STEP_RESET'
+        });
+    }
+
     @autobind
     _onMenuButtonClick () {
+        this._conditionalReset();
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
             payload: 'menu'
@@ -49,6 +66,7 @@ export default class WinnerScreen extends Screen {
 
     @autobind
     _onNextButtonClick () {
+        this._conditionalReset();
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
             payload: 'map'
