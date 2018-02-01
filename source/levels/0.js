@@ -43,7 +43,7 @@ export default {
         from: [100, 300],
         to: [700, 300]
     }, {
-        name: 'Rainbow',
+        name: 'SlowMotion',
         position: [600, 50],
         from: [100, 300],
         to: [700, 300]

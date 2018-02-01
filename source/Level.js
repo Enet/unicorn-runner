@@ -76,18 +76,13 @@ export default class Level {
 
     addEffect (name) {
         const {effects} = this;
-        if (name === 'slow' && effects.has('fast')) {
-            this.removeEffect('fast');
-        } else if (name === 'fast' && effects.has('slow')) {
-            this.removeEffect('slow');
+        if (name === 'fly') {
+            this.player.fly.start();
         } else {
-            if (name === 'fly') {
-                this.player.fly.start();
-            } else {
-                this._setPlaybackRate(name === 'fast' ? 2 : 0.5);
-            }
-            effects.add(name);
+            const playbackRate = name === 'fast' ? 2 : 0.5;
+            this._setPlaybackRate(this._playbackRate * playbackRate);
         }
+        effects.add(name);
         this.callbacks.onEffectChange(effects);
     }
 
@@ -97,7 +92,8 @@ export default class Level {
         if (name === 'fly') {
             this.player.fly.stop();
         } else {
-            this._setPlaybackRate(1);
+            const playbackRate = name === 'fast' ? 2 : 0.5;
+            this._setPlaybackRate(this._playbackRate / playbackRate);
         }
         this.callbacks.onEffectChange(effects);
     }
@@ -209,7 +205,7 @@ export default class Level {
         }
 
         const {effects} = this;
-        if (effects.has('slow') && ++this._timeFactor % 2) {
+        if (this._playbackRate < 1 && ++this._timeFactor % 2) {
             return;
         }
 
@@ -246,7 +242,7 @@ export default class Level {
 
         this._elapsedTime += deltaTime;
 
-        if (effects.has('fast') && ++this._timeFactor % 2) {
+        if (this._playbackRate > 1 && ++this._timeFactor % 2) {
             return this.update(deltaTime);
         }
     }
