@@ -167,7 +167,7 @@ export default class GameScreen extends Screen {
     @autobind
     _onGameLose () {
         this.props.dispatch({
-            type: 'GAME_RESET'
+            type: 'GAME_PAUSE'
         });
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
@@ -184,7 +184,7 @@ export default class GameScreen extends Screen {
             step: this.props.game.step
         });
         this.props.dispatch({
-            type: 'GAME_RESET'
+            type: 'GAME_PAUSE'
         });
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
