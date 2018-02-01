@@ -5,6 +5,7 @@ import Scene from 'engine/Scene.js';
 import Debugger from 'engine/Debugger.js';
 
 import UnicornResourceManager from 'UnicornResourceManager.js';
+import TouchScreen from 'TouchScreen.js';
 import Level from 'Level.js';
 import {
     KEY_SPACE,
@@ -92,12 +93,13 @@ export default class UnicornGame extends Game {
             return;
         }
 
-        const keyboard = this._keyboard;
+        const kb = this._keyboard;
+        const ts = this._touchScreen;
         const newState = {
-            up: keyboard.isPressed(KEY_UP, KEY_W, KEY_SPACE),
-            down: keyboard.isPressed(KEY_DOWN, KEY_S),
-            left: keyboard.isPressed(KEY_LEFT, KEY_A),
-            right: keyboard.isPressed(KEY_RIGHT, KEY_D)
+            up: kb.isPressed(KEY_UP, KEY_W, KEY_SPACE) || ts.isSectorTouching('top'),
+            down: kb.isPressed(KEY_DOWN, KEY_S) || ts.isSectorTouching('bottom'),
+            left: kb.isPressed(KEY_LEFT, KEY_A) || ts.isSectorTouching('left'),
+            right: kb.isPressed(KEY_RIGHT, KEY_D) || ts.isSectorTouching('right')
         };
         if (settings.mirror) {
             [newState.left, newState.right] = [newState.right, newState.left];
@@ -111,9 +113,10 @@ export default class UnicornGame extends Game {
         size = this._size || size;
         const {width, height} = size;
         const scale = `scale(${settings.mirror ? -1 : 1}, 1)`;
-        context.canvas.style.transform = scale;
-        context.canvas.width = width;
-        context.canvas.height = height;
+        const {canvas} = context;
+        canvas.style.transform = scale;
+        canvas.width = width;
+        canvas.height = height;
 
         const manager = this._manager;
         const renderer = new Renderer(context);
@@ -125,6 +128,7 @@ export default class UnicornGame extends Game {
             manager, scene, settings, callbacks
         });
 
+        this._touchScreen = new TouchScreen(canvas);
         this._game = {context, renderer, scene, camera, level};
         if (debug) {
             this._debugger = new Debugger(level.world, camera, context);

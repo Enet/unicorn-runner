@@ -30,13 +30,7 @@ export default class GameScreen extends Screen {
 
     renderWrapper () {
         const {game} = this.props;
-        let style = '';
-        if (window.innerWidth <= 640) {
-            const top = (1 - window.innerWidth / window.innerHeight) * 50;
-            style = 'top: ' + top + '%';
-        }
-
-        return <div className="game-screen__wrapper" style={style}>
+        return <div className="game-screen__wrapper">
             {game.inited ? this.renderGame() : null}
             <Score value={game.score}>
                 {i18n.get(this, 'score')}
