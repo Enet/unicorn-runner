@@ -31,8 +31,8 @@ export default {
         ]
     }],
     entities: [{
-        name: 'SlowMotion',
-        position: [250, 50],
+        name: 'Ballon',
+        position: [250, -30],
         from: [100, 300],
         to: [700, 300]
     }, {

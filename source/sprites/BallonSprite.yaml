@@ -1,0 +1,9 @@
+frames:
+    ballon-1: [0, 0, 100, 100]
+    ballon-2: [100, 0, 100, 100]
+    ballon-3: [200, 0, 100, 100]
+    ballon-4: [300, 0, 100, 100]
+    ballon-5: [400, 0, 100, 100]
+    ballon-6: [500, 0, 100, 100]
+animations:
+    default: [ballon-1, ballon-2, ballon-3, ballon-4, ballon-5, ballon-6]

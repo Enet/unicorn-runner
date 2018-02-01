@@ -213,7 +213,7 @@ export default class Level {
             timers.delete(timerId);
         });
 
-        const {world, entities} = this;
+        const {world, entities, player, bounds} = this;
         const candidates = Array.from(entities.values()).map(entity => entity.body);
         entities.forEach((entity) => {
             const tiles = getTileRangeByBounds(this._tileMatrix, entity.body);
@@ -229,22 +229,15 @@ export default class Level {
 
         this.sounds.forEach(sound => this._updateSoundByPosition(sound));
 
-        this._play();
+        if (player.body.center.y + player.size.height * 0.5 >= bounds.bottom - 100 &&
+            !player.organism.isDead()) {
+            player.organism.changeHealth(-100);
+        }
+
         this._elapsedTime += deltaTime;
 
         if (effects.has('fast') && ++this._timeFactor % 2) {
             return this.update(deltaTime);
-        }
-    }
-
-    _play () {
-        const {player, bounds} = this;
-        if (player.body.center.y + player.size.height / 2 >= bounds.bottom - 100 &&
-            !player.organism.isDead()) {
-            player.organism.changeHealth(-100);
-        }
-        if (player.body.center.x + player.size.width / 2 >= bounds.right - 100) {
-            this.winGame();
         }
     }
 
