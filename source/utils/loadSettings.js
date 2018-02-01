@@ -18,7 +18,13 @@ export default function loadSettings (defaultSettings={}, type='boolean') {
                 const value = transform[type](setting);
                 if (value !== null) {
                     setting = value;
+                } else {
+                    // Value from local storage is not valid
+                    setting = settings[s];
                 }
+            } else {
+                // There is no value in local storage
+                setting = settings[s];
             }
         } catch (error) {
             console.error(error);
