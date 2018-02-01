@@ -33,9 +33,13 @@ export default function (state=defaultState, action) {
     }
 
     if (action.type === 'GAME_SELECT_STEP') {
+        const step = typeof action.payload === 'number' ?
+            action.payload :
+            state.step;
+
         return {
             ...state,
-            step: +action.payload || state.step,
+            step,
             inited: true,
             paused: false
         };
