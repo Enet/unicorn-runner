@@ -49,7 +49,7 @@ export default class BackgroundScreen extends Screen {
                 value={this.context.locale}
                 onChange={this._onLocaleChange} />
             <canvas
-                hidden={this.props.game.inited}
+                hidden={this._frameRequest === null}
                 className="background-screen__canvas"
                 ref={this._onCanvasRef} />
         </section>
@@ -65,7 +65,10 @@ export default class BackgroundScreen extends Screen {
 
         this._prevPosition = particleSystem.options.position;
         this._prevTime = Date.now();
-        this._frame = requestAnimationFrame(this._onAnimationFrame);
+
+        this._frameTimer = null;
+        this._onFrameTimerTick();
+
         this._rainbow = {renderer, scene, particleSystem};
 
         document.addEventListener('mousemove', this._onDocumentMouseMove);
@@ -73,13 +76,21 @@ export default class BackgroundScreen extends Screen {
     }
 
     componentDidUpdate (prevProps) {
+        /*
+            Timer is required, because webkit cannot render canvas over canvas
+            using non-default mix-blend-mode. Particles following the cursor
+            will appear only when transition ends (after 500ms).
+        */
         if (!prevProps.active && this.props.active) {
-            this._frame = requestAnimationFrame(this._onAnimationFrame);
+            this._frameTimer = setTimeout(this._onFrameTimerTick, 500);
+        } else if (!this.props.active) {
+            clearTimeout(this._frameTimer);
         }
     }
 
     componentWillUnmount () {
-        cancelAnimationFrame(this._frame);
+        clearTimeout(this._frameTimer);
+        cancelAnimationFrame(this._frameRequest);
         document.removeEventListener('mousemove', this._onDocumentMouseMove);
         window.removeEventListener('resize', this._onWindowResize);
     }
@@ -124,8 +135,14 @@ export default class BackgroundScreen extends Screen {
     }
 
     @autobind
+    _onFrameTimerTick () {
+        this._frameRequest = requestAnimationFrame(this._onAnimationFrame);
+    }
+
+    @autobind
     _onAnimationFrame () {
         if (!this.props.game.paused) {
+            this._frameRequest = null;
             return;
         }
 
@@ -151,7 +168,7 @@ export default class BackgroundScreen extends Screen {
 
         this._prevPosition = position;
         this._prevTime = currentTime;
-        this._frame = requestAnimationFrame(this._onAnimationFrame);
+        this._onFrameTimerTick();
     }
 
     @autobind
