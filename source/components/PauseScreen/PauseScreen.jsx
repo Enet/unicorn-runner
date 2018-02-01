@@ -66,4 +66,14 @@ export default class PauseScreen extends Screen {
         });
         fullscreenMode.stop();
     }
+
+    @autobind
+    _onOneKeyDown () {
+        this._onQuitButtonClick();
+    }
+
+    @autobind
+    _onTwoKeyDown () {
+        this._onResumeButtonClick();
+    }
 }

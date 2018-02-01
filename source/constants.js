@@ -41,6 +41,12 @@ export const KEY_W = 87;
 export const KEY_S = 83;
 export const KEY_A = 65;
 export const KEY_D = 68;
+export const KEY_E = 69;
+export const KEY_R = 82;
+export const KEY_1 = 49;
+export const KEY_2 = 50;
+export const KEY_3 = 51;
+export const KEY_4 = 52;
 
 export const COLOR_BLACK = new Color(0, 0, 0);
 export const COLOR_RED = new Color(255, 0, 0);

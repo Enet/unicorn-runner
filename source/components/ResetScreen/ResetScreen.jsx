@@ -74,4 +74,14 @@ export default class ResetScreen extends Screen {
             payload: 'map'
         });
     }
+
+    @autobind
+    _onOneKeyDown () {
+        this._onYesButtonClick();
+    }
+
+    @autobind
+    _onTwoKeyDown () {
+        this._onNoButtonClick();
+    }
 }

@@ -12,6 +12,8 @@ import './MenuScreen.styl';
 
 const i18n = new I18n(dictionary);
 
+const TINKOFF_URI = 'https://www.tinkoff.ru/loans/mortgage/';
+
 @connect()
 export default class MenuScreen extends Screen {
     renderContent () {
@@ -27,7 +29,7 @@ export default class MenuScreen extends Screen {
             <Button>
                 <a
                     className="menu-screen__link"
-                    href="https://www.tinkoff.ru/loans/mortgage/"
+                    href={TINKOFF_URI}
                     rel="noopener noreferrer"
                     target="_blank">
                     {i18n.get(this, 'mortgage')}
@@ -53,6 +55,18 @@ export default class MenuScreen extends Screen {
             type: 'SCREEN_CHANGE',
             payload: screenName
         });
+    }
+
+    _onOneKeyDown () {
+        this._onButtonClick('map');
+    }
+
+    _onTwoKeyDown () {
+        this._onButtonClick('settings');
+    }
+
+    _onThreeKeyDown () {
+        window.open(TINKOFF_URI, '_blank');
     }
 
     _onEscapeKeyDown () {

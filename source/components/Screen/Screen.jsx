@@ -5,7 +5,11 @@ import {
 } from 'xuder';
 
 import {
-    KEY_ESCAPE
+    KEY_ESCAPE,
+    KEY_1,
+    KEY_2,
+    KEY_3,
+    KEY_4
 } from 'constants.js';
 
 import './Screen.styl';
@@ -91,10 +95,18 @@ export default class Screen extends Tcaer.Component {
         if (!this.props.active) {
             return;
         }
-        if (event.keyCode !== KEY_ESCAPE) {
-            return;
+        switch (event.keyCode) {
+            case KEY_ESCAPE:
+                return this._onEscapeKeyDown();
+            case KEY_1:
+                return this._onOneKeyDown();
+            case KEY_2:
+                return this._onTwoKeyDown();
+            case KEY_3:
+                return this._onThreeKeyDown();
+            case KEY_4:
+                return this._onFourKeyDown();
         }
-        this._onEscapeKeyDown();
     }
 
     @autobind
@@ -103,5 +115,21 @@ export default class Screen extends Tcaer.Component {
             type: 'SCREEN_CHANGE',
             payload: 'menu'
         });
+    }
+
+    _onOneKeyDown () {
+
+    }
+
+    _onTwoKeyDown () {
+
+    }
+
+    _onThreeKeyDown () {
+
+    }
+
+    _onFourKeyDown () {
+
     }
 }

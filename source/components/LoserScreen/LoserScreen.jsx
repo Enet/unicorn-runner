@@ -61,4 +61,14 @@ export default class LoserScreen extends Screen {
         });
         fullscreenMode.start();
     }
+
+    @autobind
+    _onOneKeyDown () {
+        this._onQuitButtonClick();
+    }
+
+    @autobind
+    _onTwoKeyDown () {
+        this._onRepeatButtonClick();
+    }
 }

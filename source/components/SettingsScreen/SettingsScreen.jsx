@@ -64,4 +64,27 @@ export default class SettingsScreen extends Screen {
             payload: 'menu'
         });
     }
+
+    @autobind
+    _onOneKeyDown () {
+        const fakeEvent = {currentTarget: {checked: !this.props.sound}};
+        this._onSettingChange('sound', fakeEvent);
+    }
+
+    @autobind
+    _onTwoKeyDown () {
+        const fakeEvent = {currentTarget: {checked: !this.props.music}};
+        this._onSettingChange('music', fakeEvent);
+    }
+
+    @autobind
+    _onThreeKeyDown () {
+        const fakeEvent = {currentTarget: {checked: !this.props.mirror}}
+        this._onSettingChange('mirror', fakeEvent);
+    }
+
+    @autobind
+    _onFourKeyDown () {
+        this._onBackButtonClick();
+    }
 }

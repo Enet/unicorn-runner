@@ -81,6 +81,9 @@ export default class MapScreen extends Screen {
     }
 
     _onStepClick (payload) {
+        if (payload > this.props.progress) {
+            return;
+        }
         this.props.dispatch({
             type: 'GAME_SELECT_STEP',
             payload
@@ -106,5 +109,25 @@ export default class MapScreen extends Screen {
             type: 'SCREEN_CHANGE',
             payload: 'reset'
         });
+    }
+
+    @autobind
+    _onOneKeyDown () {
+        this._onStepClick(0);
+    }
+
+    @autobind
+    _onTwoKeyDown () {
+        this._onStepClick(1);
+    }
+
+    @autobind
+    _onThreeKeyDown () {
+        this._onStepClick(2);
+    }
+
+    @autobind
+    _onFourKeyDown () {
+        this._onStepClick(3);
     }
 }

@@ -78,4 +78,14 @@ export default class WinnerScreen extends Screen {
             payload: 'map'
         });
     }
+
+    @autobind
+    _onOneKeyDown () {
+        this._onMenuButtonClick();
+    }
+
+    @autobind
+    _onTwoKeyDown () {
+        this._onNextButtonClick();
+    }
 }

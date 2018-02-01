@@ -21,7 +21,9 @@ import {
     COLOR_GREEN,
     COLOR_SKY,
     COLOR_BLUE,
-    COLOR_VIOLET
+    COLOR_VIOLET,
+    KEY_E,
+    KEY_R
 } from 'constants.js';
 
 import './BackgroundScreen.styl';
@@ -72,6 +74,7 @@ export default class BackgroundScreen extends Screen {
         this._rainbow = {renderer, scene, particleSystem};
 
         document.addEventListener('mousemove', this._onDocumentMouseMove);
+        document.addEventListener('keydown', this._onDocumentKeyDown);
         window.addEventListener('resize', this._onWindowResize);
     }
 
@@ -92,6 +95,7 @@ export default class BackgroundScreen extends Screen {
         clearTimeout(this._frameTimer);
         cancelAnimationFrame(this._frameRequest);
         document.removeEventListener('mousemove', this._onDocumentMouseMove);
+        document.removeEventListener('keydown', this._onDocumentKeyDown);
         window.removeEventListener('resize', this._onWindowResize);
     }
 
@@ -180,6 +184,24 @@ export default class BackgroundScreen extends Screen {
         const {particleSystem} = this._rainbow;
         const position = new Vector2(event.clientX, event.clientY);
         particleSystem.options.position = position;
+    }
+
+    @autobind
+    _onDocumentKeyDown (event) {
+        if (!this.props.active) {
+            return;
+        }
+
+        let payload = null;
+        if (event.keyCode === KEY_R) {
+            payload = 'ru';
+        } else if (event.keyCode === KEY_E) {
+            payload = 'en';
+        }
+        payload && this.props.dispatch({
+            type: 'LOCALE_CHANGE',
+            payload
+        });
     }
 
     @autobind
