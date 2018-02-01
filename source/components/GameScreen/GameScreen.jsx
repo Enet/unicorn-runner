@@ -11,6 +11,7 @@ import Effects from 'components/Effects/Effects.jsx';
 import Information from 'components/Information/Information.jsx';
 import Game from 'components/Game/Game.jsx';
 import I18n from 'utils/I18n.js';
+import fullscreenMode from 'utils/fullscreenMode.js';
 
 import dictionary from './GameScreen.json';
 import './GameScreen.styl';
@@ -172,6 +173,7 @@ export default class GameScreen extends Screen {
             type: 'SCREEN_CHANGE',
             payload: 'loser'
         });
+        fullscreenMode.stop();
     }
 
     @autobind
@@ -188,6 +190,7 @@ export default class GameScreen extends Screen {
             type: 'SCREEN_CHANGE',
             payload: 'winner'
         });
+        fullscreenMode.stop();
     }
 
     @autobind

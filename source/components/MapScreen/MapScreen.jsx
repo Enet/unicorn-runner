@@ -8,6 +8,7 @@ import Screen from 'components/Screen/Screen.jsx';
 import Step from 'components/Step/Step.jsx';
 import Button from 'components/Button/Button.jsx';
 import I18n from 'utils/I18n.js';
+import fullscreenMode from 'utils/fullscreenMode.js';
 
 import step0Image from 'menu/0.png';
 import step1Image from 'menu/1.png';
@@ -88,6 +89,7 @@ export default class MapScreen extends Screen {
             type: 'SCREEN_CHANGE',
             payload: 'spinner'
         });
+        fullscreenMode.start();
     }
 
     @autobind

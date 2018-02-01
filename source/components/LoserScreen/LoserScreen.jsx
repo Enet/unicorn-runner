@@ -7,6 +7,7 @@ import {
 import Screen from 'components/Screen/Screen.jsx';
 import Button from 'components/Button/Button.jsx';
 import I18n from 'utils/I18n.js';
+import fullscreenMode from 'utils/fullscreenMode.js';
 
 import dictionary from './LoserScreen.json';
 import './LoserScreen.styl';
@@ -58,5 +59,6 @@ export default class LoserScreen extends Screen {
             type: 'SCREEN_CHANGE',
             payload: 'spinner'
         });
+        fullscreenMode.start();
     }
 }

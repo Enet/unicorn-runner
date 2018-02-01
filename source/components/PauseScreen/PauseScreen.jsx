@@ -4,6 +4,7 @@ import autobind from 'tcaer/autobind';
 import Screen from 'components/Screen/Screen.jsx';
 import Button from 'components/Button/Button.jsx';
 import I18n from 'utils/I18n.js';
+import fullscreenMode from 'utils/fullscreenMode.js';
 
 import dictionary from './PauseScreen.json';
 import './PauseScreen.styl';
@@ -63,5 +64,6 @@ export default class PauseScreen extends Screen {
         this.props.dispatch({
             type: 'GAME_RESET'
         });
+        fullscreenMode.stop();
     }
 }
