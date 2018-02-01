@@ -4,6 +4,9 @@ import Sound from 'engine/Sound.js';
 import {
     Vector2
 } from 'engine/math.js';
+import {
+    AUDIO_CONTEXT
+} from 'engine/constants.js';
 
 import CloudBackground from 'backgrounds/CloudBackground.js';
 import TileBackground from 'backgrounds/TileBackground.js';
@@ -33,6 +36,8 @@ export default class Level {
         this._isStopped = false;
         this._elapsedTime = 0;
         this._playbackRate = 1;
+        this._gainNode = AUDIO_CONTEXT.createGain();
+        this._gainNode.connect(AUDIO_CONTEXT.destination);
 
         this._initBounds(...arguments);
         this._initWorld(...arguments);
@@ -156,6 +161,7 @@ export default class Level {
         }
         const {manager} = this;
         options.buffer = manager.getSound(name);
+        options.destination = this._gainNode;
 
         const sound = new Sound(options);
         sound.position = options.position;
@@ -177,6 +183,14 @@ export default class Level {
         }
         sound.stop();
         this.sounds.delete(sound);
+    }
+
+    pause () {
+        this._gainNode.gain.value = 0;
+    }
+
+    resume () {
+        this._gainNode.gain.value = 1;
     }
 
     update (deltaTime) {

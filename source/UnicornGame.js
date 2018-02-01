@@ -43,6 +43,24 @@ export default class UnicornGame extends Game {
         camera.size.height = height;
     }
 
+    pause () {
+        super.pause(...arguments);
+        if (!this._game) {
+            return;
+        }
+        const {level} = this._game;
+        level.pause();
+    }
+
+    resume () {
+        super.resume(...arguments);
+        if (!this._game) {
+            return;
+        }
+        const {level} = this._game;
+        level.resume();
+    }
+
     _createManager () {
         return new UnicornResourceManager();
     }

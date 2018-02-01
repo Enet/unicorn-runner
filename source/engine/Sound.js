@@ -149,11 +149,12 @@ export default class Sound extends EventEmitter {
 
         const stereoPanNode = AUDIO_CONTEXT.createStereoPanner();
         const sourceNode = this._createSourceNode(options);
+        const destinationNode = options.destination || AUDIO_CONTEXT.destination;
 
         sourceNode.connect(amplitudeNode);
         amplitudeNode.connect(volumeNode);
         volumeNode.connect(stereoPanNode);
-        stereoPanNode.connect(AUDIO_CONTEXT.destination);
+        stereoPanNode.connect(destinationNode);
         Object.assign(nodes, {
             sourceNode,
             amplitudeNode,
