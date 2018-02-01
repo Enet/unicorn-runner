@@ -31,10 +31,12 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Ballon',
-        position: [250, -30],
-        from: [100, 300],
-        to: [700, 300]
+        name: 'Info',
+        position: [250, 0],
+        data: {
+            ru: 'Привет, <b>дружок</b>. Конь набрал кредитов, теперь придётся возвращать.',
+            en: 'Hello <b>world</b>!'
+        }
     }, {
         name: 'FastMotion',
         position: [450, 50],

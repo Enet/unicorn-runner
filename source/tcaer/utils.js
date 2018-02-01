@@ -70,6 +70,8 @@ export function setProp (node, propName, propValue) {
     } else if (isEventProp(propName)) {
         const eventName = toEventName(propName);
         node.addEventListener(eventName, propValue);
+    } else if (propName === 'dangerouslySetInnerHtml') {
+        node.innerHTML = propValue;
     } else {
         node.setAttribute(propName, propValue);
     }
@@ -89,6 +91,8 @@ export function removeProp (node, propName, propValue) {
     } else if (isEventProp(propName)) {
         const eventName = toEventName(propName);
         node.removeEventListener(eventName, propValue);
+    } else if (propName === 'dangerouslySetInnerHtml') {
+        node.innerHTML = '';
     } else {
         node.removeAttribute(propName);
     }

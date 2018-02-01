@@ -102,6 +102,16 @@ export default class Level {
         this.callbacks.onEffectChange(effects);
     }
 
+    showInfo (data) {
+        const {onShowInfo} = this.callbacks;
+        onShowInfo && onShowInfo(data);
+    }
+
+    hideInfo (data) {
+        const {onHideInfo} = this.callbacks;
+        onHideInfo && onHideInfo(data);
+    }
+
     setTimeout (callback, time=0) {
         const timerId = uniqueTimerId++;
         time += this._elapsedTime;

@@ -8,6 +8,7 @@ import Screen from 'components/Screen/Screen.jsx';
 import Score from 'components/Score/Score.jsx';
 import Health from 'components/Health/Health.jsx';
 import Effects from 'components/Effects/Effects.jsx';
+import Information from 'components/Information/Information.jsx';
 import Game from 'components/Game/Game.jsx';
 import I18n from 'utils/I18n.js';
 
@@ -44,6 +45,7 @@ export default class GameScreen extends Screen {
                 {i18n.get(this, 'health')}
             </Health>
             <Effects value={game.effects} />
+            <Information>{this.state.information}</Information>
         </section>
     }
 
@@ -58,6 +60,8 @@ export default class GameScreen extends Screen {
             onScoreChange={this._onScoreChange}
             onHealthChange={this._onHealthChange}
             onEffectChange={this._onEffectChange}
+            onShowInfo={this._onShowInfo}
+            onHideInfo={this._onHideInfo}
             onGameLose={this._onGameLose}
             onGameWin={this._onGameWin} />
     }
@@ -70,6 +74,17 @@ export default class GameScreen extends Screen {
         this.props.dispatch({
             type: 'GAME_PAUSE'
         });
+    }
+
+    @autobind
+    _onShowInfo (information) {
+        information = information[this.context.locale];
+        this.setState({information});
+    }
+
+    @autobind
+    _onHideInfo () {
+        this._onShowInfo({});
     }
 
     @autobind
