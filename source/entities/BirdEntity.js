@@ -93,6 +93,7 @@ export default class BirdEntity extends Entity {
                 onActivate: this._onContact.bind(this)
             }),
             new OrganismTrait({
+                hideHealthScale: true,
                 onDie: this._onDie.bind(this)
             }),
             new GameplayScoreTrait({

@@ -38,19 +38,15 @@ export default {
             en: 'Hello <b>world</b>!'
         }
     }, {
-        name: 'FastMotion',
+        name: 'TopGasMushroom',
         position: [450, 50],
         from: [100, 300],
         to: [700, 300]
     }, {
-        name: 'SlowMotion',
+        name: 'Box',
         position: [600, 50],
         from: [100, 300],
         to: [700, 300]
-    }, {
-        name: 'Frog',
-        position: [800, 200],
-        range: [300, 800]
     }] || [{
         name: 'Spider',
         position: [350, 50],

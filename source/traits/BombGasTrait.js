@@ -9,4 +9,8 @@ export default class BombGasTrait extends BombTrait {
     _getCloud () {
         return GasCloudEntity;
     }
+
+    _getDuration () {
+        return +this.options.duration || null;
+    }
 }

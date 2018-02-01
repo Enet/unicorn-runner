@@ -7,7 +7,6 @@ export default class AppearanceFadeInTrait extends AppearanceFadeOutTrait {
 
     traitWillMount () {
         super.traitWillMount(...arguments);
-        this._startValue = 0;
         this._endValue = 1;
     }
 

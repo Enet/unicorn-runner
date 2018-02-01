@@ -1,4 +1,5 @@
 import Trait from 'traits/Trait.js';
+import HealthScaleEntity from 'entities/HealthScaleEntity.js';
 
 const MIN_HEALTH = 0;
 const MAX_HEALTH = 100;
@@ -32,8 +33,15 @@ export default class OrganismTrait extends Trait {
         this._health = health;
 
         const {onChange, onDie} = options;
-        onChange && onChange({health, deltaHealth});
-        this.isDead() && onDie && onDie();
+        const healthScale = this._healthScale;
+        if (deltaHealth) {
+            healthScale && healthScale.show();
+            onChange && onChange({health, deltaHealth});
+        }
+        if (this.isDead()) {
+            healthScale && healthScale.hide();
+            onDie && onDie();
+        }
     }
 
     getName () {
@@ -42,6 +50,23 @@ export default class OrganismTrait extends Trait {
 
     traitWillMount ({health=100}) {
         this._health = +health;
+    }
+
+    traitDidMount () {
+        if (this.options.hideHealthScale) {
+            return;
+        }
+        const {level} = this;
+        const {x, y} = this.entity.body.center;
+        const organism = this;
+        const healthScale = new HealthScaleEntity({level, x, y, organism});
+        this.level.addEntity(healthScale);
+        this._healthScale = healthScale;
+    }
+
+    traitWillUnmount () {
+        const healthScale = this._healthScale;
+        healthScale && healthScale.hide();
     }
 }
 

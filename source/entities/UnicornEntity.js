@@ -31,6 +31,7 @@ export default class UnicornEntity extends Entity {
                 maxAngle: 0.33 * Math.PI
             }),
             new OrganismTrait({
+                hideHealthScale: true,
                 onChange: this._onHealthChange.bind(this),
                 onDie: this._onDie.bind(this)
             })

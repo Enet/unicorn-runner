@@ -64,12 +64,17 @@ export default class BombTrait extends Trait {
 
     }
 
+    _getDuration () {
+
+    }
+
     _makeCloud () {
         const Cloud = this._getCloud();
         const {level} = this;
         const images = getImageNodes(level.manager, Cloud.images);
         const {x, y} = this.entity.body.center;
-        const cloud = new Cloud({level, images, x, y});
+        const duration = this._getDuration();
+        const cloud = new Cloud({level, images, x, y, duration});
         level.addEntity(cloud);
     }
 }

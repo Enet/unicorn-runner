@@ -1,15 +1,15 @@
 import AppearanceTrait from 'traits/AppearanceTrait.js';
 
 const DEFAULT_DURATION = 500;
-const ZERO_GETTER = () => 0;
-const ONE_GETTER = () => 1;
-
-const getterMap = [ZERO_GETTER, ONE_GETTER];
 
 export default class AppearanceFadeOutTrait extends AppearanceTrait {
     start (duration=DEFAULT_DURATION) {
+        if (this._startTime) {
+            return;
+        }
         this._duration = +duration;
         this._startTime = this._lifeTime;
+        this._startValue = this.entity.opacity;
         this._defineProperty(this._getOpacity.bind(this));
 
         const {options} = this;
@@ -18,12 +18,16 @@ export default class AppearanceFadeOutTrait extends AppearanceTrait {
     }
 
     stop () {
-        this._reset();
-        this._defineProperty(getterMap[this._startValue]);
+        if (!this._startTime) {
+            return;
+        }
+        const opacity = this.entity.opacity;
+        this._resetOptions();
+        this._defineProperty(() => opacity);
 
         const {options} = this;
         const {onStop} = options;
-        onStop();
+        onStop && onStop();
     }
 
     getName () {
@@ -32,7 +36,6 @@ export default class AppearanceFadeOutTrait extends AppearanceTrait {
 
     traitWillMount () {
         this._resetOptions();
-        this._startValue = 1;
         this._endValue = 0;
     }
 
@@ -46,6 +49,7 @@ export default class AppearanceFadeOutTrait extends AppearanceTrait {
     _resetOptions () {
         this._duration = null;
         this._startTime = null;
+        this._startValue = null;
     }
 
     _processOpacity (opacity) {
@@ -60,7 +64,7 @@ export default class AppearanceFadeOutTrait extends AppearanceTrait {
         const elapsedTime = this._lifeTime - this._startTime;
         const opacity = this._processOpacity(elapsedTime / this._duration);
         if (this._isEnded(opacity)) {
-            this._defineProperty(getterMap[this._endValue]);
+            this._defineProperty(() => this._endValue);
             const {options} = this;
             const {onEnd} = options;
             onEnd && onEnd();

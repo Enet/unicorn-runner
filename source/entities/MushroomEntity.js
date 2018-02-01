@@ -52,6 +52,7 @@ export default class MushroomEntity extends Entity {
         return [
             new FootholdTrait(),
             new TriggerContactTrait({
+                maxActivationCount: Infinity,
                 onActivate: this._onContact.bind(this)
             }),
             new BombTrait({
@@ -73,6 +74,7 @@ export default class MushroomEntity extends Entity {
     }
 
     _onExplode () {
+        this.traits.remove(this.trigger);
         this._explodeTime = this._lifeTime;
     }
 }

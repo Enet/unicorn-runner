@@ -38,6 +38,7 @@ export default class GasMushroomEntity extends MushroomEntity {
         if (body.entity.fight && !body.entity.fight.isStopped()) {
             return preventExplosion();
         }
+        this.bomb.options.duration = this.organism.getHealth() * 50;
         super._willExplode(...arguments);
     }
 

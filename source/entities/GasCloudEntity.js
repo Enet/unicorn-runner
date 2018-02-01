@@ -16,13 +16,14 @@ export default class GasCloudEntity extends StaticEntity {
     }
 
     get angle () {
-        return this._lifeTime / 2000;
+        return this._lifeTime * 0.0005;
     }
 
     entityDidMount () {
         super.entityDidMount(...arguments);
-        this.level.createSound('GasCloud', {
-            position: this.body.center
+        this._gasSound = this.level.createSound('GasCloud', {
+            position: this.body.center,
+            fadeOutOnPause: {}
         }).play();
     }
 
@@ -32,7 +33,7 @@ export default class GasCloudEntity extends StaticEntity {
         }
         const {sprite, offset} = this;
         const alpha = context.globalAlpha * 0.9;
-        const phase = 0.2 * this._lifeTime / EFFECT_TIME;
+        const phase = this._lifeTime * 0.00005;
         context.globalAlpha = alpha * Math.abs(Math.sin(phase));
         sprite.render('gas-1', context, offset.x, offset.y);
         context.globalAlpha = alpha * Math.abs(Math.cos(phase));
@@ -59,7 +60,8 @@ export default class GasCloudEntity extends StaticEntity {
     }
 
     _onFadeInEnd () {
-        this.level.setTimeout(this._onGasCloudTimerTick.bind(this), EFFECT_TIME);
+        const duration = +this.options.duration || EFFECT_TIME;
+        this.level.setTimeout(this._onGasCloudTimerTick.bind(this), duration);
     }
 
     _onContact (body) {
@@ -74,5 +76,6 @@ export default class GasCloudEntity extends StaticEntity {
 
     _onFadeOutEnd () {
         this.level.removeEntity(this);
+        this._gasSound.pause();
     }
 }
