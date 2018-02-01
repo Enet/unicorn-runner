@@ -31,7 +31,7 @@ export default {
         ]
     }],
     entities: [{
-        name: 'Box',
+        name: 'Coin100',
         position: [250, 50],
         from: [100, 300],
         to: [700, 300]
