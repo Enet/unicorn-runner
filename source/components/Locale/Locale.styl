@@ -1,5 +1,6 @@
 .locale
     absolute: bottom 0 left 50%
+    margin-bottom: ($ui.size.margin / 3)
     transform: translateX(-50%)
     z-index: 10
 
@@ -9,15 +10,13 @@
 
     &__space
         display: inline-block
-        width: 30px
+        width: $ui.size.margin
 
     &__circle
-        width: 48px
-        height: @width
+        ui-circle($ui.size.base)
         absolute: top 0 left 20%
-        transform: translateX(-0.5 * @width)
-        border-radius: 50%
         background: $ui.color.pink
+        transform: translateX(-0.5 * @width)
         transition: left $ui.transition.default
 
     &_en

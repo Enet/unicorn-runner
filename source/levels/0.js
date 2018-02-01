@@ -38,7 +38,7 @@ export default {
             en: 'Hello <b>world</b>!'
         }
     }, {
-        name: 'TopGasMushroom',
+        name: 'Ballon',
         position: [450, 50],
         from: [100, 300],
         to: [700, 300]

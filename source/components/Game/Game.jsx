@@ -1,5 +1,4 @@
 import Tcaer from 'tcaer';
-import autobind from 'tcaer/autobind';
 
 import UnicornGame from 'UnicornGame.js';
 
@@ -18,12 +17,14 @@ export default class Game extends Tcaer.Component {
 
     componentDidMount () {
         super.componentDidMount(...arguments);
-        window.addEventListener('resize', this._onWindowResize);
         this._game = this._createGame();
     }
 
-    componentDidUpdate () {
+    componentDidUpdate (prevProps) {
         const game = this._game;
+        if (game && prevProps.size !== this.props.size) {
+            game.resize(this.props.size);
+        }
         if (this.props.paused) {
             game.pause();
         } else {
@@ -33,14 +34,12 @@ export default class Game extends Tcaer.Component {
 
     componentWillUnmount () {
         super.componentWillUnmount(...arguments);
-        window.removeEventListener('resize', this._onWindowResize);
         this._destructGame(this._game);
     }
 
     _createGame () {
         return new UnicornGame({
             ...this.props,
-            size: this._getWindowSize(),
             context: this._canvasNode.getContext('2d')
         });
     }
@@ -50,18 +49,7 @@ export default class Game extends Tcaer.Component {
         game.destructor();
     }
 
-    _getWindowSize () {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        return {width, height};
-    }
-
     _onCanvasRef (node) {
         this._canvasNode = node;
-    }
-
-    @autobind
-    _onWindowResize () {
-        this._game.resize(this._getWindowSize());
     }
 }

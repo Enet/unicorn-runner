@@ -1,24 +1,50 @@
 .game-screen
-    &__header,
-    &__portfolio
-        absolute: top 30px left 30px
+    &__wrapper
+        position: relative
+
+    &__tinkoff,
+    &__portfolio,
+    &__menu-button
+        position: absolute
+        top: $ui.size.margin
+        left: $ui.size.margin
         color: $ui.color.black
-        font-size: 24px
+        font-size: 0.5rem
         text-align: left
         text-decoration: none
 
-    &__header
+    &__tinkoff,
+    &__menu-button
+        ui-text-stroke()
         transition: text-shadow $ui.transition.fast
-        text-shadow: 2px 2px 0 $ui.color.white, -2px -2px 0 $ui.color.white, -2px 2px 0 $ui.color.white, 2px -2px 0 $ui.color.white
 
         &:hover
-            text-shadow: 2px 2px 0 $ui.color.yellow, -2px -2px 0 $ui.color.yellow, -2px 2px 0 $ui.color.yellow, 2px -2px 0 $ui.color.yellow
+            ui-text-stroke($ui.color.yellow)
 
     &__portfolio
+        ui-text-stroke()
         top: auto
-        bottom: 30px
-        text-shadow: 2px 2px 0 $ui.color.white, -2px -2px 0 $ui.color.white, -2px 2px 0 $ui.color.white, 2px -2px 0 $ui.color.white
+        bottom: $ui.size.margin
         transition: color $ui.transition.fast
 
         &:hover
             color: $ui.color.aqua
+
+    &__menu-button
+        top: auto
+        left: auto
+        right: $ui.size.margin
+        bottom: $ui.size.margin
+        cursor: pointer
+
+        &:hover
+            ui-text-stroke($ui.color.pink)
+
+@media screen and (max-width: $ui.breakpoint.tablet)
+    .game-screen
+        &__wrapper
+            absolute: top 0 left 0
+            width: 100vh
+            height: 100vw
+            transform: rotate(90deg) translate(-50%, -50%)
+            transform-origin: 0 50%

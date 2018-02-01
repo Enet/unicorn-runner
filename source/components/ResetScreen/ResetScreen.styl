@@ -1,17 +1,16 @@
-.reset-screen
-    &__header
-        margin-top: 144px
-        margin-bottom: 18px
-        color: $ui.color.violet
-        font-size: 72px
-        line-height: 1
+@media screen and (max-width: $ui.breakpoint.netbook)
+    .reset-screen
+        &__line-break
+            display: block
+            font-size: 0
 
-    &__description
-        margin-top: -18px
-        color: $ui.color.violet
-        font-family: $ui.font.marck
-        font-size: 36px
-        line-height: 1
+@media screen and (max-width: $ui.breakpoint.shovel)
+    .reset-screen
+        &__desktop-text
+            display: none
 
-    &__menu
-        padding-top: 36px
+@media screen and (min-width: $ui.breakpoint.shovel + 1)
+    .reset-screen
+        &__mobile-text
+            display: none
+

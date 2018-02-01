@@ -5,7 +5,8 @@
         "stepan": "Степан",
         "zhevak": "Жевак",
         "score": "Деньги",
-        "health": "Здоровье"
+        "health": "Здоровье",
+        "menu": "Меню"
     },
     "en": {
         "tinkoff": "Tinkoff",
@@ -13,6 +14,7 @@
         "stepan": "Stepan",
         "zhevak": "Zhevak",
         "score": "Money",
-        "health": "Health"
+        "health": "Health",
+        "menu": "Menu"
     }
 }

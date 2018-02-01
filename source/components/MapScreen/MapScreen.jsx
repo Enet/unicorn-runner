@@ -21,24 +21,11 @@ const i18n = new I18n(dictionary);
 
 @connect(({step}) => step)
 export default class MapScreen extends Screen {
-    render () {
+    renderContent () {
         const {step0, step1, step2, step3, progress} = this.props;
         const score = step0 + step1 + step2 + step3;
-        const className = [
-            ...this._getClassName(),
-            `map-screen`
-        ];
 
-        return <section className={className}>
-            <h2 className="map-screen__header">
-                {i18n.get(this, 'header')}
-            </h2>
-            <p className="map-screen__description">
-                {i18n.get(this, 'description')}
-            </p>
-            <Button disabled={true} className="map-screen__score-button">
-                {score}$ {i18n.get(this, 'of')} 10000$
-            </Button>
+        return <nav className="screen__content map-screen__content">
             <div className="map-screen__map">
                 <Step
                     image={step0Image}
@@ -50,6 +37,7 @@ export default class MapScreen extends Screen {
                     disabled={progress < 1}
                     className="map-screen__step"
                     onClick={this._onStepClick.bind(this, 1)} />
+                <div className="map-screen__step-separator" />
                 <Step
                     image={step2Image}
                     disabled={progress < 2}
@@ -61,6 +49,10 @@ export default class MapScreen extends Screen {
                     className="map-screen__step"
                     onClick={this._onStepClick.bind(this, 3)} />
             </div>
+            <Button disabled={true} className="map-screen__score-button">
+                {score}$ {i18n.get(this, 'of')} 10000$
+            </Button>
+            <br />
             <Button
                 className="map-screen__reset-button"
                 onClick={this._onResetButtonClick}>
@@ -72,7 +64,19 @@ export default class MapScreen extends Screen {
                 onClick={this._onBackButtonClick}>
                 {i18n.get(this, 'back')}
             </Button>
-        </section>
+        </nav>
+    }
+
+    _getHeaderText () {
+        return i18n.get(this, 'header');
+    }
+
+    _getSubheaderText () {
+        return i18n.get(this, 'subheader');
+    }
+
+    _getBaseName () {
+        return 'map-screen';
     }
 
     _onStepClick (payload) {

@@ -1,13 +1,19 @@
 {
     "ru": {
         "header": "Сброс",
-        "description": "Вы уверены, что хотите сбросить игровой прогресс?",
+        "subheader1": "Вы уверены, что хотите",
+        "subheader2": "сбросить игровой прогресс?",
+        "shovel1": "Сбросить всё",
+        "shovel2": "полностью?",
         "yes": "Да, конечно!",
         "no": "Нет, нет, нет..."
     },
     "en": {
         "header": "Reset",
-        "description": "Do you really want to reset your game progress?",
+        "subheader1": "Do you really want",
+        "subheader2": "to reset your game progress?",
+        "shovel1": "Do you want",
+        "shovel2": "full reset?",
         "yes": "Yes, of course!",
         "no": "No, no, no..."
     }

@@ -1,13 +1,20 @@
-.settings-screen
-    &__header
-        margin-top: 144px
-        margin-bottom: 18px
-        color: $ui.color.violet
-        font-size: 72px
-        line-height: 1
+$list-width-desktop = 410px
+$list-width-mobile = 340px
+$list-width-iphone = 310px
 
+.settings-screen
     &__list
-        padding-top: 72px
-        width: 410px
+        padding-top: $ui.size.base + (2 * $ui.size.margin / 3)
+        width: $list-width-desktop
         margin: 0 auto
         text-align: left
+
+@media screen and (max-width: $ui.breakpoint.shovel)
+    .settings-screen
+        &__list
+            width: $list-width-mobile
+
+@media screen and (max-width: $ui.breakpoint.iphone)
+    .settings-screen
+        &__list
+            width: $list-width-iphone

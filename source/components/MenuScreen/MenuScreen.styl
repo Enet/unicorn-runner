@@ -1,24 +1,18 @@
 .menu-screen
-    color: black
-
-    &__header
-        margin-top: 72px
-        color: $ui.color.violet
-        font-size: 108px
-        line-height: 1
-
-    &__subheader
-        margin-top: -18px
-        color: $ui.color.violet
-        font-family: $ui.font.marck
-        font-size: 72px
-        line-height: 1
-
-    &__menu
-        margin-top: 72px
-
     &__link,
     &__link:hover
         display: block
         color: inherit
         text-decoration: none
+
+@media screen and (min-width: $ui.breakpoint.shovel + 1)
+    .menu-screen
+        &__header
+            position: relative
+            padding-top: 0.75rem
+            top: 0.5rem
+            font-size: 2.25rem
+
+        &__subheader
+            padding-top: 0
+            font-size: 1.5rem

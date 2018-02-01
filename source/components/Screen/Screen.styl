@@ -1,12 +1,49 @@
 .screen
-    absolute: top 0 left 0
-    height: 100%
-    width: 100%
+    ui-stretched()
+    ui-center()
     text-align: center
     opacity: 0
     visibility: hidden
     transition: opacity $ui.transition.slow, visibility $ui.transition.slow
 
+    &__header,
+    &__subheader
+        flex: 0 0 auto
+        box-sizing: border-box
+        color: $ui.color.violet
+        line-height: 1
+
+    &__header
+        height: 3rem
+        padding-top: 1.5rem
+        font-size: 1.5rem
+
+    &__subheader
+        padding-top: 0.25rem
+        height: 1.5rem
+        font-family: $ui.font.marck
+        font-size: 0.75rem
+
+    &__wrapper
+        ui-center()
+        flex: 1 1 100%
+        width: 100%
+
+    &__content
+        position: relative
+        top: -3 * $ui.size.base
+
     &_active_true
         opacity: 1
         visibility: visible
+
+@media screen and (max-width: $ui.breakpoint.tablet)
+    .screen
+        &__subheader
+            font-size: 1rem
+            padding-top: 0
+
+@media screen and (max-width: $ui.breakpoint.iphone)
+    .screen
+        &__header
+            font-size: 1.25rem

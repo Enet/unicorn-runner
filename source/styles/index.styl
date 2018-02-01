@@ -1,5 +1,10 @@
 global-reset()
 
-body
+html
+    font-size: $ui.size.base
     font-family: $ui.font.ruslan
     line-height: 1.25
+
+@media screen and (max-width: $ui.breakpoint.tablet)
+    html
+        font-size: $ui.size.base * 0.75

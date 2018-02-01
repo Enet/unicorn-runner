@@ -1,13 +1,17 @@
+$information-width = 400px
+
 .information
-    width: 400px
-    absolute: top 30px left 50%
+    width: $information-width
+    position: absolute
+    left: 50%
+    top: $ui.size.margin
     text-align: left
     background: rgba($ui.color.black, 0.75)
     color: $ui.color.white
     font-family: 'Marck Script', cursive
-    font-size: 24px
-    padding: 12px
-    border-radius: 8px
+    font-size: 0.5rem
+    padding: ($ui.size.margin / 2)
+    border-radius: ($ui.size.margin / 3)
     transform: translateX(-50%)
 
     &:empty

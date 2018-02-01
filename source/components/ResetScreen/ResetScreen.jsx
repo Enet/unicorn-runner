@@ -10,31 +10,44 @@ import './ResetScreen.styl';
 const i18n = new I18n(dictionary);
 
 export default class ResetScreen extends Screen {
-    render () {
-        const className = [
-            ...this._getClassName(),
-            `reset-screen`
-        ];
+    renderContent () {
+        return <nav className="screen__content reset-screen__content">
+            <Button
+                onClick={this._onYesButtonClick}>
+                {i18n.get(this, 'yes')}
+            </Button>
+            <br />
+            <Button
+                onClick={this._onNoButtonClick}>
+                {i18n.get(this, 'no')}
+            </Button>
+        </nav>
+    }
 
-        return <section className={className}>
-            <h2 className="reset-screen__header">
-                {i18n.get(this, 'header')}
-            </h2>
-            <p className="reset-screen__description">
-                {i18n.get(this, 'description')}
-            </p>
-            <nav className="reset-screen__menu">
-                <Button
-                    onClick={this._onYesButtonClick}>
-                    {i18n.get(this, 'yes')}
-                </Button>
-                <br />
-                <Button
-                    onClick={this._onNoButtonClick}>
-                    {i18n.get(this, 'no')}
-                </Button>
-            </nav>
-        </section>
+    _getHeaderText () {
+        return i18n.get(this, 'header');
+    }
+
+    _getSubheaderText () {
+        return <span>
+            <span className="reset-screen__desktop-text">
+                {i18n.get(this, 'subheader1')}
+            </span>
+            <span className="reset-screen__mobile-text">
+                {i18n.get(this, 'shovel1')}
+            </span>
+            <span className="reset-screen__line-break"> </span>
+            <span className="reset-screen__desktop-text">
+                {i18n.get(this, 'subheader2')}
+            </span>
+            <span className="reset-screen__mobile-text">
+                {i18n.get(this, 'shovel2')}
+            </span>
+        </span>;
+    }
+
+    _getBaseName () {
+        return 'reset-screen';
     }
 
     _onEscapeKeyDown () {

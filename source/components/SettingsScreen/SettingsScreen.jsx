@@ -16,16 +16,8 @@ const i18n = new I18n(dictionary);
 
 @connect(({settings}) => settings)
 export default class SettingsScreen extends Screen {
-    render () {
-        const className = [
-            ...this._getClassName(),
-            `settings-screen`
-        ];
-
-        return <section className={className}>
-            <h2 className="settings-screen__header">
-                {i18n.get(this, 'header')}
-            </h2>
+    renderContent () {
+        return <nav className="screen__content settings-screen__content">
             <div className="settings-screen__list">
                 {this.renderCheckbox('sound')}
                 {this.renderCheckbox('music')}
@@ -36,7 +28,7 @@ export default class SettingsScreen extends Screen {
                 onClick={this._onBackButtonClick}>
                 {i18n.get(this, 'back')}
             </Button>
-        </section>
+        </nav>
     }
 
     renderCheckbox (settingName) {
@@ -47,6 +39,14 @@ export default class SettingsScreen extends Screen {
             name={settingName}>
             {i18n.get(this, settingName)}
         </Checkbox>
+    }
+
+    _getHeaderText () {
+        return i18n.get(this, 'header');
+    }
+
+    _getBaseName () {
+        return 'settings-screen';
     }
 
     _onSettingChange (settingName, event) {

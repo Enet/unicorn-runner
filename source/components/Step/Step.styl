@@ -1,6 +1,9 @@
+$image-size = 200px
+
 .step
     display: inline-block
-    transition: transform $ui.transition.fast, filter $ui.transition.default
+    margin: 0 $ui.size.margin
+    transition: transform $ui.transition.fast, filter $ui.transition.fast
 
     &_disabled_true
         filter: grayscale(1)
@@ -9,4 +12,17 @@
         cursor: pointer
 
         &:hover
-            transform: rotate(10deg) scale(1.1)
+            transform: rotate(10deg) scale(1.05)
+
+@media screen and (max-width: $ui.breakpoint.desktop)
+    .step
+        &__image
+            width: 0.75 * $image-size
+
+@media screen and (max-width: $ui.breakpoint.netbook)
+    .step
+        margin: 0
+
+@media screen and (max-width: $ui.breakpoint.tablet)
+    .step
+        width: 50%

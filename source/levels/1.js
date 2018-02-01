@@ -31,6 +31,11 @@ export default {
         ]
     }],
     entities: [{
+        name: 'Ballon',
+        position: [450, 50],
+        from: [100, 300],
+        to: [700, 300]
+    }, {
         name: 'Box',
         position: [250, 50],
         from: [100, 300],

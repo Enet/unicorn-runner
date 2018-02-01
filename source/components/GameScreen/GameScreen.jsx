@@ -15,25 +15,42 @@ import I18n from 'utils/I18n.js';
 import dictionary from './GameScreen.json';
 import './GameScreen.styl';
 
+const TABLET_WIDTH = 640;
 const i18n = new I18n(dictionary);
 
 @connect(({game, settings}) => ({game, settings}))
 export default class GameScreen extends Screen {
-    render () {
+    renderHeader () {
+
+    }
+
+    renderSubheader () {
+
+    }
+
+    renderWrapper () {
         const {game} = this.props;
-        const className = [
-            ...this._getClassName(),
-            `game-screen`
-        ];
+        let style = '';
+        if (window.innerWidth <= 640) {
+            const top = (1 - window.innerWidth / window.innerHeight) * 50;
+            style = 'top: ' + top + '%';
+        }
 
-        return <section className={className}>
+        return <div className="game-screen__wrapper" style={style}>
             {game.inited ? this.renderGame() : null}
-
+            <Score value={game.score}>
+                {i18n.get(this, 'score')}
+            </Score>
+            <Health value={game.health}>
+                {i18n.get(this, 'health')}
+            </Health>
+            <Effects value={game.effects} />
+            <Information>{this.state.information}</Information>
             <a
                 href="https://fintech.tinkoff.ru"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="game-screen__header">
+                className="game-screen__tinkoff">
                 {i18n.get(this, 'tinkoff')}
                 <br />
                 {i18n.get(this, 'fintech')}
@@ -47,15 +64,12 @@ export default class GameScreen extends Screen {
                 <br />
                 {i18n.get(this, 'zhevak')}
             </a>
-            <Score value={game.score}>
-                {i18n.get(this, 'score')}
-            </Score>
-            <Health value={game.health}>
-                {i18n.get(this, 'health')}
-            </Health>
-            <Effects value={game.effects} />
-            <Information>{this.state.information}</Information>
-        </section>
+            <span
+                onClick={this._onEscapeKeyDown}
+                className="game-screen__menu-button">
+                {i18n.get(this, 'menu')}
+            </span>
+        </div>
     }
 
     renderGame () {
@@ -66,6 +80,7 @@ export default class GameScreen extends Screen {
             step={game.step}
             paused={game.paused}
             debug={false}
+            size={this.state.size}
             onScoreChange={this._onScoreChange}
             onHealthChange={this._onHealthChange}
             onEffectChange={this._onEffectChange}
@@ -75,6 +90,31 @@ export default class GameScreen extends Screen {
             onGameWin={this._onGameWin} />
     }
 
+    componentDidMount () {
+        super.componentDidMount(...arguments);
+        window.addEventListener('resize', this._onWindowResize);
+        this._onWindowResize();
+    }
+
+    componentWillUnmount () {
+        super.componentWillUnmount(...arguments);
+        window.removeEventListener('resize', this._onWindowResize);
+    }
+
+    _getBaseName () {
+        return 'game-screen';
+    }
+
+    _getWindowSize () {
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        if (width <= TABLET_WIDTH) {
+            [width, height] = [height, width];
+        }
+        return {width, height};
+    }
+
+    @autobind
     _onEscapeKeyDown () {
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
@@ -145,5 +185,11 @@ export default class GameScreen extends Screen {
             type: 'SCREEN_CHANGE',
             payload: 'winner'
         });
+    }
+
+    @autobind
+    _onWindowResize () {
+        const size = this._getWindowSize();
+        this.setState({size});
     }
 }

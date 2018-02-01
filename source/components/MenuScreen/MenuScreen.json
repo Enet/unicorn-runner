@@ -1,14 +1,14 @@
 {
     "ru": {
-        "header1": "Единорог",
-        "header2": "на пробежке",
+        "header": "Единорог",
+        "subheader": "на пробежке",
         "map": "Начать игру",
         "settings": "Настройки",
         "mortgage": "Взять ипотеку"
     },
     "en": {
-        "header1": "Unicorn",
-        "header2": "morning jog",
+        "header": "Unicorn",
+        "subheader": "morning jog",
         "map": "Play Game",
         "settings": "Settings",
         "mortgage": "Mortgage"

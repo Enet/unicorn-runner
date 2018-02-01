@@ -1,11 +1,13 @@
 {
     "ru": {
-        "fail": "Неудача!",
+        "header": "Неудача!",
+        "subheader": "К сожалению, Вы проиграли",
         "quit": "Выйти в меню",
         "repeat": "Ещё раз"
     },
     "en": {
-        "fail": "Failure!",
+        "header": "Failure!",
+        "subheader": "You lost unfortunately",
         "quit": "Main Menu",
         "repeat": "Try Again"
     }

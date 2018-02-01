@@ -15,31 +15,37 @@ const i18n = new I18n(dictionary);
 
 @connect(({step}) => step)
 export default class WinnerScreen extends Screen {
-    render () {
-        const className = [
-            ...this._getClassName(),
-            `winner-screen`
-        ];
+    renderContent () {
+        return <nav className="screen__content winner-screen__content">
+            <Button
+                onClick={this._onMenuButtonClick}>
+                {i18n.get(this, 'menu')}
+            </Button>
+            <br />
+            <Button
+                onClick={this._onNextButtonClick}>
+                {i18n.get(this, 'next')}
+            </Button>
+        </nav>
+    }
 
-        return <section className={className}>
-            <h2 className="winner-screen__header">
-                {i18n.get(this, 'header')}
-            </h2>
-            <p className="winner-screen__description">
-                {this._isGameCompleted() ? i18n.get(this, 'description') : <span>&nbsp;</span>}
-            </p>
-            <nav className="winner-screen__menu">
-                <Button
-                    onClick={this._onMenuButtonClick}>
-                    {i18n.get(this, 'menu')}
-                </Button>
-                <br />
-                <Button
-                    onClick={this._onNextButtonClick}>
-                    {i18n.get(this, 'next')}
-                </Button>
-            </nav>
-        </section>
+    _getHeaderText () {
+        return i18n.get(this, 'header');
+    }
+
+    _getSubheaderText () {
+        if (!this._isGameCompleted()) {
+            return '';
+        }
+        return <span>
+            {i18n.get(this, 'subheader1')}
+            <span className="winner-screen__line-break"> </span>
+            {i18n.get(this, 'subheader2')}
+        </span>
+    }
+
+    _getBaseName () {
+        return 'winner-screen';
     }
 
     _isGameCompleted () {

@@ -1,35 +1,36 @@
-.health
-    width: 130px
-    absolute: top 30px right 190px
-    font-size: 24px
-    text-align: center
-    text-shadow: 2px 2px 0 $ui.color.white, -2px -2px 0 $ui.color.white, -2px 2px 0 $ui.color.white, 2px -2px 0 $ui.color.white
+$bar-border-width = 2px
+$bar-inner-height = 16px
+$bar-shadow-blur = 4px
 
-    &__label
-        margin: 0
+.health
+    ui-game-panel()
+    right: $ui.size.game-panel + $ui.size.base
 
     &__container
-        margin-top: 8px
+        height: $bar-inner-height
         width: 100%
-        height: 14px
-        border: 2px solid $ui.color.white
+        margin-top: ($ui.size.margin / 3)
+        border: $bar-border-width solid $ui.color.white
+        box-sizing: border-box
         background: $ui.color.black
-        font-size: 0
-        border-radius: 8px
+        border-radius: ($bar-inner-height + 2 * $bar-border-width) * 0.5
+
+    &__value,
+    &__value::after
+        display: block
+        height: 100%
+        width: 100%
+        border-radius: 0.5 * $bar-inner-height
 
     &__value
-        width: 100%
-        height: 14px
         background: $ui.color.red
-        box-shadow: 0 0 4px $ui.color.red
-        font-size: 0
-        border-radius: 7px
+        box-shadow: 0 0 $bar-shadow-blur $ui.color.red
         transition: width $ui.transition.default
 
         &::after
             content: ''
-            display: block
-            height: 100%
-            width: 100%
-            border-radius: 7px
-            background: linear-gradient(to bottom, rgba($ui.color.white, 0), rgba($ui.color.white, 0.25))
+            background: linear-gradient(
+                to bottom,
+                rgba($ui.color.white, 0),
+                rgba($ui.color.white, 0.25)
+            )

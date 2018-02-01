@@ -1,6 +1,7 @@
 .checkbox
-    display: block
-    font-size: 48px
+    display: inline-block
+    width: 100%
+    margin: ($ui.size.margin / 3) 0
     color: $ui.color.blue
     cursor: pointer
     transition: color $ui.transition.fast
@@ -13,17 +14,16 @@
         pointer-events: none
 
         &:not(:checked) + .checkbox__circle
-            color: transparent
+            color: $ui.color.transparent
 
     &__circle
+        ui-circle(1rem)
+        margin-top: -0.25rem
         float: right
-        width: 48px
-        height: @width
-        border-radius: 50%
         background: $ui.color.pink
-        vertical-align: top
         line-height: 1.4
         text-align: center
+        vertical-align: top
         transition: color $ui.transition.default
 
     &:hover

@@ -15,28 +15,30 @@ const i18n = new I18n(dictionary);
 
 @connect()
 export default class LoserScreen extends Screen {
-    render () {
-        const className = [
-            ...this._getClassName(),
-            `loser-screen`
-        ];
+    renderContent () {
+        return <nav className="screen__content loser-screen__content">
+            <Button
+                onClick={this._onQuitButtonClick}>
+                {i18n.get(this, 'quit')}
+            </Button>
+            <br />
+            <Button
+                onClick={this._onRepeatButtonClick}>
+                {i18n.get(this, 'repeat')}
+            </Button>
+        </nav>
+    }
 
-        return <section className={className}>
-            <h2 className="loser-screen__header">
-                {i18n.get(this, 'fail')}
-            </h2>
-            <nav className="loser-screen__menu">
-                <Button
-                    onClick={this._onQuitButtonClick}>
-                    {i18n.get(this, 'quit')}
-                </Button>
-                <br />
-                <Button
-                    onClick={this._onRepeatButtonClick}>
-                    {i18n.get(this, 'repeat')}
-                </Button>
-            </nav>
-        </section>
+    _getHeaderText () {
+        return i18n.get(this, 'header');
+    }
+
+    _getSubheaderText () {
+        return i18n.get(this, 'subheader');
+    }
+
+    _getBaseName () {
+        return 'loser-screen';
     }
 
     @autobind

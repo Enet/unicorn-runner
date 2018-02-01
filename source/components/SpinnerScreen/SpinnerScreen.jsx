@@ -1,4 +1,3 @@
-import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
 import {
     connect
@@ -16,17 +15,24 @@ const DELAY = 500;
 
 @connect()
 export default class SpinnerScreen extends Screen {
-    render () {
-        const className = [
-            ...this._getClassName(),
-            `spinner-screen`
-        ];
+    renderHeader () {
 
-        return <section className={className}>
-            <h2 className="spinner-screen__header">
-                {i18n.get(this, 'header')}
-            </h2>
-        </section>
+    }
+
+    renderSubheader () {
+
+    }
+
+    renderContent () {
+        return super.renderHeader();
+    }
+
+    _getHeaderText () {
+        return i18n.get(this, 'header');
+    }
+
+    _getBaseName () {
+        return 'spinner-screen';
     }
 
     componentDidUpdate (prevProps) {

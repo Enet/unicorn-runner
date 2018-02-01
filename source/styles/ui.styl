@@ -1,3 +1,31 @@
+ui-stretched()
+    height: 100%
+    width: 100%
+    absolute: top 0 left 0
+
+ui-circle($diameter)
+    height: $diameter
+    width: @height
+    border-radius: 50%
+
+ui-text-stroke($color=$ui.color.white)
+    text-shadow: 2px 2px 0 $color, -2px -2px 0 $color, -2px 2px 0 $color, 2px -2px 0 $color
+
+ui-game-panel()
+    ui-text-stroke()
+    width: $ui.size.game-panel
+    position: absolute
+    top: $ui.size.margin
+    right: $ui.size.margin
+    font-size: 0.5rem
+    text-align: center
+
+ui-center()
+    display: flex
+    flex-flow: column nowrap
+    align-items: center
+    justify-content: center
+
 $ui = {
     color: {
         transparent: transparent,
@@ -21,5 +49,20 @@ $ui = {
         fast: 100ms,
         default: 300ms,
         slow: 500ms
+    },
+    size: {
+        base: 48px,
+        margin: 24px,
+        game-panel: 130px
+    },
+    breakpoint: {
+        fullhd: 1920px,
+        hd: 1280px,
+        desktop: 1024px,
+        netbook: 800px,
+        tablet: 640px,
+        shovel: 480px,
+        smartphone: 360px,
+        iphone: 350px
     }
 }

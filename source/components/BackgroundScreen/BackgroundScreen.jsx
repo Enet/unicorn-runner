@@ -38,21 +38,21 @@ const rainbowColors = [
 
 @connect(({game}) => ({game}))
 export default class BackgroundScreen extends Screen {
-    render () {
-        const className = [
-            ...this._getClassName(),
-            `background-screen`
-        ];
+    renderHeader () {
 
-        return <section className={className}>
-            <Locale
-                value={this.context.locale}
-                onChange={this._onLocaleChange} />
-            <canvas
-                hidden={this._frameRequest === null}
-                className="background-screen__canvas"
-                ref={this._onCanvasRef} />
-        </section>
+    }
+
+    renderSubheader () {
+        return <Locale
+            value={this.context.locale}
+            onChange={this._onLocaleChange} />
+    }
+
+    renderContent () {
+        return <canvas
+            hidden={this._frameRequest === null}
+            className="background-screen__canvas"
+            ref={this._onCanvasRef} />
     }
 
     componentDidMount () {
@@ -93,6 +93,10 @@ export default class BackgroundScreen extends Screen {
         cancelAnimationFrame(this._frameRequest);
         document.removeEventListener('mousemove', this._onDocumentMouseMove);
         window.removeEventListener('resize', this._onWindowResize);
+    }
+
+    _getBaseName () {
+        return 'background-screen';
     }
 
     _getWindowSize () {
