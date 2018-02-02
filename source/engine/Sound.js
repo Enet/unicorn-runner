@@ -124,11 +124,17 @@ export default class Sound extends EventEmitter {
 
     getPanValue () {
         const {stereoPanNode} = this._nodes;
+        if (!stereoPanNode) {
+            return 0;
+        }
         return stereoPanNode.pan.value;
     }
 
     setPanValue (value) {
         const {stereoPanNode} = this._nodes;
+        if (!stereoPanNode) {
+            return this;
+        }
         value = Math.max(-1, Math.min(1, +value));
         stereoPanNode.pan.value = value;
         return this;
@@ -147,14 +153,16 @@ export default class Sound extends EventEmitter {
         const volumeNode = AUDIO_CONTEXT.createGain();
         volumeNode.gain.value = this.fadeInOnPlay ? 0 : 1;
 
-        const stereoPanNode = AUDIO_CONTEXT.createStereoPanner();
         const sourceNode = this._createSourceNode(options);
         const destinationNode = options.destination || AUDIO_CONTEXT.destination;
+        const stereoPanNode = AUDIO_CONTEXT.createStereoPanner ?
+            AUDIO_CONTEXT.createStereoPanner() :
+            null;
 
         sourceNode.connect(amplitudeNode);
         amplitudeNode.connect(volumeNode);
-        volumeNode.connect(stereoPanNode);
-        stereoPanNode.connect(destinationNode);
+        volumeNode.connect(stereoPanNode || destinationNode);
+        stereoPanNode && stereoPanNode.connect(destinationNode);
         Object.assign(nodes, {
             sourceNode,
             amplitudeNode,
