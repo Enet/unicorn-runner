@@ -29,15 +29,21 @@
   "name": "unicorn-runner",
   "version": "2.0.0",
   "description": "Tinkoff Fintech Game by enet",
-  "main": "source/index.jsx",
+  "main": "game-source/index.jsx",
   "repository": "git@github.com:Enet/unicorn-runner.git",
   "author": "Stepan Zhevak <enet@protonmail.ch>",
   "license": "SEE LICENSE IN LICENSE.md",
   "private": false,
   "scripts": {
-    "clean": "rm -rf ./output/bundles ./output/images ./output/sounds",
-    "build": "yarn clean && yarn webpack -p --config webpack.config.js",
-    "watch": "yarn webpack --watch --config webpack.config.js",
-    "start": "yarn webpack-dev-server --config webpack.config.js"
+    "clean:game": "rm -rf ./game-output/bundles ./game-output/images ./game-output/sounds",
+    "clean:editor": "rm -rf ./editor-output/bundles ./editor-output/images",
+    "clean": "yarn clean:game; yarn clean:editor",
+    "build:game": "yarn clean:game && yarn webpack -p --config webpack.game.js",
+    "build:editor": "yarn clean:editor && yarn webpack -p --config webpack.editor.js",
+    "build": "yarn build:game; yarn build:editor",
+    "watch:game": "yarn webpack --watch --config webpack.game.js",
+    "watch:editor": "yarn webpack --watch --config webpack.editor.js",
+    "start:game": "yarn webpack-dev-server --config webpack.game.js",
+    "start:editor": "yarn webpack-dev-server --config webpack.editor.js"
   }
 }
