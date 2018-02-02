@@ -37,12 +37,10 @@ export default function (state=defaultState, action) {
         play(manager, 'MenuHover', {amplitude: 0.25});
     }
 
-    if (action.type === 'SOUND_CLICK') {
-        play(manager, 'MenuClick');
-    }
-
-    if (action.type === 'SETTING_CHANGE') {
-        play(manager, 'MenuClick');
+    if (action.type === 'SOUND_CLICK' ||
+        action.type === 'SETTING_CHANGE' ||
+        action.type === 'GAME_SELECT_STEP') {
+        play(manager, 'MenuClick', {amplitude: 0.5});
     }
 
     if (action.type === 'SCREEN_CHANGE') {

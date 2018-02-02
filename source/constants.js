@@ -2,6 +2,7 @@ import {
     Color
 } from 'engine/math.js';
 
+export const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 export const TILE_SIZE = 60;
 export const LAVA_HEIGHT = 150;
 export const EFFECT_TIME = 5000;

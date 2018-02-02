@@ -1,3 +1,7 @@
+import {
+    IS_PRODUCTION
+} from 'constants.js';
+
 /*
 Image names only reflect corresponding situations below.
 Tiles for 0, 1, 2, 3, 4, 6, 7 cases are different.
@@ -8,9 +12,9 @@ Tiles for A, C, D are the same, so used common tile ACD.
 Also the suffix -l or -r tells about tile's orientation.
 For example 6-r and 6-l are just mirrored tiles.
 
-..#..   .....   .....   ..#..   ..#..   .....   .....
-.#0#.   ..1#.   .#2..   .#3..   ..4#.   ..6#.   .#7..
-..#..   ..#..   ..#..   .....   .....   .....   .....
+..#..   ..#..   .....   .....   ..#..   .....   .....
+.#0#.   ..1#.   ..2#.   .#3..   .#4..   ..6#.   .#7..
+..#..   .....   ..#..   ..#..   .....   .....   .....
 
 .....   ..#..   ..#..   ..#..
 ..8..   ..B..   ..E#.   .#F..
@@ -32,7 +36,6 @@ const DEBUG_TO_X = 0;
 const DEBUG_FROM_Y = 0;
 const DEBUG_TO_Y = 0;
 
-const sideNames = ['top', 'right', 'bottom', 'left'];
 let uniquePathId = 0;
 
 // Abstract tile environment
@@ -113,44 +116,61 @@ class PathTileEnvironment extends FilteredTileEnvironment {
         });
     }
 
-    _getCornerDataFor (filteredEnvironment, {pathSideName, environmentSideName, coordinateName}) {
-        if (this.has(pathSideName)) {
-            const indexOffset = {x: 0, y: 0};
-            indexOffset[coordinateName] = filteredEnvironment.has(environmentSideName) ? 1 : -1;
-            if (pathSideName === 'bottom' || pathSideName === 'left') {
-                indexOffset[coordinateName] *= -1;
+    getCornerData (pathEnvironment, filteredEnvironment) {
+        // Code below can be shorter, but branches are the best way to debug it
+        const indexOffset = {x: 0, y: 0};
+        let deltaAngle = null;
+        let imageName;
+        if (pathEnvironment.has('top')) {
+            if (filteredEnvironment.has('right')) {
+                deltaAngle = -90;
+                indexOffset.x = 1;
+                imageName = '1-';
+            } else {
+                deltaAngle = 90;
+                indexOffset.x = -1;
+                imageName = '4-';
             }
-            const deltaAngle = filteredEnvironment.has(environmentSideName) ? -90 : 90;
-            const imageName = (sideNames.indexOf(pathSideName) + 1) + (deltaAngle > 0 ? '-r' : '-l');
-            return {indexOffset, imageName, deltaAngle};
+            const pathAngle = filteredEnvironment.get('top').angle;
+            imageName += pathAngle === 90 - 90 * indexOffset.x ? 'l' : 'r';
+        } else if (pathEnvironment.has('right')) {
+            if (filteredEnvironment.has('bottom')) {
+                deltaAngle = -90;
+                indexOffset.y = 1;
+                imageName = '2-';
+            } else {
+                deltaAngle = 90;
+                indexOffset.y = -1;
+                imageName = '1-';
+            }
+            const pathAngle = filteredEnvironment.get('right').angle;
+            imageName += pathAngle === 180 - 90 * indexOffset.y ? 'l' : 'r';
+        } else if (pathEnvironment.has('bottom')) {
+            if (filteredEnvironment.has('left')) {
+                deltaAngle = -90;
+                indexOffset.x = -1;
+                imageName = '3-';
+            } else {
+                deltaAngle = 90;
+                indexOffset.x = 1;
+                imageName = '2-';
+            }
+            const pathAngle = filteredEnvironment.get('bottom').angle;
+            imageName += pathAngle === 90 - 90 * indexOffset.x ? 'l' : 'r';
+        } else if (pathEnvironment.has('left')) {
+            if (filteredEnvironment.has('top')) {
+                deltaAngle = -90;
+                indexOffset.y = -1;
+                imageName = '4-';
+            } else {
+                deltaAngle = 90;
+                indexOffset.y = 1;
+                imageName = '3-';
+            }
+            const pathAngle = filteredEnvironment.get('left').angle;
+            imageName += pathAngle === 180 - 90 * indexOffset.y ? 'l' : 'r';
         }
-        return null;
-    }
-
-    getCornerData (filteredEnvironment) {
-        const cornerData = null ||
-            this._getCornerDataFor(filteredEnvironment, {
-                pathSideName: 'top',
-                environmentSideName: 'right',
-                coordinateName: 'x'
-            }) ||
-            this._getCornerDataFor(filteredEnvironment, {
-                pathSideName: 'right',
-                environmentSideName: 'bottom',
-                coordinateName: 'y'
-            }) ||
-            this._getCornerDataFor(filteredEnvironment, {
-                pathSideName: 'bottom',
-                environmentSideName: 'left',
-                coordinateName: 'x'
-            }) ||
-            this._getCornerDataFor(filteredEnvironment, {
-                pathSideName: 'left',
-                environmentSideName: 'top',
-                coordinateName: 'y'
-            });
-
-        return cornerData;
+        return {indexOffset, imageName, deltaAngle};
     }
 }
 
@@ -165,11 +185,11 @@ export default function resolveTileMatrix (matrix) {
 }
 
 function findPath (matrix, xIndex, yIndex, pathId, angle) {
-    if (DEBUG_MODE) {
+    if (DEBUG_MODE && !IS_PRODUCTION) {
         var debug = DEBUG_MODE &&
-            xIndex > DEBUG_FROM_X &&
+            xIndex >= DEBUG_FROM_X &&
             xIndex < DEBUG_TO_X &&
-            yIndex > DEBUG_FROM_Y &&
+            yIndex >= DEBUG_FROM_Y &&
             yIndex < DEBUG_TO_Y;
 
         // eslint-disable-next-line
@@ -197,14 +217,14 @@ function findPath (matrix, xIndex, yIndex, pathId, angle) {
         // Lonely tile
         const imageName = '59-l';
         angle = angle || 0;
-        Object.assign(tile, {imageName, pathId});
+        Object.assign(tile, {imageName, pathId, angle});
     } else if (!filteredEnvironment.isHorizontal()) {
         // Kind of vertical tile
         angle = angle || 0;
         let imageName = '' +
             (filteredEnvironment.has('bottom') ? '8BEF' : '59') +
             (angle > 0 ? '-r' : '-l');
-        Object.assign(tile, {imageName, pathId});
+        Object.assign(tile, {imageName, pathId, angle});
         findPath(matrix, xIndex, yIndex - 1, pathId, angle);
         findPath(matrix, xIndex, yIndex + 1, pathId, angle);
     } else if (!filteredEnvironment.isVertical()) {
@@ -217,13 +237,13 @@ function findPath (matrix, xIndex, yIndex, pathId, angle) {
         }
         angle = angle || 90;
         imageName = imageName + (angle > 180 ? '-l' : '-r');
-        Object.assign(tile, {imageName, pathId});
+        Object.assign(tile, {imageName, pathId, angle});
         findPath(matrix, xIndex - 1, yIndex, pathId, angle);
         findPath(matrix, xIndex + 1, yIndex, pathId, angle);
     } else if (pathEnvironment.size) {
         // Kind of corner tile
-        const {imageName, deltaAngle, indexOffset} = pathEnvironment.getCornerData(filteredEnvironment);
-        Object.assign(tile, {imageName, pathId});
+        const {imageName, deltaAngle, indexOffset} = pathEnvironment.getCornerData(pathEnvironment, filteredEnvironment, log);
+        Object.assign(tile, {imageName, pathId, angle});
         findPath(matrix, xIndex + indexOffset.x, yIndex + indexOffset.y, pathId, angle + deltaAngle);
     }
 

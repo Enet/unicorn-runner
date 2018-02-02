@@ -5,7 +5,8 @@ import getTileIndexByDistance from 'utils/getTileIndexByDistance.js';
 import resolveTileMatrix from 'utils/resolveTileMatrix.js';
 import {
     TILE_SIZE,
-    INDEX_TILE_BACKGROUND
+    INDEX_TILE_BACKGROUND,
+    IS_PRODUCTION
 } from 'constants.js';
 
 const THOUSAND_TILE_SIZE = 1000 * TILE_SIZE;
@@ -13,6 +14,7 @@ const CLOUD_OFFSET_X = (90 - TILE_SIZE) * 0.5;
 const CLOUD_OFFSET_Y = 7;
 const CLOUD_EDGE_OFFSET_X = 15;
 const DEBUG_TILE_IMAGES = false;
+const DEBUG_CORNER_SET = false;
 
 const frameDescriptions = {
     'cloud-edge-right': {
@@ -48,25 +50,25 @@ const frameDescriptions = {
     '1-r': {
         from: 'tile-corner-right',
         transforms: {
-            scale: [1, 1]
+            rotate: [Math.PI / 2]
         }
     },
     '2-r': {
         from: 'tile-corner-right',
         transforms: {
-            scale: [-1, 1]
+            rotate: [Math.PI]
         }
     },
     '3-r': {
         from: 'tile-corner-right',
         transforms: {
-            scale: [-1, -1]
+            rotate: [-Math.PI / 2]
         }
     },
     '4-r': {
         from: 'tile-corner-right',
         transforms: {
-            scale: [-1, 1]
+            rotate: [0]
         }
     },
     '59-l': {
@@ -204,12 +206,24 @@ export default class TileBackground extends Background {
                     );
                 });
 
-                if (DEBUG_TILE_IMAGES) {
+                if (DEBUG_TILE_IMAGES && !IS_PRODUCTION) {
                     const fontSize = 16;
-                    context.fillStyle = 'red';
+                    context.fillStyle = 'black';
                     context.font = fontSize + 'px sans-serif';
                     context.textAlign = 'center';
                     context.fillText(tile.imageName, x + TILE_SIZE / 2, y + (TILE_SIZE + fontSize) / 2);
+                }
+
+                if (DEBUG_CORNER_SET && !IS_PRODUCTION) {
+                    for (let i = 1; i <= 4; i++) {
+                        for (let f of ['l', 'r']) {
+                            const x = TILE_SIZE * i + camera.size.width / 2;
+                            const y = TILE_SIZE * (f === 'r') + 2 * TILE_SIZE;
+                            const imageName = i + '-' + f;
+                            context.drawImage(this.sprite.frames.get(imageName), x, y);
+                            context.fillText(imageName, x + TILE_SIZE / 2, y + TILE_SIZE / 2);
+                        }
+                    }
                 }
             });
         }
