@@ -20,6 +20,7 @@ import PauseScreen from 'components/PauseScreen/PauseScreen.jsx';
 import LoserScreen from 'components/LoserScreen/LoserScreen.jsx';
 import WinnerScreen from 'components/WinnerScreen/WinnerScreen.jsx';
 import ResetScreen from 'components/ResetScreen/ResetScreen.jsx';
+import ErrorScreen from 'components/ErrorScreen/ErrorScreen.jsx';
 
 import './App.styl';
 
@@ -54,6 +55,7 @@ export default class App extends Tcaer.Component {
             <WinnerScreen active={screen === 'winner'} />
             <MapScreen active={screen === 'map'} />
             <ResetScreen active={screen === 'reset'} />
+            <ErrorScreen active={screen === 'error'} />
             <MenuScreen active={screen === 'menu'} />
             <SettingsScreen active={screen === 'settings'} />
         </main>

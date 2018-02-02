@@ -4,6 +4,9 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const IS_PRODUCTION = NODE_ENV === 'production';
+
 module.exports = {
     context: __dirname,
 
@@ -62,7 +65,7 @@ module.exports = {
                 loader: 'image-webpack-loader',
                 options: {
                     optipng: {
-                        enabled: false
+                        enabled: IS_PRODUCTION
                     }
                 }
             }]
@@ -92,6 +95,10 @@ module.exports = {
                     ]
                 }
             }
+        }),
+
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
         })
     ],
 

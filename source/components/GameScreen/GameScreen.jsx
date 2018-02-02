@@ -82,6 +82,7 @@ export default class GameScreen extends Screen {
             onShowInfo={this._onShowInfo}
             onHideInfo={this._onHideInfo}
             onGameReady={this._onGameReady}
+            onGameError={this._onGameError}
             onGameLose={this._onGameLose}
             onGameWin={this._onGameWin} />
     }
@@ -161,6 +162,14 @@ export default class GameScreen extends Screen {
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
             payload: 'game'
+        });
+    }
+
+    @autobind
+    _onGameError () {
+        this.props.dispatch({
+            type: 'SCREEN_CHANGE',
+            payload: 'error'
         });
     }
 

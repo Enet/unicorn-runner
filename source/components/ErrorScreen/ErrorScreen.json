@@ -1,0 +1,12 @@
+{
+    "ru": {
+        "header": "Ошибка!",
+        "quit": "Выйти в меню",
+        "repeat": "Ещё разок"
+    },
+    "en": {
+        "header": "Error!",
+        "quit": "Main Menu",
+        "repeat": "Try Again"
+    }
+}

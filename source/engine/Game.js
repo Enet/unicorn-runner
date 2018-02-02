@@ -7,15 +7,17 @@ const UPDATE_TIME = 17;
 export default class Game {
     constructor (options) {
         const manager = this._createManager();
-        manager.fetchResources(this._getResources()).then(() => {
-            this._onManagerReady(options);
-        });
+        manager.fetchResources(this._getResources())
+            .then(() => this._onManagerReady(options))
+            .catch(() => this._onManagerError(options));
         this._manager = manager;
         this._isPaused = false;
     }
 
     destructor () {
-        this._keyboard.destructor();
+        if (this._keyboard) {
+            this._keyboard.destructor();
+        }
     }
 
     pause () {
@@ -56,6 +58,10 @@ export default class Game {
         this._lastTime = 0;
         this._accumulatedTime = 0;
         !this._isPaused && requestAnimationFrame(this._onAnimationFrame);
+    }
+
+    _onManagerError () {
+
     }
 
     _onAnimationFrame (currentTime) {

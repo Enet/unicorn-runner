@@ -27,8 +27,12 @@ import {
 export default class UnicornGame extends Game {
     destructor () {
         super.destructor(...arguments);
+        if (!this._game) {
+            return;
+        }
         const {level} = this._game;
         level.destructor();
+        this._touchScreen.destructor();
     }
 
     resize (size) {
@@ -136,6 +140,11 @@ export default class UnicornGame extends Game {
 
         const {onGameReady} = callbacks;
         onGameReady && onGameReady();
+    }
+
+    _onManagerError ({onGameError}) {
+        super._onManagerError(...arguments);
+        onGameError && onGameError();
     }
 
     _onUpdate (deltaTime) {
