@@ -34,7 +34,7 @@ export default function (state=defaultState, action) {
     }
 
     if (action.type === 'SOUND_HOVER') {
-        play(manager, 'MenuHover');
+        play(manager, 'MenuHover', {amplitude: 0.25});
     }
 
     if (action.type === 'SOUND_CLICK') {
@@ -46,7 +46,7 @@ export default function (state=defaultState, action) {
     }
 
     if (action.type === 'SCREEN_CHANGE') {
-        play(manager, 'MenuTransition');
+        play(manager, 'MenuTransition', {amplitude: 0.25});
     }
 
     return state;

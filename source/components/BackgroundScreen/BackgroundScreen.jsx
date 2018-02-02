@@ -198,7 +198,13 @@ export default class BackgroundScreen extends Screen {
         } else if (event.keyCode === KEY_E) {
             payload = 'en';
         }
-        payload && this.props.dispatch({
+        if (!payload) {
+            return;
+        }
+        this.props.dispatch({
+            type: 'SOUND_CLICK'
+        });
+        this.props.dispatch({
             type: 'LOCALE_CHANGE',
             payload
         });
