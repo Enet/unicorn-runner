@@ -1,16 +1,20 @@
 import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
 
+import Level from 'components/Level/Level.jsx';
+import Menu from 'components/Menu/Menu.jsx';
+
 import './App.styl';
 
 export default class App extends Tcaer.Component {
     render () {
         const className = [
-            `editor`
+            `app`
         ];
 
         return <main className={className}>
-            Hello world!
+            <Level />
+            <Menu />
         </main>
     }
 
