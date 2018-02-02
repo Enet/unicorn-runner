@@ -99,6 +99,7 @@ export default class App extends Tcaer.Component {
         const {settings} = this.props;
 
         this._musicSound = new Sound({
+            amplitude: 0.25,
             buffer: manager.getSound('MenuMusic'),
             loop: true,
             fadeInOnPlay: {duration: 2000},

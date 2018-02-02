@@ -162,12 +162,11 @@ export default class Level {
     }
 
     createSound (name, options={}) {
-        if (!this.settings.sound) {
-            options.amplitude = 0;
-        }
         const {manager} = this;
         options.buffer = manager.getSound(name);
-        options.destination = this._gainNode;
+        if (!options.music) {
+            options.destination = this._gainNode;
+        }
 
         const sound = new Sound(options);
         sound.position = options.position;
@@ -193,10 +192,12 @@ export default class Level {
 
     pause () {
         this._gainNode.gain.value = 0;
+        this._musicSound && this._musicSound.setVolume(0);
     }
 
     resume () {
-        this._gainNode.gain.value = 1;
+        this._gainNode.gain.value = this.settings.sound * 1;
+        this._musicSound && this._musicSound.setVolume(1);
     }
 
     update (deltaTime) {
@@ -262,7 +263,9 @@ export default class Level {
         this._playbackRate = playbackRate;
         this.sounds.forEach((sound) => {
             sound.setPlaybackRate(playbackRate);
-            this._musicSound.setPlaybackRate(playbackRate);
+            if (this._musicSound) {
+                this._musicSound.setPlaybackRate(playbackRate);
+            }
         });
     }
 
@@ -358,16 +361,15 @@ export default class Level {
     }
 
     _initMusic ({meta}) {
-        if (!meta.music) {
+        if (!meta.music || !this.settings.music) {
             return;
         }
-        const musicSound = this.createSound(meta.music, {
+        this._musicSound = this.createSound(meta.music, {
+            music: true,
             loop: true,
             amplitude: 0.25,
             fadeOutOnPause: {}
-        });
-        this._musicSound = musicSound;
-        this.settings.music && musicSound.play();
+        }).play();
     }
 
     _onSoundEnd (sound) {
