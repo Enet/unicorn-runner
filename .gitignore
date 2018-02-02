@@ -1,4 +1,5 @@
 node_modules/
 output/bundles/
 output/images/
+output/sounds/
 *.todo

@@ -13,6 +13,7 @@
     "eslint-plugin-react": "^7.6.1",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
+    "image-webpack-loader": "^4.0.0",
     "json-loader": "^0.5.7",
     "nib": "^1.1.2",
     "style-loader": "^0.19.1",
@@ -34,7 +35,7 @@
   "license": "SEE LICENSE IN LICENSE.md",
   "private": false,
   "scripts": {
-    "clean": "rm -rf ./output/bundles ./output/images ./output/menu ./output/sounds",
+    "clean": "rm -rf ./output/bundles ./output/images ./output/sounds",
     "build": "yarn clean && yarn webpack -p --config webpack.config.js",
     "watch": "yarn webpack --watch --config webpack.config.js",
     "start": "yarn webpack-dev-server --config webpack.config.js"

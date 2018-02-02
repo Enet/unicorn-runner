@@ -50,13 +50,20 @@ module.exports = {
             test: /\.json$/,
             use: ['json-loader']
         }, {
-            test: /\.(?:gif|png|jpe?g)$/i,
+            test: /\.png$/i,
             use: [{
                 loader: 'url-loader',
                 options: {
-                    limit: 0 * 1024,
-                    outputPath: 'images',
+                    limit: 10 * 1024,
+                    outputPath: 'images/',
                     name: '[name].[hash].[ext]'
+                }
+            }, {
+                loader: 'image-webpack-loader',
+                options: {
+                    optipng: {
+                        enabled: false
+                    }
                 }
             }]
         }, {
@@ -64,8 +71,8 @@ module.exports = {
             use: [{
                 loader: 'url-loader',
                 options: {
-                    limit: 0 * 1024,
-                    outputPath: 'sounds',
+                    limit: 10 * 1024,
+                    outputPath: 'sounds/',
                     name: '[name].[hash].[ext]'
                 }
             }]
