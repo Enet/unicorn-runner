@@ -38,6 +38,10 @@ const DEBUG_TO_Y = 0;
 
 let uniquePathId = 0;
 
+function randomFrom () {
+    return arguments[arguments.length * Math.random() | 0];
+}
+
 // Abstract tile environment
 class TileEnvironment extends Map {
     constructor ({top, right, bottom, left}) {
@@ -215,12 +219,12 @@ function findPath (matrix, xIndex, yIndex, pathId, angle) {
 
     if (filteredEnvironment.isSeparate()) {
         // Lonely tile
-        const imageName = '59-l';
+        const imageName = '59-' + randomFrom('l', 'r');
         angle = angle || 0;
         Object.assign(tile, {imageName, pathId, angle});
     } else if (!filteredEnvironment.isHorizontal()) {
         // Kind of vertical tile
-        angle = angle || 0;
+        angle = angle === undefined ? randomFrom(0, 180) : angle;
         let imageName = '' +
             (filteredEnvironment.has('bottom') ? '8BEF' : '59') +
             (angle > 0 ? '-r' : '-l');
