@@ -1,11 +1,13 @@
 import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
 import {
-    TILE_SIZE
-} from 'constants.js';
-import {
+    Matrix,
     Vector2
 } from 'engine/math.js';
+
+import {
+    TILE_SIZE
+} from 'constants.js';
 
 import './Level.styl';
 
@@ -21,12 +23,14 @@ export default class Level extends Tcaer.Component {
             onMouseDown={this._onMouseDown}
             onMouseUp={this._onMouseUp}
             onMouseLeave={this._onMouseLeave}
-            onMouseMove={this._onMouseMove}>
+            onMouseMove={this._onMouseMove}
+            onClick={this._onClick}>
             <canvas className="level__canvas" ref={this._onCanvasRef} />
         </div>
     }
 
     componentDidMount () {
+        this.tiles = new Matrix();
         this.bounds = {
             top: -100,
             right: 1000,
@@ -81,9 +85,13 @@ export default class Level extends Tcaer.Component {
             for (let xIndex = xFrom; xIndex < xTo; xIndex++) {
                 context.beginPath();
                 context.strokeStyle = 'yellow';
+                context.fillStyle = 'orange';
                 context.lineWidth = 2;
                 context.rect(xIndex * TILE_SIZE - x, yIndex * TILE_SIZE - y, TILE_SIZE, TILE_SIZE);
                 context.stroke();
+                if (this.tiles.getElement(xIndex, yIndex)) {
+                    context.fill();
+                }
             }
         }
 
@@ -101,6 +109,24 @@ export default class Level extends Tcaer.Component {
         }
         if (left > x) {
             context.fillRect(0, 0, left - x, height);
+        }
+
+        // Entity
+        const {entity} = this.props;
+        if (entity && entity !== 'Tile' && entity !== 'Cursor' && this._cursorPosition) {
+            const cursorPosition = this._cursorPosition;
+
+            context.save();
+            context.translate(cursorPosition.x, cursorPosition.y);
+            context.save();
+            context.rotate(entity.angle);
+            entity.render(context, this.camera);
+            context.restore();
+            context.beginPath();
+            context.strokeStyle = 'red';
+            context.rect(-entity.size.width / 2, -entity.size.height / 2, entity.size.width, entity.size.height);
+            context.stroke();
+            context.restore();
         }
 
         // Scale
@@ -139,16 +165,47 @@ export default class Level extends Tcaer.Component {
 
     @autobind
     _onMouseMove (event) {
+        const cursorPosition = new Vector2(event.clientX, event.clientY);
+        this._cursorPosition = cursorPosition;
         if (!this.state.isSpacePressed) {
             return;
         }
         if (!this._isDragging) {
             return;
         }
-        const currentDragging = new Vector2(event.clientX, event.clientY);
-        const diff = currentDragging.subtract(this._startDragging).length(-1);
+        const diff = cursorPosition.subtract(this._startDragging).length(-1);
         this.camera.position.set(this.camera.position.add(diff));
-        this._startDragging = currentDragging;
+        this._startDragging = cursorPosition;
+    }
+
+    @autobind
+    _onClick (event) {
+        if (this._startDragging) {
+            this._startDragging = false;
+            return;
+        }
+        if (!this.props.entity) {
+            return;
+        }
+        if (this.state.isSpacePressed && this._isDragging) {
+            return;
+        }
+        const {top, right, bottom, left} = this.bounds;
+        const {x, y} = this.camera.position;
+        let {clientX, clientY} = event;
+        clientX += x;
+        clientY += y;
+        if (clientX < left || clientX > right ||
+            clientY < top || clientY > bottom) {
+            return;
+        }
+
+        if (this.props.entity === 'Tile') {
+            const xIndex = Math.floor(clientX / TILE_SIZE);
+            const yIndex = Math.floor(clientY / TILE_SIZE);
+            const tile = this.tiles.getElement(xIndex, yIndex);
+            this.tiles.setElement(xIndex, yIndex, !tile);
+        }
     }
 
     @autobind

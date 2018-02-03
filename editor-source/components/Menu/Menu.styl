@@ -1,5 +1,17 @@
 .menu
-    fixed: bottom 0 right 0
+    box-sizing: border-box
+    fixed: top 0 right 0
     height: 100%
-    width: 250px
+    width: 300px
+    padding: 24px
     background: black
+    color: white
+    font-size: 0.4rem
+    line-height: 1.5
+    overflow-y: scroll
+
+    &__entity
+        cursor: pointer
+
+        &:hover
+            color: red
