@@ -55,6 +55,69 @@ export default class Level extends Tcaer.Component {
         window.removeEventListener('resize', this._onWindowResize);
     }
 
+    _getStickyCandidates (entity, entityPosition, secondStep=false) {
+        const fromIndex = {
+            x: Math.floor((entityPosition.x - entity.size.width / 2) / TILE_SIZE),
+            y: Math.floor((entityPosition.y - entity.size.height / 2) / TILE_SIZE)
+        };
+        const toIndex = {
+            x: Math.ceil((entityPosition.x + entity.size.width / 2) / TILE_SIZE),
+            y: Math.ceil((entityPosition.y + entity.size.height / 2) / TILE_SIZE)
+        };
+
+        let stickyDistance = 5;
+        let stickyCandidates = [];
+        let minStickyDistance = new Vector2(Infinity, Infinity);
+
+        if (entity.name === 'Tile') {
+            stickyDistance = TILE_SIZE;
+        }
+
+        for (let entityOffset = -0.5; entityOffset <= 0.5; entityOffset += 0.5) {
+            if (entity.name === 'Tile' && !entityOffset) {
+                continue;
+            }
+            for (let tileOffset = 0; tileOffset <= 1; tileOffset += 0.5) {
+                if (entity.name === 'Tile' && tileOffset === 0.5) {
+                    continue;
+                }
+                for (let coordinateProp in fromIndex) {
+                    const sizeProp = coordinateProp === 'x' ? 'width' : 'height';
+                    for (let index = fromIndex[coordinateProp]; index < toIndex[coordinateProp]; index++) {
+                        const tileCoordinate = index * TILE_SIZE + tileOffset * TILE_SIZE;
+                        const entityCoordinate = entityPosition[coordinateProp] + entityOffset * entity.size[sizeProp];
+                        const distance = entityCoordinate - tileCoordinate;
+                        if (Math.abs(distance) <= stickyDistance) {
+                            stickyCandidates.push({
+                                axis: coordinateProp,
+                                distance: Math.abs(distance),
+                                tileCoordinate,
+                                entityCoordinate,
+                                position: tileCoordinate - entityOffset * entity.size[sizeProp]
+                            });
+                            minStickyDistance[coordinateProp] = Math.min(minStickyDistance[coordinateProp], Math.abs(distance));
+                        }
+                    }
+                }
+            }
+        }
+
+        stickyCandidates = stickyCandidates.filter((stickyCandidate) => {
+            const f = !(stickyCandidate.distance > minStickyDistance[stickyCandidate.axis]);
+            if (f) {
+                entityPosition[stickyCandidate.axis] = stickyCandidate.position;
+            }
+            return f;
+        });
+
+        if (secondStep) {
+            stickyCandidates.entityPosition = entityPosition;
+            return stickyCandidates;
+        } else {
+            return this._getStickyCandidates(entity, entityPosition, true);
+        }
+    }
+
     @autobind
     _onCanvasRef (node) {
         this._context = node.getContext('2d');
@@ -113,15 +176,36 @@ export default class Level extends Tcaer.Component {
 
         // Entity
         const {entity} = this.props;
-        if (entity && entity !== 'Tile' && entity !== 'Cursor' && this._cursorPosition) {
-            const cursorPosition = this._cursorPosition;
+        if (entity && entity !== 'Cursor' && this._cursorPosition) {
+            let cursorPosition = this._cursorPosition;
+            let stickyCandidates = [];
+            if (this._isControlPressed || entity.name === 'Tile') {
+                stickyCandidates = this._getStickyCandidates(entity, cursorPosition);
+                cursorPosition = stickyCandidates.entityPosition;
+            }
 
             context.save();
             context.translate(cursorPosition.x, cursorPosition.y);
-            context.save();
             context.rotate(entity.angle);
+            context.globalAlpha = 0.5;
             entity.render(context, this.camera);
             context.restore();
+
+            stickyCandidates.forEach((stickyCandidate) => {
+                context.strokeStyle = 'lime';
+                context.beginPath();
+                if (stickyCandidate.axis === 'x') {
+                    context.moveTo(stickyCandidate.tileCoordinate, 0);
+                    context.lineTo(stickyCandidate.tileCoordinate, width);
+                } else {
+                    context.moveTo(0, stickyCandidate.tileCoordinate);
+                    context.lineTo(width, stickyCandidate.tileCoordinate);
+                }
+                context.stroke();
+            });
+
+            context.save();
+            context.translate(cursorPosition.x, cursorPosition.y);
             context.beginPath();
             context.strokeStyle = 'red';
             context.rect(-entity.size.width / 2, -entity.size.height / 2, entity.size.width, entity.size.height);
@@ -200,7 +284,7 @@ export default class Level extends Tcaer.Component {
             return;
         }
 
-        if (this.props.entity === 'Tile') {
+        if (this.props.entity.name === 'Tile') {
             const xIndex = Math.floor(clientX / TILE_SIZE);
             const yIndex = Math.floor(clientY / TILE_SIZE);
             const tile = this.tiles.getElement(xIndex, yIndex);
@@ -213,6 +297,8 @@ export default class Level extends Tcaer.Component {
         if (event.keyCode === 32) {
             event.preventDefault();
             this.setState({isSpacePressed: true});
+        } else if (event.keyCode === 17) {
+            this._isControlPressed = true;
         }
     }
 
@@ -221,6 +307,8 @@ export default class Level extends Tcaer.Component {
         if (event.keyCode === 32) {
             this.setState({isSpacePressed: false});
             this._onMouseUp();
+        } else if (event.keyCode === 17) {
+            this._isControlPressed = false;
         }
     }
 }

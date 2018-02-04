@@ -9,6 +9,9 @@ import Menu from 'components/Menu/Menu.jsx';
 import {
     entities
 } from 'resources.js';
+import {
+    TILE_SIZE
+} from 'constants.js';
 import GameLevel from '../../../game-source/Level.js';
 
 import './App.styl';
@@ -29,6 +32,23 @@ Object.getOwnPropertyNames(GameLevel.prototype).forEach((methodName) => {
     }
     LevelMock.prototype[methodName] = noop;
 });
+
+class TileMock {
+    get angle () {
+        return 0;
+    }
+
+    render (context) {
+        context.beginPath();
+        context.fillStyle = 'orange';
+        context.fillRect(-TILE_SIZE / 2, -TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
+    }
+
+    constructor () {
+        this.size = new Vector2(TILE_SIZE, TILE_SIZE);
+        this.name = 'Tile';
+    }
+}
 
 export default class App extends Tcaer.Component {
     render () {
@@ -55,6 +75,11 @@ export default class App extends Tcaer.Component {
 
     @autobind
     _onEntitySelect (entityName) {
+        if (entityName === 'Tile') {
+            return this.setState({
+                entity: new TileMock()
+            });
+        }
         const Entity = entities[entityName];
         if (!Entity) {
             return this.setState({
@@ -71,6 +96,7 @@ export default class App extends Tcaer.Component {
             to: [0, 0]
         };
         const entity = new Entity({level, settings, x, y});
+        entity.name = entityName;
         this.setState({entity});
     }
 }
