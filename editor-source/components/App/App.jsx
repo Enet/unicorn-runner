@@ -1,6 +1,7 @@
 import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
 import {
+    Matrix,
     Vector2
 } from 'engine/math.js';
 
@@ -57,12 +58,19 @@ export default class App extends Tcaer.Component {
         ];
 
         return <main className={className}>
-            <Level entity={this.state.entity} />
-            <Menu onSelect={this._onEntitySelect} />
+            <Level
+                level={this._level}
+                entity={this.state.entity}
+                onTileChange={this._onTileChange}
+                onEntityAdd={this._onEntityAdd} />
+            <Menu
+                selected={this.state.entity.name}
+                onSelect={this._onEntitySelect} />
         </main>
     }
 
     componentWillMount () {
+        this.state.entity = {name: 'Cursor'};
         const levelMock = new LevelMock();
         levelMock.manager = this.props.manager;
         levelMock.player = {
@@ -71,6 +79,17 @@ export default class App extends Tcaer.Component {
             }
         };
         this._levelMock = levelMock;
+        this._level = {
+            tiles: new Matrix(),
+            entities: [],
+            meta: {},
+            bounds: {
+                top: -100,
+                right: 1000,
+                bottom: 1000,
+                left: -100
+            }
+        };
     }
 
     @autobind
@@ -83,7 +102,9 @@ export default class App extends Tcaer.Component {
         const Entity = entities[entityName];
         if (!Entity) {
             return this.setState({
-                entity: entityName
+                entity: {
+                    name: entityName
+                }
             });
         }
         const x = 0;
@@ -98,5 +119,20 @@ export default class App extends Tcaer.Component {
         const entity = new Entity({level, settings, x, y});
         entity.name = entityName;
         this.setState({entity});
+    }
+
+    @autobind
+    _onTileChange ({xIndex, yIndex}) {
+        const tile = this._level.tiles.getElement(xIndex, yIndex);
+        this._level.tiles.setElement(xIndex, yIndex, !tile);
+    }
+
+    @autobind
+    _onEntityAdd ({entity, x, y}) {
+        Object.defineProperty(entity, 'position', {
+            get: () => new Vector2(x, y)
+        });
+        this._level.entities.push(entity);
+        this._onEntitySelect(entity.name);
     }
 }

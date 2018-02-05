@@ -1,7 +1,6 @@
 import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
 import {
-    Matrix,
     Vector2
 } from 'engine/math.js';
 
@@ -30,13 +29,6 @@ export default class Level extends Tcaer.Component {
     }
 
     componentDidMount () {
-        this.tiles = new Matrix();
-        this.bounds = {
-            top: -100,
-            right: 1000,
-            bottom: 1000,
-            left: -100
-        };
         this.camera = {
             position: new Vector2(0, 0),
             size: new Vector2(0, 0)
@@ -56,6 +48,10 @@ export default class Level extends Tcaer.Component {
     }
 
     _getStickyCandidates (entity, entityPosition, secondStep=false) {
+        if (!secondStep) {
+            entityPosition = entityPosition.add(this.camera.position);
+        }
+
         const fromIndex = {
             x: Math.floor((entityPosition.x - entity.size.width / 2) / TILE_SIZE),
             y: Math.floor((entityPosition.y - entity.size.height / 2) / TILE_SIZE)
@@ -111,7 +107,7 @@ export default class Level extends Tcaer.Component {
         });
 
         if (secondStep) {
-            stickyCandidates.entityPosition = entityPosition;
+            stickyCandidates.entityPosition = entityPosition.subtract(this.camera.position);
             return stickyCandidates;
         } else {
             return this._getStickyCandidates(entity, entityPosition, true);
@@ -152,14 +148,14 @@ export default class Level extends Tcaer.Component {
                 context.lineWidth = 2;
                 context.rect(xIndex * TILE_SIZE - x, yIndex * TILE_SIZE - y, TILE_SIZE, TILE_SIZE);
                 context.stroke();
-                if (this.tiles.getElement(xIndex, yIndex)) {
+                if (this.props.level.tiles.getElement(xIndex, yIndex)) {
                     context.fill();
                 }
             }
         }
 
         // Bounds
-        const {top, right, bottom, left} = this.bounds;
+        const {top, right, bottom, left} = this.props.level.bounds;
         context.fillStyle = 'midnightblue';
         if (top > y) {
             context.fillRect(0, 0, width, top - y);
@@ -174,9 +170,18 @@ export default class Level extends Tcaer.Component {
             context.fillRect(0, 0, left - x, height);
         }
 
-        // Entity
+        // Entities
+        this.props.level.entities.forEach((entity) => {
+            context.save();
+            context.translate(entity.position.x - x, entity.position.y - y);
+            context.rotate(entity.angle);
+            entity.render(context, this.camera);
+            context.restore();
+        });
+
+        // Selected entity
         const {entity} = this.props;
-        if (entity && entity !== 'Cursor' && this._cursorPosition) {
+        if (!this.state.isSpacePressed && entity && entity.name !== 'Cursor' && this._cursorPosition) {
             let cursorPosition = this._cursorPosition;
             let stickyCandidates = [];
             if (this._isControlPressed || entity.name === 'Tile') {
@@ -195,11 +200,11 @@ export default class Level extends Tcaer.Component {
                 context.strokeStyle = 'lime';
                 context.beginPath();
                 if (stickyCandidate.axis === 'x') {
-                    context.moveTo(stickyCandidate.tileCoordinate, 0);
-                    context.lineTo(stickyCandidate.tileCoordinate, width);
+                    context.moveTo(stickyCandidate.tileCoordinate - x, 0);
+                    context.lineTo(stickyCandidate.tileCoordinate - x, width);
                 } else {
-                    context.moveTo(0, stickyCandidate.tileCoordinate);
-                    context.lineTo(width, stickyCandidate.tileCoordinate);
+                    context.moveTo(0, stickyCandidate.tileCoordinate - y);
+                    context.lineTo(width, stickyCandidate.tileCoordinate - y);
                 }
                 context.stroke();
             });
@@ -274,7 +279,7 @@ export default class Level extends Tcaer.Component {
         if (this.state.isSpacePressed && this._isDragging) {
             return;
         }
-        const {top, right, bottom, left} = this.bounds;
+        const {top, right, bottom, left} = this.props.level.bounds;
         const {x, y} = this.camera.position;
         let {clientX, clientY} = event;
         clientX += x;
@@ -287,8 +292,20 @@ export default class Level extends Tcaer.Component {
         if (this.props.entity.name === 'Tile') {
             const xIndex = Math.floor(clientX / TILE_SIZE);
             const yIndex = Math.floor(clientY / TILE_SIZE);
-            const tile = this.tiles.getElement(xIndex, yIndex);
-            this.tiles.setElement(xIndex, yIndex, !tile);
+            this.props.onTileChange && this.props.onTileChange({xIndex, yIndex});
+        } else if (this.props.entity.name !== 'Cursor') {
+            let cursorPosition = this._cursorPosition;
+            let stickyCandidates = [];
+            const {entity} = this.props;
+            if (this._isControlPressed || entity.name === 'Tile') {
+                stickyCandidates = this._getStickyCandidates(entity, cursorPosition);
+                cursorPosition = stickyCandidates.entityPosition;
+            }
+            this.props.onEntityAdd && this.props.onEntityAdd({
+                entity,
+                x: cursorPosition.x + this.camera.position.x,
+                y: cursorPosition.y + this.camera.position.y
+            });
         }
     }
 
