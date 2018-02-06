@@ -62,6 +62,7 @@ export default class App extends Tcaer.Component {
                 level={this._level}
                 entity={this.state.entity}
                 onTileChange={this._onTileChange}
+                onEntityRemove={this._onEntityRemove}
                 onEntityAdd={this._onEntityAdd} />
             <Menu
                 selected={this.state.entity.name}
@@ -130,9 +131,20 @@ export default class App extends Tcaer.Component {
     @autobind
     _onEntityAdd ({entity, x, y}) {
         Object.defineProperty(entity, 'position', {
-            get: () => new Vector2(x, y)
+            get: () => new Vector2(x, y),
+            configurable: true
         });
         this._level.entities.push(entity);
         this._onEntitySelect(entity.name);
+    }
+
+    @autobind
+    _onEntityRemove ({entity}) {
+        const index = this._level.entities.indexOf(entity);
+        if (index === -1) {
+            return;
+        }
+        this._level.entities.splice(index, 1);
+        this._onEntitySelect('Cursor');
     }
 }

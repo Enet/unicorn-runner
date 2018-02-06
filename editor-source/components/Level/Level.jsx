@@ -41,6 +41,12 @@ export default class Level extends Tcaer.Component {
         this._frame = requestAnimationFrame(this._onAnimationFrame);
     }
 
+    componentDidUpdate () {
+        if (this.props.entity) {
+            this._selectedEntity = null;
+        }
+    }
+
     componentWillUnmount () {
         document.removeEventListener('keydown', this._onDocumentKeyDown);
         document.removeEventListener('keyup', this._onDocumentKeyUp);
@@ -172,11 +178,51 @@ export default class Level extends Tcaer.Component {
 
         // Entities
         this.props.level.entities.forEach((entity) => {
+            let cursorPosition = this._cursorPosition;
+            let entityPosition = entity.position.subtract(this.camera.position);
+            let stickyCandidates = [];
+            if (entity === this._selectedEntity && this._isMoving) {
+                if (this._isControlPressed) {
+                    stickyCandidates = this._getStickyCandidates(entity, cursorPosition);
+                    entityPosition = stickyCandidates.entityPosition;
+                }
+            }
+
             context.save();
-            context.translate(entity.position.x - x, entity.position.y - y);
+            context.translate(entityPosition.x, entityPosition.y);
+
             context.rotate(entity.angle);
             entity.render(context, this.camera);
+            if (entity === this._selectedEntity) {
+                context.fillStyle = 'rgba(0, 255, 0, 0.25)';
+                context.fillRect(-entity.size.width / 2, -entity.size.height / 2, entity.size.width, entity.size.height);
+            }
+
             context.restore();
+
+            if (entity === this._hoverEntity || entity === this._selectedEntity) {
+                context.save();
+                context.translate(entityPosition.x, entityPosition.y);
+                context.strokeStyle = 'red';
+                context.setLineDash(entity !== this._selectedEntity ? [5, 5] : [5, 0]);
+                context.beginPath();
+                context.rect(-entity.size.width / 2, -entity.size.height / 2, entity.size.width, entity.size.height);
+                context.stroke();
+                context.restore();
+
+                stickyCandidates.forEach((stickyCandidate) => {
+                    context.strokeStyle = 'lime';
+                    context.beginPath();
+                    if (stickyCandidate.axis === 'x') {
+                        context.moveTo(stickyCandidate.tileCoordinate - x, 0);
+                        context.lineTo(stickyCandidate.tileCoordinate - x, width);
+                    } else {
+                        context.moveTo(0, stickyCandidate.tileCoordinate - y);
+                        context.lineTo(width, stickyCandidate.tileCoordinate - y);
+                    }
+                    context.stroke();
+                });
+            }
         });
 
         // Selected entity
@@ -235,6 +281,8 @@ export default class Level extends Tcaer.Component {
 
     @autobind
     _onMouseDown (event) {
+        this._selectedEntity = this._hoverEntity;
+        this._startMoving = new Vector2(event.clientX, event.clientY);
         if (!this.state.isSpacePressed) {
             return;
         }
@@ -244,6 +292,8 @@ export default class Level extends Tcaer.Component {
 
     @autobind
     _onMouseUp () {
+        this._startMoving = null;
+        this._isMoving = false;
         this._isDragging = false;
     }
 
@@ -256,6 +306,43 @@ export default class Level extends Tcaer.Component {
     _onMouseMove (event) {
         const cursorPosition = new Vector2(event.clientX, event.clientY);
         this._cursorPosition = cursorPosition;
+
+        let hoverEntity = null;
+        this.props.entity.name === 'Cursor' && !this._startMoving && this.props.level.entities.forEach((entity) => {
+            if (cursorPosition.x + this.camera.position.x >= entity.position.x - entity.size.width / 2 &&
+                cursorPosition.x + this.camera.position.x <= entity.position.x + entity.size.width / 2 &&
+                cursorPosition.y + this.camera.position.y >= entity.position.y - entity.size.height / 2 &&
+                cursorPosition.y + this.camera.position.y <= entity.position.y + entity.size.height / 2) {
+                hoverEntity = entity;
+            }
+        });
+        this._hoverEntity = hoverEntity;
+
+        if (this._selectedEntity && this._startMoving) {
+            const diff = cursorPosition.subtract(this._startMoving);
+            let position;
+            if (this._isControlPressed) {
+                const stickyCandidates = this._getStickyCandidates(this._selectedEntity, this._cursorPosition);
+                position = stickyCandidates.entityPosition.add(this.camera.position);
+            } else {
+                position = this._selectedEntity.position;
+            }
+            if (this._isMoving) {
+                position.set(position.add(diff));
+                const {top, right, bottom, left} = this.props.level.bounds;
+                position.x = Math.max(left, Math.min(right, position.x));
+                position.y = Math.max(top, Math.min(bottom, position.y));
+                this._startMoving = cursorPosition;
+            } else if (diff.length() > 5) {
+                this._isMoving = true;
+            }
+
+            Object.defineProperty(this._selectedEntity, 'position', {
+                get: () => position,
+                configurable: true
+            });
+        }
+
         if (!this.state.isSpacePressed) {
             return;
         }
@@ -316,6 +403,11 @@ export default class Level extends Tcaer.Component {
             this.setState({isSpacePressed: true});
         } else if (event.keyCode === 17) {
             this._isControlPressed = true;
+        } else if (event.keyCode === 8 || event.keyCode === 46) {
+            this._selectedEntity && this.props.onEntityRemove && this.props.onEntityRemove({
+                entity: this._selectedEntity
+            });
+            this._selectedEntity = null;
         }
     }
 
