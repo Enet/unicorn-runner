@@ -7,6 +7,7 @@ import {
 
 import Level from 'components/Level/Level.jsx';
 import Menu from 'components/Menu/Menu.jsx';
+import Meta from 'components/Meta/Meta.jsx';
 import {
     entities
 } from 'resources.js';
@@ -26,6 +27,50 @@ class LevelMock {
         };
     }
 }
+
+const settingsByEntityName = {
+    Level: {
+        'music': 'MusicMenu',
+        'background': 'Mountains',
+        'bounds.top': -500,
+        'bounds.right': -500,
+        'bounds.bottom': 500,
+        'bounds.left': 500
+    },
+    Frog: {
+        'range.from': 0,
+        'range.to': 0
+    },
+    FruitFly: {
+        'trigger.value': true,
+        'trigger.x': 0,
+        'trigger.y': 0
+    },
+    Info: {
+        'data.ru': '',
+        'data.en': ''
+    },
+    Lizard: {
+        'range.from': 0,
+        'range.to': 0
+    },
+    Platform: {
+        'from.x': 0,
+        'from.y': 0,
+        'to.x': 0,
+        'to.y': 0,
+        'speed': 0
+    },
+    Spider: {
+        'web': 0,
+        'reaction': 0
+    },
+    Stone: {
+        'trigger.value': true,
+        'trigger.x': 0,
+        'trigger.y': 0
+    }
+};
 
 Object.getOwnPropertyNames(GameLevel.prototype).forEach((methodName) => {
     if (LevelMock.prototype.hasOwnProperty(methodName)) {
@@ -63,10 +108,13 @@ export default class App extends Tcaer.Component {
                 entity={this.state.entity}
                 onTileChange={this._onTileChange}
                 onEntityRemove={this._onEntityRemove}
+                onEntitySelect={this._onEntitySelect}
                 onEntityAdd={this._onEntityAdd} />
             <Menu
                 selected={this.state.entity.name}
-                onSelect={this._onEntitySelect} />
+                onSelect={this._onMenuSelect} />
+            <Meta
+                entity={this.state.selected || this._levelMock} />
         </main>
     }
 
@@ -79,6 +127,7 @@ export default class App extends Tcaer.Component {
                 center: new Vector2(0, 0)
             }
         };
+        levelMock.settings = settingsByEntityName.Level;
         this._levelMock = levelMock;
         this._level = {
             tiles: new Matrix(),
@@ -94,7 +143,7 @@ export default class App extends Tcaer.Component {
     }
 
     @autobind
-    _onEntitySelect (entityName) {
+    _onMenuSelect (entityName) {
         if (entityName === 'Tile') {
             return this.setState({
                 entity: new TileMock()
@@ -119,6 +168,7 @@ export default class App extends Tcaer.Component {
         };
         const entity = new Entity({level, settings, x, y});
         entity.name = entityName;
+        entity.settings = settingsByEntityName[entity.name.replace(/Entity$/, '')] || {};
         this.setState({entity});
     }
 
@@ -135,7 +185,14 @@ export default class App extends Tcaer.Component {
             configurable: true
         });
         this._level.entities.push(entity);
-        this._onEntitySelect(entity.name);
+        this._onMenuSelect(entity.name);
+    }
+
+    @autobind
+    _onEntitySelect ({entity}) {
+        this.setState({
+            selected: entity
+        });
     }
 
     @autobind
@@ -145,6 +202,6 @@ export default class App extends Tcaer.Component {
             return;
         }
         this._level.entities.splice(index, 1);
-        this._onEntitySelect('Cursor');
+        this._onMenuSelect('Cursor');
     }
 }

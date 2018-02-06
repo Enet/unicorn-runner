@@ -41,9 +41,12 @@ export default class Level extends Tcaer.Component {
         this._frame = requestAnimationFrame(this._onAnimationFrame);
     }
 
-    componentDidUpdate () {
-        if (this.props.entity) {
+    componentDidUpdate (prevProps) {
+        if (prevProps.entity !== this.props.entity && this.props.entity) {
             this._selectedEntity = null;
+            this.props.onEntitySelect && this.props.onEntitySelect({
+                entity: null
+            });
         }
     }
 
@@ -282,6 +285,9 @@ export default class Level extends Tcaer.Component {
     @autobind
     _onMouseDown (event) {
         this._selectedEntity = this._hoverEntity;
+        this.props.onEntitySelect && this.props.onEntitySelect({
+            entity: this._hoverEntity
+        });
         this._startMoving = new Vector2(event.clientX, event.clientY);
         if (!this.state.isSpacePressed) {
             return;
@@ -408,6 +414,9 @@ export default class Level extends Tcaer.Component {
                 entity: this._selectedEntity
             });
             this._selectedEntity = null;
+            this.props.onEntitySelect && this.props.onEntitySelect({
+                entity: null
+            });
         }
     }
 
