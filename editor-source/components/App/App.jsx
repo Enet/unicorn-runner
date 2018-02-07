@@ -5,6 +5,7 @@ import jsonToLevel from 'utils/jsonToLevel.js';
 import levelToJson from 'utils/levelToJson.js';
 import createEntity from 'utils/createEntity.js';
 import expandSettings from 'utils/expandSettings.js';
+import isInputActive from 'utils/isInputActive.js';
 import Level from 'components/Level/Level.jsx';
 import Menu from 'components/Menu/Menu.jsx';
 import SettingsEditor from 'components/SettingsEditor/SettingsEditor.jsx';
@@ -223,11 +224,13 @@ export default class App extends Tcaer.Component {
         if (keyCode === KEY_ESCAPE) {
             this._onCodeEditorClose();
             this._onHelpClose();
-        } else if (keyCode === KEY_E) {
-            if (document.activeElement &&
-                document.activeElement.tagName === 'INPUT') {
-                return;
-            }
+        }
+
+        if (isInputActive()) {
+            return;
+        }
+
+        if (keyCode === KEY_E) {
             this._onCodeEditorOpen();
         } else if (keyCode === KEY_H) {
             this._onHelpOpen();

@@ -42,6 +42,7 @@ export default class SettingsEditor extends Tcaer.Component {
                     return <label key={settingName} className="settings-editor__label">
                         <span className="settings-editor__text">{settingName}:</span>
                         <input
+                            key={'' + entity.id}
                             className="settings-editor__input"
                             type={type}
                             checked={value}

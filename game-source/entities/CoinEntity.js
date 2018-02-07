@@ -2,6 +2,7 @@ import Entity from 'entities/Entity.js';
 import GameplayScoreTrait from 'traits/GameplayScoreTrait.js';
 import PickableTrait from 'traits/PickableTrait.js';
 import AppearanceFallDownTrait from 'traits/AppearanceFallDownTrait.js';
+import BodyGravityTrait from 'traits/BodyGravityTrait.js';
 
 const COIN_UNPICKABLE_TIME = 500;
 
@@ -26,7 +27,7 @@ export default class CoinEntity extends Entity {
         return 0;
     }
 
-    _createTraits () {
+    _createTraits ({settings}) {
         return [
             new GameplayScoreTrait({
                 deltaScore: this._getNominal()
@@ -34,7 +35,9 @@ export default class CoinEntity extends Entity {
             new AppearanceFallDownTrait({
                 onEnd: this._onFallDownEnd.bind(this)
             })
-        ];
+        ].concat(settings.gravity ? [] : [
+            new BodyGravityTrait()
+        ]);
     }
 
     _onPickableTimerTick () {

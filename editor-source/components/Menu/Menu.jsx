@@ -8,6 +8,7 @@ import {
     KEY_C,
     KEY_Z
 } from 'game/constants.js';
+import isInputActive from 'utils/isInputActive.js';
 
 import './Menu.styl';
 
@@ -67,6 +68,10 @@ export default class Menu extends Tcaer.Component {
 
     @autobind
     _onDocumentKeyDown (event) {
+        if (isInputActive()) {
+            return;
+        }
+
         const {keyCode} = event;
         const {selectedEntityName} = this.props;
         switch (keyCode) {

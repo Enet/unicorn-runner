@@ -21,6 +21,15 @@ const settingsByEntityName = {
         'range.from': 0,
         'range.to': 0
     },
+    Coin10Entity: {
+        'gravity': true
+    },
+    Coin50Entity: {
+        'gravity': true
+    },
+    Coin100Entity: {
+        'gravity': true
+    },
     FrogEntity: {
         'range.from': 0,
         'range.to': 0
@@ -58,6 +67,8 @@ const settingsByEntityName = {
     }
 };
 
+let uniqueEntityId = 0;
+
 export default function createEntity (entityName, options={}) {
     if (entityName === 'LevelEntity') {
         return new LevelMock({
@@ -76,7 +87,7 @@ export default function createEntity (entityName, options={}) {
 
     const settings = false ||
         options.settings ||
-        settingsByEntityName[entityName] ||
+        {...settingsByEntityName[entityName]} ||
         {};
 
     const position = options.position ?
@@ -93,6 +104,7 @@ export default function createEntity (entityName, options={}) {
     const entity = new Entity(options);
     entity.name = entityName;
     entity.settings = settings;
+    entity.id = ++uniqueEntityId;
     entity._shouldRender = () => true;
     Object.defineProperty(entity, 'position', {
         get: () => position,

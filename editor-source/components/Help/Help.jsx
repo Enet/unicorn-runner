@@ -13,8 +13,7 @@ export default class Help extends Tcaer.Component {
         return <div className={className}>
             <div className="help__cell">
                 <div className="help__container">
-                    You can use hotkeys for<br />
-                    the most frequent operations.<br />
+                    <strong className="help__hotkey">SPACE</strong> - move canvas<br />
                     <strong className="help__hotkey">C</strong> - select cursor<br />
                     <strong className="help__hotkey">T</strong> - select tile<br />
                     <strong className="help__hotkey">Z</strong> - select previous entity<br />

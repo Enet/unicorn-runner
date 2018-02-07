@@ -14,6 +14,7 @@ import {
     KEY_DOWN,
     KEY_LEFT
 } from 'game/constants.js';
+import isInputActive from 'utils/isInputActive.js';
 
 import './Level.styl';
 
@@ -578,16 +579,15 @@ export default class Level extends Tcaer.Component {
 
     @autobind
     _onDocumentKeyDown (event) {
+        if (isInputActive()) {
+            return;
+        }
         let dx = 0;
         let dy = 0;
         switch (event.keyCode) {
             case KEY_SPACE:
                 this.setState({isSpacePressed: true});
-                if (document.activeElement &&
-                    document.activeElement.tagName !== 'TEXTAREA' &&
-                    document.activeElement.tagName !== 'INPUT') {
-                    event.preventDefault();
-                }
+                event.preventDefault();
                 break;
             case KEY_CONTROL:
                 this.setState({isControlPressed: true});
