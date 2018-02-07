@@ -29,22 +29,26 @@ export default class MapScreen extends Screen {
         return <nav className="screen__content map-screen__content">
             <div className="map-screen__map">
                 <Step
+                    score={step0}
                     image={step0Image}
                     disabled={progress < 0}
                     className="map-screen__step"
                     onClick={this._onStepClick.bind(this, 0)} />
                 <Step
+                    score={step1}
                     image={step1Image}
                     disabled={progress < 1}
                     className="map-screen__step"
                     onClick={this._onStepClick.bind(this, 1)} />
                 <div className="map-screen__step-separator" />
                 <Step
+                    score={step2}
                     image={step2Image}
                     disabled={progress < 2}
                     className="map-screen__step"
                     onClick={this._onStepClick.bind(this, 2)} />
                 <Step
+                    score={step3}
                     image={step3Image}
                     disabled={progress < 3}
                     className="map-screen__step"

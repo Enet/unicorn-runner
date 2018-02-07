@@ -18,6 +18,7 @@ export default class Step extends Tcaer.Component {
             dataHover={!isDisabled}
             onClick={this._onClick}>
             <img className="step__image" src={this.props.image} />
+            <div className="step__score">{this.props.score}$</div>
         </div>
     }
 

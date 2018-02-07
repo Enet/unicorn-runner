@@ -44,6 +44,7 @@ export default class Menu extends Tcaer.Component {
                     onClick={this._onClick.bind(this, entityName)}
                     className={`menu__entity menu__entity_selected_${isSelected}`}
                     key={entityName}>
+                    {entityName === 'CursorEntity' || entityName === 'TileEntity' ? '' : '+ '}
                     {entityName.replace(/Entity$/, '')}
                 </div>
             })}

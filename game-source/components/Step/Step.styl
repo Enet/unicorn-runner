@@ -1,12 +1,23 @@
 $image-size = 200px
 
 .step
+    position: relative
     display: inline-block
     margin: 0 $ui.size.margin
     transition: transform $ui.transition.fast, filter $ui.transition.fast
 
+    &__score
+        ui-text-stroke($ui.color.white)
+        absolute: bottom 0 left 50%
+        font-size: 0.75rem
+        color: $ui.color.blue
+        transform: translateX(-50%)
+
     &_disabled_true
         filter: grayscale(1)
+
+        .step__score
+            display: none
 
     &_disabled_false
         cursor: pointer
