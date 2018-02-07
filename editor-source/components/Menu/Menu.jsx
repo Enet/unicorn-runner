@@ -53,7 +53,7 @@ export default class Menu extends Tcaer.Component {
 
     _onClick (entityName) {
         this._prevSelected = this.props.selected;
-        this.props.onSelect && this.props.onSelect(entityName);
+        this.props.onSelect && this.props.onSelect(entityName.replace(/Entity$/, ''));
     }
 
     @autobind

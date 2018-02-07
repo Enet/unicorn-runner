@@ -103,9 +103,18 @@ export class Color {
 }
 
 export class Matrix {
-    constructor (table) {
-        this._size = new Vector2(0, 0);
-        this._table = table || [];
+    constructor (matrix) {
+        if (matrix) {
+            this._size = matrix.getSize();
+            this._table = matrix.getTable();
+        } else {
+            this._size = new Vector2(0, 0);
+            this._table = [];
+        }
+    }
+
+    getTable () {
+        return this._table;
     }
 
     getSize () {

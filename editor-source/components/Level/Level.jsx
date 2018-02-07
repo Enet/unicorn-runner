@@ -164,7 +164,7 @@ export default class Level extends Tcaer.Component {
         }
 
         // Bounds
-        const {top, right, bottom, left} = this.props.level.bounds;
+        const {top, right, bottom, left} = this.props.level.meta.bounds;
         context.fillStyle = 'midnightblue';
         if (top > y) {
             context.fillRect(0, 0, width, top - y);
@@ -301,6 +301,9 @@ export default class Level extends Tcaer.Component {
         this._startMoving = null;
         this._isMoving = false;
         this._isDragging = false;
+        this._selectedEntity && this.props.onEntitySelect && this.props.onEntitySelect({
+            entity: this._selectedEntity
+        });
     }
 
     @autobind
@@ -335,7 +338,7 @@ export default class Level extends Tcaer.Component {
             }
             if (this._isMoving) {
                 position.set(position.add(diff));
-                const {top, right, bottom, left} = this.props.level.bounds;
+                const {top, right, bottom, left} = this.props.level.meta.bounds;
                 position.x = Math.max(left, Math.min(right, position.x));
                 position.y = Math.max(top, Math.min(bottom, position.y));
                 this._startMoving = cursorPosition;
@@ -372,7 +375,7 @@ export default class Level extends Tcaer.Component {
         if (this.state.isSpacePressed && this._isDragging) {
             return;
         }
-        const {top, right, bottom, left} = this.props.level.bounds;
+        const {top, right, bottom, left} = this.props.level.meta.bounds;
         const {x, y} = this.camera.position;
         let {clientX, clientY} = event;
         clientX += x;

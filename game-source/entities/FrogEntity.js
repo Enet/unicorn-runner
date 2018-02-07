@@ -112,8 +112,8 @@ export default class FrogEntity extends Entity {
                 onStart: this._onJumpStart.bind(this)
             }),
             new MotionJumpTrait({
-                fromPoint: new Vector2(settings.range[0], y),
-                toPoint: new Vector2(settings.range[1], y)
+                fromPoint: new Vector2(settings.range.from, y),
+                toPoint: new Vector2(settings.range.to, y)
             }),
             new AppearanceFadeOutTrait({
                 onEnd: this._onFadeOutEnd.bind(this)
