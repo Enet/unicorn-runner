@@ -79,6 +79,14 @@ export default class App extends Tcaer.Component {
         this._level = jsonToLevel(json, this.props.manager);
     }
 
+    componentDidMount () {
+        document.addEventListener('keydown', this._onDocumentKeyDown);
+    }
+
+    componentWillUnmount () {
+        document.removeEventListener('keydown', this._onDocumentKeyDown);
+    }
+
     @autobind
     _onMenuSelect (entityName) {
         const level = this._level;
@@ -141,6 +149,15 @@ export default class App extends Tcaer.Component {
             this._level = jsonToLevel(json, this.props.manager);
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    @autobind
+    _onDocumentKeyDown (event) {
+        if (event.keyCode === 27) {
+            this._onEditorClose();
+        } else if (event.keyCode === 69) {
+            this._onEditorOpen();
         }
     }
 }

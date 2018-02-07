@@ -408,7 +408,6 @@ export default class Level extends Tcaer.Component {
     @autobind
     _onDocumentKeyDown (event) {
         if (event.keyCode === 32) {
-            event.preventDefault();
             this.setState({isSpacePressed: true});
         } else if (event.keyCode === 17) {
             this._isControlPressed = true;
