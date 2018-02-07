@@ -612,7 +612,7 @@ export default class Level extends Tcaer.Component {
         const {selectedEntity} = this.props;
         if (selectedEntity && (dx || dy)) {
             const shift = new Vector2(dx, dy).length(event.shiftKey ? 10 : 1);
-            const position = selectedEntity.position.add(shift);
+            const position = this._boundPoint(selectedEntity.position.add(shift));
             Object.defineProperty(selectedEntity, 'position', {
                 get: () => position,
                 configurable: true
