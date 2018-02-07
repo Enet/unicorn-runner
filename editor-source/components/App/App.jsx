@@ -29,6 +29,7 @@ export default class App extends Tcaer.Component {
                 menuEntity={this.state.menuEntity}
                 selectedEntity={this.state.selectedEntity}
                 onTileChange={this._onTileChange}
+                onEntityChange={this._onEntityChange}
                 onEntityRemove={this._onEntityRemove}
                 onEntitySelect={this._onEntitySelect}
                 onEntityAdd={this._onEntityAdd} />
@@ -37,8 +38,10 @@ export default class App extends Tcaer.Component {
                 onSelect={this._onMenuSelect} />
             <SettingsEditor
                 selectedEntity={this.state.selectedEntity || this._level}
+                onReset={this._onReset}
                 onHelpOpen={this._onHelpOpen}
-                onCodeEditorOpen={this._onCodeEditorOpen} />
+                onCodeEditorOpen={this._onCodeEditorOpen}
+                onSettingChange={this._onSettingChange} />
             <CodeEditor
                 opened={this.state.isCodeEditorOpened}
                 json={this._level.json}
@@ -51,7 +54,7 @@ export default class App extends Tcaer.Component {
     }
 
     componentWillMount () {
-        this._level = jsonToLevel(JSON.stringify(getEmptyLevel()), this.props.manager);
+        this._level = jsonToLevel(this._loadLevel(), this.props.manager);
         this.state.isCodeEditorOpened = false;
         this.state.isHelpOpened = false;
         this.state.menuEntity = createEntity('CursorEntity');
@@ -63,6 +66,27 @@ export default class App extends Tcaer.Component {
 
     componentWillUnmount () {
         document.removeEventListener('keydown', this._onDocumentKeyDown);
+    }
+
+    _loadLevel () {
+        try {
+            const json = localStorage.getItem('json');
+            if (!json) {
+                throw 'Empty level is created.';
+            }
+            return json;
+        } catch (error) {
+            console.log(error);
+            return JSON.stringify(getEmptyLevel());
+        }
+    }
+
+    _saveLevel () {
+        try {
+            localStorage.setItem('json', levelToJson(this._level));
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     @autobind
@@ -81,12 +105,14 @@ export default class App extends Tcaer.Component {
         const {tiles} = this._level;
         const tile = tiles.getElement(xIndex, yIndex);
         tiles.setElement(xIndex, yIndex, tile ? null : {});
+        this._saveLevel();
     }
 
     @autobind
     _onEntityAdd ({entity}) {
         this._level.entities.push(entity);
         this._onMenuSelect(entity.name, true);
+        this._saveLevel();
     }
 
     @autobind
@@ -112,6 +138,28 @@ export default class App extends Tcaer.Component {
         const selectedEntity = null;
         this.setState({selectedEntity});
         this._onMenuSelect('CursorEntity');
+        this._saveLevel();
+    }
+
+    @autobind
+    _onSettingChange () {
+        this._saveLevel();
+    }
+
+    @autobind
+    _onEntityChange () {
+        this._saveLevel();
+    }
+
+    @autobind
+    _onReset () {
+        try {
+            localStorage.clear();
+        } catch (error) {
+            console.log(error);
+        }
+        this._level = jsonToLevel(this._loadLevel(), this.props.manager);
+        this.setState();
     }
 
     @autobind
@@ -133,6 +181,7 @@ export default class App extends Tcaer.Component {
         try {
             JSON.parse(json);
             this._level = jsonToLevel(json, this.props.manager);
+            this._saveLevel();
         } catch (error) {
             console.error(error);
         }

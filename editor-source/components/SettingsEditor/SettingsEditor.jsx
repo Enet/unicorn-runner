@@ -51,12 +51,17 @@ export default class SettingsEditor extends Tcaer.Component {
                     <button
                         className="settings-editor__button"
                         onClick={this._onCodeEditorButtonClick}>
-                        Code Editor
+                        Code
                     </button>
                     <button
                         className="settings-editor__button"
                         onClick={this._onHelpButtonClick}>
                         Help
+                    </button>
+                    <button
+                        className="settings-editor__button"
+                        onClick={this._onResetButtonClick}>
+                        Reset
                     </button>
                 </div> : null}
             </div>
@@ -75,6 +80,14 @@ export default class SettingsEditor extends Tcaer.Component {
         entity.settings[settingName] = value;
         if (entity.name === 'LevelEntity') {
             entity.meta = expandSettings(entity.settings);
+        }
+        this.props.onSettingChange && this.props.onSettingChange();
+    }
+
+    @autobind
+    _onResetButtonClick () {
+        if (confirm('Do you want to reset the level? Data will be lost!')) {
+            this.props.onReset && this.props.onReset();
         }
     }
 

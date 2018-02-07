@@ -14,7 +14,7 @@ export default function jsonToLevel (json, manager) {
     const settings = data.meta ? flattenSettings(data.meta) : {};
     const level = createEntity('LevelEntity', {settings, manager});
 
-    const tiles = generateTileMatrix(data.tiles, data.patterns, () => {});
+    const tiles = generateTileMatrix(data.tiles, data.patterns, () => ({}));
     const entities = data.entities.map((entity) => {
         return createEntity(entity.name + 'Entity', {
             level,

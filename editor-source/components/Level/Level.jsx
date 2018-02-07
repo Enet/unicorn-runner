@@ -198,8 +198,12 @@ export default class Level extends Tcaer.Component {
     }
 
     _stopEntityMoving () {
+        if (!this._isMoving && !this._moveStartPoint) {
+            return;
+        }
         this._moveStartPoint = null;
         this._isMoving = false;
+        this.props.onEntityChange && this.props.onEntityChange();
     }
 
     _stopLevelDragging () {
