@@ -24,6 +24,9 @@ export default class SettingsEditor extends Tcaer.Component {
                     <br />
                 </span> : null}
                 {Object.keys(settings).map((settingName) => {
+                    if (settingName === 'start.x' || settingName === 'start.y') {
+                        return <span />;
+                    }
                     let type;
                     let value = settings[settingName];
                     if (typeof value === 'number') {

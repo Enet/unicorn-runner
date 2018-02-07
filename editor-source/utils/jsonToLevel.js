@@ -2,6 +2,9 @@ import createEntity from 'utils/createEntity.js';
 import flattenSettings from 'utils/flattenSettings.js';
 import getEmptyLevel from 'utils/getEmptyLevel.js';
 import generateTileMatrix from 'game/utils/generateTileMatrix.js';
+import {
+    TILE_SIZE
+} from 'game/constants.js';
 
 export default function jsonToLevel (json, manager) {
     let data;
@@ -23,6 +26,11 @@ export default function jsonToLevel (json, manager) {
         });
     });
     const meta = data.meta;
+
+    entities.push(createEntity('PlayerEntity', {
+        level,
+        position: meta.start || {x: TILE_SIZE, y: TILE_SIZE}
+    }));
 
     Object.assign(level, {tiles, entities, meta, json});
     return level;

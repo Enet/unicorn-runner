@@ -181,9 +181,7 @@ export default class Level extends Tcaer.Component {
         if (this.state.isSpacePressed) {
             return;
         }
-        this.props.onEntitySelect && this.props.onEntitySelect({
-            entity: this._hoverEntity
-        });
+        this.props.onEntitySelect && this.props.onEntitySelect(this._hoverEntity);
     }
 
     _startLevelDragging () {
@@ -207,7 +205,11 @@ export default class Level extends Tcaer.Component {
         }
         this._moveStartPoint = null;
         this._isMoving = false;
+
+        const {selectedEntity} = this.props;
+        selectedEntity && selectedEntity.name === 'PlayerEntity' && this._changeStart(selectedEntity.position);
         this.props.onEntityChange && this.props.onEntityChange();
+
     }
 
     _stopLevelDragging () {
@@ -235,17 +237,21 @@ export default class Level extends Tcaer.Component {
             get: () => entityPosition,
             configurable: true
         });
-        this.props.onEntityAdd && this.props.onEntityAdd({
-            entity: menuEntity
-        });
+        menuEntity.name === 'PlayerEntity' && this._changeStart(entityPosition);
+        this.props.onEntityAdd && this.props.onEntityAdd(menuEntity);
     }
 
     _removeEntity () {
-        this.props.selectedEntity &&
-        this.props.onEntityRemove &&
-        this.props.onEntityRemove({
-            entity: this.props.selectedEntity
-        });
+        const {selectedEntity} = this.props;
+        if (selectedEntity) {
+            selectedEntity.name === 'PlayerEntity' && this._changeStart();
+            this.props.onEntityRemove && this.props.onEntityRemove(selectedEntity);
+        }
+    }
+
+    _changeStart (position) {
+        position = position || new Vector2(TILE_SIZE, TILE_SIZE);
+        this.props.onStartChange && this.props.onStartChange(position);
     }
 
     _clearCanvas () {
@@ -611,7 +617,9 @@ export default class Level extends Tcaer.Component {
                 get: () => position,
                 configurable: true
             });
+
             this.props.onEntityChange && this.props.onEntityChange();
+            selectedEntity.name === 'PlayerEntity' && this._changeStart(selectedEntity.position);
         }
     }
 

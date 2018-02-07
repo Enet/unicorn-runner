@@ -4,6 +4,7 @@ import getEmptyLevel from 'utils/getEmptyLevel.js';
 import jsonToLevel from 'utils/jsonToLevel.js';
 import levelToJson from 'utils/levelToJson.js';
 import createEntity from 'utils/createEntity.js';
+import expandSettings from 'utils/expandSettings.js';
 import Level from 'components/Level/Level.jsx';
 import Menu from 'components/Menu/Menu.jsx';
 import SettingsEditor from 'components/SettingsEditor/SettingsEditor.jsx';
@@ -28,6 +29,7 @@ export default class App extends Tcaer.Component {
                 level={this._level}
                 menuEntity={this.state.menuEntity}
                 selectedEntity={this.state.selectedEntity}
+                onStartChange={this._onStartChange}
                 onTileChange={this._onTileChange}
                 onEntityChange={this._onEntityChange}
                 onEntityRemove={this._onEntityRemove}
@@ -109,14 +111,29 @@ export default class App extends Tcaer.Component {
     }
 
     @autobind
-    _onEntityAdd ({entity}) {
-        this._level.entities.push(entity);
+    _onStartChange (position) {
+        const level = this._level;
+        level.settings['start.x'] = position.x;
+        level.settings['start.y'] = position.y;
+        level.meta = expandSettings(level.settings);
+    }
+
+    @autobind
+    _onEntityAdd (entity) {
+        const {entities} = this._level;
+        if (entity.name === 'PlayerEntity') {
+            const index = entities.findIndex(e => e.name === entity.name);
+            if (index !== -1) {
+                entities.splice(index, 1);
+            }
+        }
+        entities.push(entity);
         this._onMenuSelect(entity.name, true);
         this._saveLevel();
     }
 
     @autobind
-    _onEntitySelect ({entity}) {
+    _onEntitySelect (entity) {
         const {entities} = this._level;
         const index = entities.indexOf(entity);
         if (index !== -1) {
@@ -128,7 +145,7 @@ export default class App extends Tcaer.Component {
     }
 
     @autobind
-    _onEntityRemove ({entity}) {
+    _onEntityRemove (entity) {
         const {entities} = this._level;
         const index = entities.indexOf(entity);
         if (index === -1) {

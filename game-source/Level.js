@@ -139,9 +139,10 @@ export default class Level {
             .once('end', this._onGameWin.bind(this));
     }
 
-    placePlayer () {
+    placePlayer ({meta}) {
+        const start = meta.start || {x: TILE_SIZE, y: TILE_SIZE};
         const {player} = this;
-        player.body.place(new Vector2(TILE_SIZE, TILE_SIZE));
+        player.body.place(new Vector2(start.x, start.y));
     }
 
     isStopped () {
@@ -357,7 +358,7 @@ export default class Level {
         const player = new PlayerEntity({level});
         this.player = player;
         this.addEntity(player);
-        this.placePlayer();
+        this.placePlayer(data);
         return player;
     }
 
