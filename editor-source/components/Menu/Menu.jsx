@@ -1,9 +1,13 @@
 import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
-
 import {
     entities
-} from 'resources.js';
+} from 'game/resources.js';
+import {
+    KEY_T,
+    KEY_C,
+    KEY_Z
+} from 'game/constants.js';
 
 import './Menu.styl';
 
@@ -20,9 +24,12 @@ const hiddenEntityNames = [
     'StaticEntity',
     'UnicornEntity'
 ];
-const entityNames = ['Cursor', 'Tile'].concat(Object.keys(entities).filter((entityName) => {
-    return hiddenEntityNames.indexOf(entityName) === -1;
-}));
+const entityNames = []
+    .concat('CursorEntity', 'TileEntity')
+    .concat(Object.keys(entities))
+    .filter((entityName) => {
+        return hiddenEntityNames.indexOf(entityName) === -1;
+    });
 
 export default class Menu extends Tcaer.Component {
     render () {
@@ -32,9 +39,10 @@ export default class Menu extends Tcaer.Component {
 
         return <div className={className}>
             {entityNames.map((entityName) => {
+                const isSelected = entityName === this.props.selectedEntityName;
                 return <div
                     onClick={this._onClick.bind(this, entityName)}
-                    className={`menu__entity menu__entity_selected_${entityName === this.props.selected}`}
+                    className={`menu__entity menu__entity_selected_${isSelected}`}
                     key={entityName}>
                     {entityName.replace(/Entity$/, '')}
                 </div>
@@ -43,7 +51,7 @@ export default class Menu extends Tcaer.Component {
     }
 
     componentDidMount () {
-        this._prevSelected = this.props.selected;
+        this._prevSelectedEntityName = this.props.selectedEntityName;
         document.addEventListener('keydown', this._onDocumentKeyDown);
     }
 
@@ -52,22 +60,27 @@ export default class Menu extends Tcaer.Component {
     }
 
     _onClick (entityName) {
-        this._prevSelected = this.props.selected;
-        this.props.onSelect && this.props.onSelect(entityName.replace(/Entity$/, ''));
+        this._prevSelectedEntityName = this.props.selectedEntityName;
+        this.props.onSelect && this.props.onSelect(entityName);
     }
 
     @autobind
     _onDocumentKeyDown (event) {
-        if (event.keyCode === 84) {
-            this._prevSelected = this.props.selected;
-            this._onClick('Tile');
-        } else if (event.keyCode === 67) {
-            this._prevSelected = this.props.selected;
-            this._onClick('Cursor');
-        } else if (event.keyCode === 90) {
-            const {selected} = this.props;
-            this._onClick(this._prevSelected);
-            this._prevSelected = selected;
+        const {keyCode} = event;
+        const {selectedEntityName} = this.props;
+        switch (keyCode) {
+            case KEY_T:
+                this._prevSelectedEntityName = selectedEntityName;
+                this._onClick('TileEntity');
+                break;
+            case KEY_C:
+                this._prevSelectedEntityName = selectedEntityName;
+                this._onClick('CursorEntity');
+                break;
+            case KEY_Z:
+                this._onClick(this._prevSelectedEntityName);
+                this._prevSelectedEntityName = selectedEntityName;
+                break;
         }
     }
 }

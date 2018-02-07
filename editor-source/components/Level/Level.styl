@@ -1,6 +1,13 @@
 .level
-    background: grey
+    height: 100%
+    width: 100%
+    absolute: top 0 left 0
+    overflow: hidden
+    background: $ui.color.seashell
 
-    &_moving_true
-        cursor: -webkit-grab
+    for $key, $value in $ui.color
+        &__color_{$key}
+            background: $value
+
+    &_dragging_true
         cursor: move

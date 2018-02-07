@@ -6,47 +6,51 @@ import LevelMock from 'mocks/LevelMock.js';
 import expandSettings from 'utils/expandSettings.js';
 import {
     entities
-} from 'resources.js';
+} from 'game/resources.js';
 
 const settingsByEntityName = {
-    Level: {
+    LevelEntity: {
         'music': 'MusicMenu',
         'background': 'Mountains',
-        'bounds.top': -500,
-        'bounds.right': -500,
-        'bounds.bottom': 500,
-        'bounds.left': 500
+        'bounds.top': 0,
+        'bounds.right': 0,
+        'bounds.bottom': 0,
+        'bounds.left': 0
     },
-    Frog: {
+    BirdEntity: {
         'range.from': 0,
         'range.to': 0
     },
-    FruitFly: {
+    FrogEntity: {
+        'range.from': 0,
+        'range.to': 0
+    },
+    FruitFlyEntity: {
         'trigger.isPositive': true,
         'trigger.isHorizontal': true,
         'trigger.x': 0,
         'trigger.y': 0
     },
-    Info: {
+    InfoEntity: {
         'ru': '',
         'en': ''
     },
-    Lizard: {
+    LizardEntity: {
         'range.from': 0,
         'range.to': 0
     },
-    Platform: {
+    PlatformEntity: {
         'from.x': 0,
         'from.y': 0,
         'to.x': 0,
         'to.y': 0,
         'speed': 0
     },
-    Spider: {
+    SpiderEntity: {
         'web': 0,
         'reaction': 0
     },
-    Stone: {
+    StoneEntity: {
         'trigger.isPositive': true,
         'trigger.isHorizontal': true,
         'trigger.x': 0,
@@ -55,16 +59,16 @@ const settingsByEntityName = {
 };
 
 export default function createEntity (entityName, options={}) {
-    if (entityName === 'Level') {
+    if (entityName === 'LevelEntity') {
         return new LevelMock({
-            ...settingsByEntityName.Level,
+            ...settingsByEntityName[entityName],
             ...options.settings
         }, options.manager);
-    } else if (entityName === 'Tile') {
+    } else if (entityName === 'TileEntity') {
         return new TileMock();
     }
 
-    const Entity = entities[entityName + 'Entity'];
+    const Entity = entities[entityName];
     if (!Entity) {
         const pseudoEntity = {name: entityName};
         return pseudoEntity;
@@ -72,7 +76,7 @@ export default function createEntity (entityName, options={}) {
 
     const settings = false ||
         options.settings ||
-        settingsByEntityName[entityName.replace(/Entity$/, '')] ||
+        settingsByEntityName[entityName] ||
         {};
 
     const position = options.position ?
@@ -89,6 +93,7 @@ export default function createEntity (entityName, options={}) {
     const entity = new Entity(options);
     entity.name = entityName;
     entity.settings = settings;
+    entity._shouldRender = () => true;
     Object.defineProperty(entity, 'position', {
         get: () => position,
         configurable: true

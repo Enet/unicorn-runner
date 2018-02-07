@@ -1,20 +1,19 @@
 .menu
-    box-sizing: border-box
-    fixed: top 0 right 0
-    height: 100%
+    height: calc(100% - 300px)
     width: 300px
-    padding: 24px
-    background: black
-    color: white
+    fixed: top 300px right 0
+    padding: $ui.size.margin
+    box-sizing: border-box
+    background: $ui.color.black
     font-size: 0.4rem
-    line-height: 1.5
     overflow-y: scroll
 
     &__entity
         cursor: pointer
 
         &:hover
-            color: red
+            color: $ui.color.pink
 
         &_selected_true
+            color: $ui.color.pink
             font-weight: bold

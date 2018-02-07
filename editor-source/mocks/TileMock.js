@@ -3,25 +3,24 @@ import {
 } from 'engine/math.js';
 import {
     TILE_SIZE
-} from 'constants.js';
+} from 'game/constants.js';
 
 const HALF_TILE_SIZE = TILE_SIZE * 0.5;
-const TILE_COLOR = 'orange';
 
 export default class TileMock {
     get angle () {
         return 0;
     }
 
-    render (context) {
+    render (context, camera, color) {
         context.beginPath();
-        context.fillStyle = TILE_COLOR;
+        context.fillStyle = color;
         context.fillRect(-HALF_TILE_SIZE, -HALF_TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 
     constructor () {
         this.size = new Vector2(TILE_SIZE, TILE_SIZE);
-        this.name = 'Tile';
+        this.name = 'TileEntity';
         this.settings = {};
     }
 }

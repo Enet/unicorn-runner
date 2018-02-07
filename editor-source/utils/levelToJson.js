@@ -5,7 +5,7 @@ export default function levelToJson (level) {
     const {meta} = level;
     const entities = level.entities.map((entity) => {
         return {
-            name: entity.name,
+            name: entity.name.replace(/Entity$/, ''),
             position: {
                 x: entity.position.x,
                 y: entity.position.y

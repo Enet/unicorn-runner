@@ -1,6 +1,7 @@
 import createEntity from 'utils/createEntity.js';
 import flattenSettings from 'utils/flattenSettings.js';
-import generateTileMatrix from '../../game-source/utils/generateTileMatrix.js';
+import getEmptyLevel from 'utils/getEmptyLevel.js';
+import generateTileMatrix from 'game/utils/generateTileMatrix.js';
 
 export default function jsonToLevel (json, manager) {
     let data;
@@ -8,23 +9,14 @@ export default function jsonToLevel (json, manager) {
         data = JSON.parse(json);
     } catch (error) {
         console.error(error);
-        data = {
-            meta: {
-                background: '',
-                music: '',
-                bounds: {top: 0, right: 0, bottom: 0, left: 0}
-            },
-            patterns: [],
-            tiles: [],
-            entities: []
-        };
+        data = getEmptyLevel();
     }
     const settings = data.meta ? flattenSettings(data.meta) : {};
-    const level = createEntity('Level', {settings, manager});
+    const level = createEntity('LevelEntity', {settings, manager});
 
     const tiles = generateTileMatrix(data.tiles, data.patterns, () => {});
     const entities = data.entities.map((entity) => {
-        return createEntity(entity.name, {
+        return createEntity(entity.name + 'Entity', {
             level,
             position: entity.position,
             settings: entity.settings ? flattenSettings(entity.settings) : null

@@ -1,0 +1,30 @@
+.code-editor
+    height: 100%
+    width: 100%
+    fixed: top 0 left 0
+    background: $ui.color.white
+
+    &__textarea
+        height: 100%
+        width: 100%
+        padding: $ui.size.margin * 0.5
+        padding-bottom: $ui.size.base
+        box-sizing: border-box
+        font-size: 0.4rem
+
+    &__footer
+        height: $ui.size.base
+        width: 100%
+        absolute: bottom 0 left 0
+        background: $ui.color.black
+
+    &__button
+        float: left
+        margin: 10px
+        font-size: 0.4rem
+
+        &:first-child
+            margin-right: 0
+
+    &_opened_false
+        display: none

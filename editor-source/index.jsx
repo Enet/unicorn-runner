@@ -1,12 +1,11 @@
 import 'styles/index.styl';
 
 import Tcaer from 'tcaer';
-
 import App from 'components/App/App.jsx';
-import UnicornResourceManager from '../game-source/UnicornResourceManager.js';
+import UnicornResourceManager from 'game/UnicornResourceManager.js';
 import {
     images
-} from 'resources.js';
+} from 'game/resources.js';
 
 const manager = new UnicornResourceManager();
 manager.fetchResources({images}).then(() => {

@@ -15,7 +15,10 @@ module.exports = function UnicornWebpackConfig (appName, port=8080) {
 
         resolve: {
             extensions: ['.js', '.jsx'],
-            modules: [appName + '-source', 'game-source', 'node_modules']
+            modules: [appName + '-source', 'game-source', 'node_modules'],
+            alias: appName === 'editor' ? {
+                game: path.resolve(__dirname, 'game-source')
+            } : {}
         },
 
         entry: {

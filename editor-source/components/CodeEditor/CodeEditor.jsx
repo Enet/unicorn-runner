@@ -1,25 +1,33 @@
 import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
 
-import './Editor.styl';
+import './CodeEditor.styl';
 
-export default class Editor extends Tcaer.Component {
+export default class CodeEditor extends Tcaer.Component {
     render () {
         const className = [
-            `editor`,
-            `editor_opened_${!!this.props.opened}`
+            `code-editor`,
+            `code-editor_opened_${!!this.props.opened}`
         ];
 
         return <div className={className}>
             <textarea
-                className="editor__textarea"
+                className="code-editor__textarea"
                 key={this.state.json}
                 onChange={this._onTextareaChange}>
                 {this.state.json}
             </textarea>
-            <footer className="editor__footer">
-                <button onClick={this._onSaveButtonClick}>Save</button>
-                <button onClick={this._onCloseButtonClick}>Close</button>
+            <footer className="code-editor__footer">
+                <button
+                    className="code-editor__button"
+                    onClick={this._onSaveButtonClick}>
+                    Save
+                </button>
+                <button
+                    className="code-editor__button"
+                    onClick={this._onCloseButtonClick}>
+                    Close
+                </button>
             </footer>
         </div>
     }

@@ -85,8 +85,8 @@ export default class BirdEntity extends Entity {
                 maxAngle: Math.PI / 3
             }),
             new MotionWalkerTrait({
-                fromPoint: new Vector2(range[0], y),
-                toPoint: new Vector2(range[1], y),
+                fromPoint: new Vector2(+range.from, y),
+                toPoint: new Vector2(+range.to, y),
                 speed: 0.1
             }),
             new TriggerContactTrait({

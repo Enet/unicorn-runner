@@ -1,20 +1,45 @@
-import Tcaer from 'tcaer';
-import autobind from 'tcaer/autobind';
 import {
     Vector2
 } from 'engine/math.js';
-
+import Tcaer from 'tcaer';
+import autobind from 'tcaer/autobind';
 import {
-    TILE_SIZE
-} from 'constants.js';
+    TILE_SIZE,
+    KEY_SPACE,
+    KEY_CONTROL,
+    KEY_TAB,
+    KEY_BACKSPACE
+} from 'game/constants.js';
 
 import './Level.styl';
+
+const colorNames = [
+    'black', 'white', 'seashell', 'pink', 'violet',
+    'ultraviolet', 'blue', 'red', 'green', 'aqua', 'yellow'
+];
+const colorValues = {};
+const colorNode = document.createElement('span');
+document.body.appendChild(colorNode);
+colorNames.forEach((colorName) => {
+    colorNode.className = 'level__color_' + colorName;
+    colorValues[colorName] = window.getComputedStyle(colorNode).backgroundColor;
+});
+document.body.removeChild(colorNode);
+
+const COLOR_MESH = colorValues.pink;
+const COLOR_BOUND = colorValues.pink;
+const COLOR_TILE = colorValues.violet;
+const COLOR_SCALE = colorValues.black;
+const COLOR_BORDER = colorValues.blue;
+const COLOR_SELECTION = colorValues.blue;
+const COLOR_STICKY_EDGE = colorValues.green;
+const STICKY_EDGE_DISTANCE = 5;
 
 export default class Level extends Tcaer.Component {
     render () {
         const className = [
             `level`,
-            `level_moving_${!!this.state.isSpacePressed}`
+            `level_dragging_${!!this.state.isSpacePressed}`
         ];
 
         return <div
@@ -29,6 +54,8 @@ export default class Level extends Tcaer.Component {
     }
 
     componentDidMount () {
+        this._cursorPosition = new Vector2(0, 0);
+        this._prevCursorPosition = this._cursorPosition;
         this.camera = {
             position: new Vector2(0, 0),
             size: new Vector2(0, 0)
@@ -41,131 +68,243 @@ export default class Level extends Tcaer.Component {
         this._frame = requestAnimationFrame(this._onAnimationFrame);
     }
 
-    componentDidUpdate (prevProps) {
-        if (prevProps.entity !== this.props.entity && this.props.entity) {
-            this._selectedEntity = null;
-            this.props.onEntitySelect && this.props.onEntitySelect({
-                entity: null
-            });
-        }
-    }
-
     componentWillUnmount () {
         document.removeEventListener('keydown', this._onDocumentKeyDown);
         document.removeEventListener('keyup', this._onDocumentKeyUp);
         window.removeEventListener('resize', this._onWindowResize);
+        cancelAnimationFrame(this._frame);
     }
 
-    _getStickyCandidates (entity, entityPosition, secondStep=false) {
-        if (!secondStep) {
-            entityPosition = entityPosition.add(this.camera.position);
-        }
+    _isPointInsideEntity (point, entity) {
+        point = point.add(this.camera.position);
+        const {position, size} = entity;
+        const {x, y} = position;
+        const {width, height} = size;
 
-        const fromIndex = {
-            x: Math.floor((entityPosition.x - entity.size.width / 2) / TILE_SIZE),
-            y: Math.floor((entityPosition.y - entity.size.height / 2) / TILE_SIZE)
-        };
-        const toIndex = {
-            x: Math.ceil((entityPosition.x + entity.size.width / 2) / TILE_SIZE),
-            y: Math.ceil((entityPosition.y + entity.size.height / 2) / TILE_SIZE)
-        };
+        return true &&
+            point.x >= x - width / 2 &&
+            point.x <= x + width / 2 &&
+            point.y >= y - height / 2 &&
+            point.y <= y + height / 2;
+    }
 
-        let stickyDistance = 5;
-        let stickyCandidates = [];
-        let minStickyDistance = new Vector2(Infinity, Infinity);
+    _isPointInsideBounds (point) {
+        point = point.add(this.camera.position);
+        const {top, right, bottom, left} = this._getBounds();
+        return true &&
+            point.x >= left &&
+            point.x <= right &&
+            point.y >= top &&
+            point.y <= bottom;
+    }
 
-        if (entity.name === 'Tile') {
-            stickyDistance = TILE_SIZE;
-        }
+    _updateCursorPosition (cursorPosition) {
+        this._prevCursorPosition = this._cursorPosition;
+        this._cursorPosition = cursorPosition;
+    }
 
-        for (let entityOffset = -0.5; entityOffset <= 0.5; entityOffset += 0.5) {
-            if (entity.name === 'Tile' && !entityOffset) {
-                continue;
+    _updateHoverEntity () {
+        const cursorPosition = this._cursorPosition;
+        let hoverEntity = null;
+
+        this.props.menuEntity.name === 'CursorEntity' &&
+        !this._isMoving &&
+        this.props.level.entities.forEach((entity) => {
+            if (!this._isPointInsideEntity(cursorPosition, entity)) {
+                return;
             }
-            for (let tileOffset = 0; tileOffset <= 1; tileOffset += 0.5) {
-                if (entity.name === 'Tile' && tileOffset === 0.5) {
-                    continue;
-                }
-                for (let coordinateProp in fromIndex) {
-                    const sizeProp = coordinateProp === 'x' ? 'width' : 'height';
-                    for (let index = fromIndex[coordinateProp]; index < toIndex[coordinateProp]; index++) {
-                        const tileCoordinate = index * TILE_SIZE + tileOffset * TILE_SIZE;
-                        const entityCoordinate = entityPosition[coordinateProp] + entityOffset * entity.size[sizeProp];
-                        const distance = entityCoordinate - tileCoordinate;
-                        if (Math.abs(distance) <= stickyDistance) {
-                            stickyCandidates.push({
-                                axis: coordinateProp,
-                                distance: Math.abs(distance),
-                                tileCoordinate,
-                                entityCoordinate,
-                                position: tileCoordinate - entityOffset * entity.size[sizeProp]
-                            });
-                            minStickyDistance[coordinateProp] = Math.min(minStickyDistance[coordinateProp], Math.abs(distance));
-                        }
-                    }
-                }
-            }
-        }
-
-        stickyCandidates = stickyCandidates.filter((stickyCandidate) => {
-            const f = !(stickyCandidate.distance > minStickyDistance[stickyCandidate.axis]);
-            if (f) {
-                entityPosition[stickyCandidate.axis] = stickyCandidate.position;
-            }
-            return f;
+            hoverEntity = entity;
         });
 
-        if (secondStep) {
-            stickyCandidates.entityPosition = entityPosition.subtract(this.camera.position);
-            return stickyCandidates;
-        } else {
-            return this._getStickyCandidates(entity, entityPosition, true);
+        this._hoverEntity = hoverEntity;
+    }
+
+    _getBounds () {
+        return this.props.level.meta.bounds;
+    }
+
+    _boundPoint (point) {
+        const {top, right, bottom, left} = this._getBounds();
+        point.x = Math.max(left, Math.min(right, point.x));
+        point.y = Math.max(top, Math.min(bottom, point.y));
+        return point;
+    }
+
+    _moveEntity () {
+        const entity = this.props.selectedEntity;
+        if (!entity) {
+            return;
         }
+        if (!this._moveStartPoint) {
+            return;
+        }
+        const cursorPosition = this._cursorPosition;
+        const moveImpulse = cursorPosition.subtract(this._moveStartPoint);
+        let {position} = entity;
+
+        if (this.state.isControlPressed) {
+            const stickyEdges = this._getStickyEdges(entity, cursorPosition);
+            position = stickyEdges.entityPosition.add(this.camera.position);
+        }
+
+        if (this._isMoving) {
+            position = this._boundPoint(position.add(moveImpulse));
+            this._moveStartPoint = cursorPosition;
+        } else if (moveImpulse.length() > 5) {
+            this._isMoving = true;
+        }
+
+        Object.defineProperty(entity, 'position', {
+            get: () => position,
+            configurable: true
+        });
     }
 
-    @autobind
-    _onCanvasRef (node) {
-        this._context = node.getContext('2d');
+    _dragLevel () {
+        if (!this.state.isSpacePressed) {
+            return;
+        }
+        if (!this._isDragging) {
+            return;
+        }
+        const cursorPosition = this._cursorPosition;
+        const prevCursorPosition = this._prevCursorPosition;
+        const dragImpulse = cursorPosition.subtract(prevCursorPosition).length(-1);
+        this.camera.position.set(this.camera.position.add(dragImpulse));
     }
 
-    @autobind
-    _onWindowResize () {
-        this._context.canvas.width = this.camera.size.width = window.innerWidth - 250;
-        this._context.canvas.height = this.camera.size.height = window.innerHeight - 20;
+    _selectEntity () {
+        if (this.state.isSpacePressed) {
+            return;
+        }
+        this.props.onEntitySelect && this.props.onEntitySelect({
+            entity: this._hoverEntity
+        });
     }
 
-    @autobind
-    _onAnimationFrame () {
-        const context = this._context;
+    _startLevelDragging () {
+        if (!this.state.isSpacePressed) {
+            return;
+        }
+        this._isDragging = true;
+    }
+
+    _startEntityMoving () {
+        if (this._isDragging) {
+            return;
+        }
+        this._isMoving = false;
+        this._moveStartPoint = this._cursorPosition.clone();
+    }
+
+    _stopEntityMoving () {
+        this._moveStartPoint = null;
+        this._isMoving = false;
+    }
+
+    _stopLevelDragging () {
+        this._isDragging = false;
+    }
+
+    _changeTile () {
+        const cursorPosition = this._cursorPosition;
+        const tilePosition = cursorPosition.add(this.camera.position);
+        const xIndex = Math.floor(tilePosition.x / TILE_SIZE);
+        const yIndex = Math.floor(tilePosition.y / TILE_SIZE);
+        this.props.onTileChange && this.props.onTileChange({xIndex, yIndex});
+    }
+
+    _addEntity () {
+        const {menuEntity} = this.props;
+        const cursorPosition = this._cursorPosition;
+        let entityPosition = cursorPosition.clone();
+        if (this.state.isControlPressed) {
+            const stickyEdges = this._getStickyEdges(menuEntity, cursorPosition);
+            entityPosition = stickyEdges.entityPosition;
+        }
+        entityPosition = entityPosition.add(this.camera.position);
+        Object.defineProperty(menuEntity, 'position', {
+            get: () => entityPosition,
+            configurable: true
+        });
+        this.props.onEntityAdd && this.props.onEntityAdd({
+            entity: menuEntity
+        });
+    }
+
+    _removeEntity () {
+        this.props.selectedEntity &&
+        this.props.onEntityRemove &&
+        this.props.onEntityRemove({
+            entity: this.props.selectedEntity
+        });
+    }
+
+    _clearCanvas () {
+        const {context} = this;
         const {canvas} = context;
         context.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
-        // Camera
-        const {x, y} = this.camera.position;
-        const {width, height} = this.camera.size;
+    _getLimits () {
+        const {camera} = this;
+        const {position, size} = camera;
+        const {width, height} = size;
+        const {x, y} = position;
 
-        // Mesh
         const xFrom = (x / TILE_SIZE | 0) - 1;
         const xTo = ((x + width) / TILE_SIZE | 0) + 1;
         const yFrom = (y / TILE_SIZE | 0) - 1;
         const yTo = ((y + height) / TILE_SIZE | 0) + 1;
+
+        return {xFrom, xTo, yFrom, yTo};
+    }
+
+    _renderMesh () {
+        const {xFrom, xTo, yFrom, yTo} = this._getLimits();
+        const {x, y} = this.camera.position;
+        const {context} = this;
+        const {tiles} = this.props.level;
+
         for (let yIndex = yFrom; yIndex < yTo; yIndex++) {
             for (let xIndex = xFrom; xIndex < xTo; xIndex++) {
                 context.beginPath();
-                context.strokeStyle = 'yellow';
-                context.fillStyle = 'orange';
+                context.strokeStyle = COLOR_MESH;
+                context.fillStyle = COLOR_TILE;
                 context.lineWidth = 2;
                 context.rect(xIndex * TILE_SIZE - x, yIndex * TILE_SIZE - y, TILE_SIZE, TILE_SIZE);
                 context.stroke();
-                if (this.props.level.tiles.getElement(xIndex, yIndex)) {
+                if (tiles.getElement(xIndex, yIndex)) {
                     context.fill();
                 }
             }
         }
+    }
 
-        // Bounds
-        const {top, right, bottom, left} = this.props.level.meta.bounds;
-        context.fillStyle = 'midnightblue';
+    _renderScale () {
+        const {xFrom, xTo, yFrom, yTo} = this._getLimits();
+        const {x, y} = this.camera.position;
+        const {context} = this;
+
+        context.fillStyle = COLOR_SCALE;
+        context.font = '20px sans-serif';
+        context.textAlign = 'start';
+        for (let yIndex = yFrom; yIndex < yTo + 1; yIndex++) {
+            context.fillText(yIndex - 1, 0, (yIndex - 0.5) * TILE_SIZE + 10 - y);
+        }
+        context.textAlign = 'center';
+        for (let xIndex = xFrom; xIndex < xTo + 1; xIndex++) {
+            context.fillText(xIndex - 1, (xIndex - 0.5) * TILE_SIZE - x, 20);
+        }
+    }
+
+    _renderBounds () {
+        const {top, right, bottom, left} = this._getBounds();
+        const {context, camera} = this;
+        const {width, height} = camera.size;
+        const {x, y} = camera.position;
+
+        context.fillStyle = COLOR_BOUND;
         if (top > y) {
             context.fillRect(0, 0, width, top - y);
         }
@@ -178,132 +317,216 @@ export default class Level extends Tcaer.Component {
         if (left > x) {
             context.fillRect(0, 0, left - x, height);
         }
+    }
 
-        // Entities
+    _renderEntity (entity, position, alpha) {
+        const {context, camera} = this;
+        const {x, y} = position;
+        context.save();
+        context.translate(x, y);
+        context.rotate(entity.angle);
+        context.globalAlpha = alpha;
+        entity.render(context, camera, COLOR_TILE);
+        context.restore();
+    }
+
+    _renderMenuEntity () {
+        const {menuEntity} = this.props;
+        if (menuEntity.name === 'CursorEntity') {
+            return;
+        }
+
+        let entityPosition = this._cursorPosition;
+        let stickyEdges = [];
+        if (this.state.isControlPressed || menuEntity.name === 'TileEntity') {
+            stickyEdges = this._getStickyEdges(menuEntity, entityPosition);
+            entityPosition = stickyEdges.entityPosition;
+        }
+
+        this._renderEntity(menuEntity, entityPosition, 0.5);
+        this._renderStickyEdges(stickyEdges);
+        this._renderEntityBorder(menuEntity, entityPosition);
+    }
+
+    _renderLevelEntities () {
         this.props.level.entities.forEach((entity) => {
-            let cursorPosition = this._cursorPosition;
-            let entityPosition = entity.position.subtract(this.camera.position);
-            let stickyCandidates = [];
-            if (entity === this._selectedEntity && this._isMoving) {
-                if (this._isControlPressed) {
-                    stickyCandidates = this._getStickyCandidates(entity, cursorPosition);
-                    entityPosition = stickyCandidates.entityPosition;
+            this._renderLevelEntity(entity);
+        });
+    }
+
+    _renderLevelEntity (entity) {
+        const {camera} = this;
+        const {selectedEntity} = this.props;
+        let cursorPosition = this._cursorPosition;
+
+        let entityPosition = entity.position.subtract(camera.position);
+        let stickyEdges = [];
+        if (entity === selectedEntity && this._isMoving && this.state.isControlPressed) {
+            stickyEdges = this._getStickyEdges(entity, cursorPosition);
+            entityPosition = stickyEdges.entityPosition;
+        }
+
+        this._renderEntity(entity, entityPosition, 1);
+        if (entity === selectedEntity) {
+            this._renderEntitySelection(entity, entityPosition);
+            this._renderEntityBorder(entity, entityPosition);
+        } else if (entity === this._hoverEntity && !this._isDragging) {
+            this._renderEntityBorder(entity, entityPosition, [5, 5]);
+        }
+        this._renderStickyEdges(stickyEdges);
+    }
+
+    _renderStickyEdges (stickyEdges) {
+        const {context, camera} = this;
+        const {width, height} = camera.size;
+        const {x, y} = camera.position;
+        context.strokeStyle = COLOR_STICKY_EDGE;
+        stickyEdges.forEach((stickyEdge) => {
+            context.beginPath();
+            if (stickyEdge.axis === 'x') {
+                context.moveTo(stickyEdge.tileCoordinate - x, 0);
+                context.lineTo(stickyEdge.tileCoordinate - x, height);
+            } else {
+                context.moveTo(0, stickyEdge.tileCoordinate - y);
+                context.lineTo(width, stickyEdge.tileCoordinate - y);
+            }
+            context.stroke();
+        });
+    }
+
+    _renderEntityBorder (entity, entityPosition, lineDash) {
+        lineDash = lineDash || [5, 0];
+        const {context} = this;
+        const {width, height} = entity.size;
+        const {x, y} = entityPosition;
+        context.save();
+        context.translate(x, y);
+        context.beginPath();
+        context.strokeStyle = COLOR_BORDER;
+        context.setLineDash(lineDash);
+        context.rect(-width / 2, -height / 2, width, height);
+        context.stroke();
+        context.restore();
+    }
+
+    _renderEntitySelection (entity, entityPosition) {
+        const {context} = this;
+        const {x, y} = entityPosition;
+        const {width, height} = entity.size;
+        context.save();
+        context.translate(x, y);
+        context.beginPath();
+        context.fillStyle = COLOR_SELECTION;
+        context.globalAlpha = 0.25;
+        context.fillRect(-width / 2, -height / 2, width, height);
+        context.restore();
+    }
+
+    _getStickyEdges (entity, entityPosition, isSecondStep=false) {
+        if (!isSecondStep) {
+            entityPosition = entityPosition.add(this.camera.position);
+        }
+
+        const fromIndex = {
+            x: Math.floor((entityPosition.x - entity.size.width / 2) / TILE_SIZE),
+            y: Math.floor((entityPosition.y - entity.size.height / 2) / TILE_SIZE)
+        };
+        const toIndex = {
+            x: Math.ceil((entityPosition.x + entity.size.width / 2) / TILE_SIZE),
+            y: Math.ceil((entityPosition.y + entity.size.height / 2) / TILE_SIZE)
+        };
+
+        let stickyDistance = STICKY_EDGE_DISTANCE;
+        let stickyEdges = [];
+        let minStickyDistance = new Vector2(Infinity, Infinity);
+
+        if (entity.name === 'TileEntity') {
+            stickyDistance = TILE_SIZE;
+        }
+
+        for (let entityOffset = -0.5; entityOffset <= 0.5; entityOffset += 0.5) {
+            if (entity.name === 'TileEntity' && !entityOffset) {
+                continue;
+            }
+            for (let tileOffset = 0; tileOffset <= 1; tileOffset += 0.5) {
+                if (entity.name === 'TileEntity' && tileOffset === 0.5) {
+                    continue;
+                }
+                for (let coordinateProp in fromIndex) {
+                    const sizeProp = coordinateProp === 'x' ? 'width' : 'height';
+                    for (let index = fromIndex[coordinateProp]; index < toIndex[coordinateProp]; index++) {
+                        const tileCoordinate = index * TILE_SIZE + tileOffset * TILE_SIZE;
+                        const entityCoordinate = entityPosition[coordinateProp] + entityOffset * entity.size[sizeProp];
+                        const distance = Math.abs(entityCoordinate - tileCoordinate);
+                        if (distance <= stickyDistance) {
+                            stickyEdges.push({
+                                axis: coordinateProp,
+                                distance,
+                                tileCoordinate,
+                                entityCoordinate,
+                                position: tileCoordinate - entityOffset * entity.size[sizeProp]
+                            });
+                            minStickyDistance[coordinateProp] = Math.min(minStickyDistance[coordinateProp], distance);
+                        }
+                    }
                 }
             }
+        }
 
-            context.save();
-            context.translate(entityPosition.x, entityPosition.y);
-
-            context.rotate(entity.angle);
-            entity.render(context, this.camera);
-            if (entity === this._selectedEntity) {
-                context.fillStyle = 'rgba(0, 255, 0, 0.25)';
-                context.fillRect(-entity.size.width / 2, -entity.size.height / 2, entity.size.width, entity.size.height);
+        stickyEdges = stickyEdges.filter((stickyEdge) => {
+            const f = !(stickyEdge.distance > minStickyDistance[stickyEdge.axis]);
+            if (f) {
+                entityPosition[stickyEdge.axis] = stickyEdge.position;
             }
-
-            context.restore();
-
-            if (entity === this._hoverEntity || entity === this._selectedEntity) {
-                context.save();
-                context.translate(entityPosition.x, entityPosition.y);
-                context.strokeStyle = 'red';
-                context.setLineDash(entity !== this._selectedEntity ? [5, 5] : [5, 0]);
-                context.beginPath();
-                context.rect(-entity.size.width / 2, -entity.size.height / 2, entity.size.width, entity.size.height);
-                context.stroke();
-                context.restore();
-
-                stickyCandidates.forEach((stickyCandidate) => {
-                    context.strokeStyle = 'lime';
-                    context.beginPath();
-                    if (stickyCandidate.axis === 'x') {
-                        context.moveTo(stickyCandidate.tileCoordinate - x, 0);
-                        context.lineTo(stickyCandidate.tileCoordinate - x, width);
-                    } else {
-                        context.moveTo(0, stickyCandidate.tileCoordinate - y);
-                        context.lineTo(width, stickyCandidate.tileCoordinate - y);
-                    }
-                    context.stroke();
-                });
-            }
+            return f;
         });
 
-        // Selected entity
-        const {entity} = this.props;
-        if (!this.state.isSpacePressed && entity && entity.name !== 'Cursor' && this._cursorPosition) {
-            let cursorPosition = this._cursorPosition;
-            let stickyCandidates = [];
-            if (this._isControlPressed || entity.name === 'Tile') {
-                stickyCandidates = this._getStickyCandidates(entity, cursorPosition);
-                cursorPosition = stickyCandidates.entityPosition;
-            }
-
-            context.save();
-            context.translate(cursorPosition.x, cursorPosition.y);
-            context.rotate(entity.angle);
-            context.globalAlpha = 0.5;
-            entity.render(context, this.camera);
-            context.restore();
-
-            stickyCandidates.forEach((stickyCandidate) => {
-                context.strokeStyle = 'lime';
-                context.beginPath();
-                if (stickyCandidate.axis === 'x') {
-                    context.moveTo(stickyCandidate.tileCoordinate - x, 0);
-                    context.lineTo(stickyCandidate.tileCoordinate - x, width);
-                } else {
-                    context.moveTo(0, stickyCandidate.tileCoordinate - y);
-                    context.lineTo(width, stickyCandidate.tileCoordinate - y);
-                }
-                context.stroke();
-            });
-
-            context.save();
-            context.translate(cursorPosition.x, cursorPosition.y);
-            context.beginPath();
-            context.strokeStyle = 'red';
-            context.rect(-entity.size.width / 2, -entity.size.height / 2, entity.size.width, entity.size.height);
-            context.stroke();
-            context.restore();
+        if (isSecondStep) {
+            stickyEdges.entityPosition = entityPosition.subtract(this.camera.position);
+            return stickyEdges;
+        } else {
+            return this._getStickyEdges(entity, entityPosition, true);
         }
+    }
 
-        // Scale
-        context.fillStyle = 'white';
-        for (let yIndex = yFrom; yIndex < yTo; yIndex++) {
-            context.font = '20px Arial';
-            context.textAlign = 'start';
-            context.fillText(yIndex - 1, 0, (yIndex - 0.5) * TILE_SIZE + 10 - y);
-        }
-        for (let xIndex = xFrom; xIndex < xTo; xIndex++) {
-            context.textAlign = 'center';
-            context.fillText(xIndex - 1, (xIndex - 0.5) * TILE_SIZE - x, 20);
-        }
+    @autobind
+    _onCanvasRef (node) {
+        this.context = node.getContext('2d');
+    }
+
+    @autobind
+    _onWindowResize () {
+        const {context, camera} = this;
+        const {canvas} = context;
+        canvas.width = window.innerWidth - 300;
+        canvas.height = window.innerHeight;
+        camera.size.width = canvas.width;
+        camera.size.height = canvas.height;
+    }
+
+    @autobind
+    _onAnimationFrame () {
+        this._clearCanvas();
+        this._renderMesh();
+        this._renderBounds();
+        this._renderLevelEntities();
+        this._renderMenuEntity();
+        this._renderScale();
+
         this._frame = requestAnimationFrame(this._onAnimationFrame);
-
     }
 
     @autobind
     _onMouseDown (event) {
-        this._selectedEntity = this._hoverEntity;
-        this.props.onEntitySelect && this.props.onEntitySelect({
-            entity: this._hoverEntity
-        });
-        this._startMoving = new Vector2(event.clientX, event.clientY);
-        if (!this.state.isSpacePressed) {
-            return;
-        }
-        this._startDragging = new Vector2(event.clientX, event.clientY);
-        this._isDragging = true;
+        this._selectEntity();
+        this._startLevelDragging();
+        this._startEntityMoving();
     }
 
     @autobind
     _onMouseUp () {
-        this._startMoving = null;
-        this._isMoving = false;
-        this._isDragging = false;
-        this._selectedEntity && this.props.onEntitySelect && this.props.onEntitySelect({
-            entity: this._selectedEntity
-        });
+        this._stopEntityMoving();
+        this._stopLevelDragging();
     }
 
     @autobind
@@ -314,121 +537,54 @@ export default class Level extends Tcaer.Component {
     @autobind
     _onMouseMove (event) {
         const cursorPosition = new Vector2(event.clientX, event.clientY);
-        this._cursorPosition = cursorPosition;
-
-        let hoverEntity = null;
-        this.props.entity.name === 'Cursor' && !this._startMoving && this.props.level.entities.forEach((entity) => {
-            if (cursorPosition.x + this.camera.position.x >= entity.position.x - entity.size.width / 2 &&
-                cursorPosition.x + this.camera.position.x <= entity.position.x + entity.size.width / 2 &&
-                cursorPosition.y + this.camera.position.y >= entity.position.y - entity.size.height / 2 &&
-                cursorPosition.y + this.camera.position.y <= entity.position.y + entity.size.height / 2) {
-                hoverEntity = entity;
-            }
-        });
-        this._hoverEntity = hoverEntity;
-
-        if (this._selectedEntity && this._startMoving) {
-            const diff = cursorPosition.subtract(this._startMoving);
-            let position;
-            if (this._isControlPressed) {
-                const stickyCandidates = this._getStickyCandidates(this._selectedEntity, this._cursorPosition);
-                position = stickyCandidates.entityPosition.add(this.camera.position);
-            } else {
-                position = this._selectedEntity.position;
-            }
-            if (this._isMoving) {
-                position.set(position.add(diff));
-                const {top, right, bottom, left} = this.props.level.meta.bounds;
-                position.x = Math.max(left, Math.min(right, position.x));
-                position.y = Math.max(top, Math.min(bottom, position.y));
-                this._startMoving = cursorPosition;
-            } else if (diff.length() > 5) {
-                this._isMoving = true;
-            }
-
-            Object.defineProperty(this._selectedEntity, 'position', {
-                get: () => position,
-                configurable: true
-            });
-        }
-
-        if (!this.state.isSpacePressed) {
-            return;
-        }
-        if (!this._isDragging) {
-            return;
-        }
-        const diff = cursorPosition.subtract(this._startDragging).length(-1);
-        this.camera.position.set(this.camera.position.add(diff));
-        this._startDragging = cursorPosition;
+        this._updateCursorPosition(cursorPosition);
+        this._updateHoverEntity();
+        this._moveEntity();
+        this._dragLevel();
     }
 
     @autobind
     _onClick (event) {
-        if (this._startDragging) {
-            this._startDragging = false;
-            return;
+        let cursorPosition = new Vector2(event.clientX, event.clientY);
+        this._updateCursorPosition(cursorPosition);
+        if (this.state.isSpacePressed) {
+            return this._stopLevelDragging();
         }
-        if (!this.props.entity) {
-            return;
-        }
-        if (this.state.isSpacePressed && this._isDragging) {
-            return;
-        }
-        const {top, right, bottom, left} = this.props.level.meta.bounds;
-        const {x, y} = this.camera.position;
-        let {clientX, clientY} = event;
-        clientX += x;
-        clientY += y;
-        if (clientX < left || clientX > right ||
-            clientY < top || clientY > bottom) {
+        if (!this._isPointInsideBounds(cursorPosition)) {
             return;
         }
 
-        if (this.props.entity.name === 'Tile') {
-            const xIndex = Math.floor(clientX / TILE_SIZE);
-            const yIndex = Math.floor(clientY / TILE_SIZE);
-            this.props.onTileChange && this.props.onTileChange({xIndex, yIndex});
-        } else if (this.props.entity.name !== 'Cursor') {
-            let cursorPosition = this._cursorPosition;
-            let stickyCandidates = [];
-            const {entity} = this.props;
-            if (this._isControlPressed || entity.name === 'Tile') {
-                stickyCandidates = this._getStickyCandidates(entity, cursorPosition);
-                cursorPosition = stickyCandidates.entityPosition;
-            }
-            this.props.onEntityAdd && this.props.onEntityAdd({
-                entity,
-                x: cursorPosition.x + this.camera.position.x,
-                y: cursorPosition.y + this.camera.position.y
-            });
+        const {menuEntity} = this.props;
+        if (menuEntity.name === 'TileEntity') {
+            this._changeTile();
+        } else if (menuEntity.name !== 'CursorEntity') {
+            this._addEntity();
         }
     }
 
     @autobind
     _onDocumentKeyDown (event) {
-        if (event.keyCode === 32) {
+        if (event.keyCode === KEY_SPACE) {
             this.setState({isSpacePressed: true});
-        } else if (event.keyCode === 17) {
-            this._isControlPressed = true;
-        } else if (event.keyCode === 8 || event.keyCode === 46) {
-            this._selectedEntity && this.props.onEntityRemove && this.props.onEntityRemove({
-                entity: this._selectedEntity
-            });
-            this._selectedEntity = null;
-            this.props.onEntitySelect && this.props.onEntitySelect({
-                entity: null
-            });
+            if (document.activeElement &&
+                document.activeElement.tagName !== 'TEXTAREA' &&
+                document.activeElement.tagName !== 'INPUT') {
+                event.preventDefault();
+            }
+        } else if (event.keyCode === KEY_CONTROL) {
+            this.setState({isControlPressed: true});
+        } else if (event.keyCode === KEY_TAB || event.keyCode === KEY_BACKSPACE) {
+            this._removeEntity();
         }
     }
 
     @autobind
     _onDocumentKeyUp (event) {
-        if (event.keyCode === 32) {
+        if (event.keyCode === KEY_SPACE) {
             this.setState({isSpacePressed: false});
             this._onMouseUp();
-        } else if (event.keyCode === 17) {
-            this._isControlPressed = false;
+        } else if (event.keyCode === KEY_CONTROL) {
+            this.setState({isControlPressed: false});
         }
     }
 }

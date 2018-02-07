@@ -2,18 +2,20 @@ import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
 import expandSettings from 'utils/expandSettings.js';
 
-import './Meta.styl';
+import './SettingsEditor.styl';
 
-export default class Meta extends Tcaer.Component {
+export default class SettingsEditor extends Tcaer.Component {
     render () {
-        const {entity} = this.props;
+        const entity = this.props.selectedEntity;
         const {settings} = entity;
         const className = [
-            `meta`
+            `settings-editor`
         ];
 
         return <div className={className}>
-            <h3 className="meta__header">{entity.name}</h3>
+            <h3 className="settings-editor__header">
+                {entity.name.replace(/Entity$/, '')}
+            </h3>
             <div>
                 {entity.position ? <span>
                     position.x: {entity.position.x}
@@ -34,9 +36,10 @@ export default class Meta extends Tcaer.Component {
                         type = 'checkbox';
                         value = !!value;
                     }
-                    return <label key={settingName}>
-                        {settingName}:
+                    return <label key={settingName} className="settings-editor__label">
+                        <span className="settings-editor__text">{settingName}:</span>
                         <input
+                            className="settings-editor__input"
                             type={type}
                             checked={value}
                             value={value}
@@ -44,8 +47,10 @@ export default class Meta extends Tcaer.Component {
                         <br />
                     </label>
                 })}
-                {entity.name === 'Level' ? <button onClick={this._onEditorButtonClick}>
-                    Editor
+                {entity.name === 'LevelEntity' ? <button
+                    className="settings-editor__code-editor-button"
+                    onClick={this._onCodeEditorButtonClick}>
+                    Code Editor
                 </button> : null}
             </div>
         </div>
@@ -61,13 +66,13 @@ export default class Meta extends Tcaer.Component {
             value = !!event.currentTarget.checked;
         }
         entity.settings[settingName] = value;
-        if (entity.name === 'Level') {
+        if (entity.name === 'LevelEntity') {
             entity.meta = expandSettings(entity.settings);
         }
     }
 
     @autobind
-    _onEditorButtonClick () {
-        this.props.onEditorOpen && this.props.onEditorOpen();
+    _onCodeEditorButtonClick () {
+        this.props.onCodeEditorOpen && this.props.onCodeEditorOpen();
     }
 }

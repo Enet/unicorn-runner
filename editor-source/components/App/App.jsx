@@ -1,16 +1,17 @@
 import Tcaer from 'tcaer';
 import autobind from 'tcaer/autobind';
-import {
-    Vector2
-} from 'engine/math.js';
-
-import Level from 'components/Level/Level.jsx';
-import Menu from 'components/Menu/Menu.jsx';
-import Meta from 'components/Meta/Meta.jsx';
-import Editor from 'components/Editor/Editor.jsx';
+import getEmptyLevel from 'utils/getEmptyLevel.js';
 import jsonToLevel from 'utils/jsonToLevel.js';
 import levelToJson from 'utils/levelToJson.js';
 import createEntity from 'utils/createEntity.js';
+import Level from 'components/Level/Level.jsx';
+import Menu from 'components/Menu/Menu.jsx';
+import SettingsEditor from 'components/SettingsEditor/SettingsEditor.jsx';
+import CodeEditor from 'components/CodeEditor/CodeEditor.jsx';
+import {
+    KEY_ESCAPE,
+    KEY_E
+} from 'game/constants.js';
 
 import './App.styl';
 
@@ -23,60 +24,30 @@ export default class App extends Tcaer.Component {
         return <main className={className}>
             <Level
                 level={this._level}
-                entity={this.state.entity}
+                menuEntity={this.state.menuEntity}
+                selectedEntity={this.state.selectedEntity}
                 onTileChange={this._onTileChange}
                 onEntityRemove={this._onEntityRemove}
                 onEntitySelect={this._onEntitySelect}
                 onEntityAdd={this._onEntityAdd} />
             <Menu
-                selected={this.state.entity.name}
+                selectedEntityName={this.state.menuEntity.name}
                 onSelect={this._onMenuSelect} />
-            <Meta
-                entity={this.state.selected || this._level}
-                onEditorOpen={this._onEditorOpen} />
-            <Editor
-                opened={this.state.isEditorOpened}
+            <SettingsEditor
+                selectedEntity={this.state.selectedEntity || this._level}
+                onCodeEditorOpen={this._onCodeEditorOpen} />
+            <CodeEditor
+                opened={this.state.isCodeEditorOpened}
                 json={this._level.json}
-                onSave={this._onEditorSave}
-                onClose={this._onEditorClose} />
+                onSave={this._onCodeEditorSave}
+                onClose={this._onCodeEditorClose} />
         </main>
     }
 
     componentWillMount () {
-        const json = JSON.stringify({
-            meta: {
-                music: '',
-                background: '',
-                bounds: {
-                    top: -100,
-                    right: 1000,
-                    bottom: 1000,
-                    left: -100
-                }
-            },
-            tiles: [{
-                ranges: [
-                    [8, 9, 3, 5]
-                ]
-            }],
-            entities: [{
-                name: 'Box',
-                position: {x: 600, y: 360}
-            }, {
-                name: 'Frog',
-                position: {x: 300, y: 360},
-                settings: {
-                    range: {
-                        from: 200,
-                        to: 600
-                    }
-                }
-            }]
-        });
-
-        this.state.isEditorOpened = false;
-        this.state.entity = createEntity('Cursor');
-        this._level = jsonToLevel(json, this.props.manager);
+        this._level = jsonToLevel(JSON.stringify(getEmptyLevel()), this.props.manager);
+        this.state.isCodeEditorOpened = false;
+        this.state.menuEntity = createEntity('CursorEntity');
     }
 
     componentDidMount () {
@@ -88,62 +59,70 @@ export default class App extends Tcaer.Component {
     }
 
     @autobind
-    _onMenuSelect (entityName) {
+    _onMenuSelect (entityName, isForced=false) {
+        if (this.state.menuEntity.name === entityName && !isForced) {
+            return;
+        }
         const level = this._level;
-        const entity = createEntity(entityName, {level});
-        this.setState({entity});
+        const menuEntity = createEntity(entityName, {level});
+        const selectedEntity = null;
+        this.setState({menuEntity, selectedEntity});
     }
 
     @autobind
     _onTileChange ({xIndex, yIndex}) {
-        const tile = this._level.tiles.getElement(xIndex, yIndex);
-        this._level.tiles.setElement(xIndex, yIndex, tile ? null : {});
+        const {tiles} = this._level;
+        const tile = tiles.getElement(xIndex, yIndex);
+        tiles.setElement(xIndex, yIndex, tile ? null : {});
     }
 
     @autobind
-    _onEntityAdd ({entity, x, y}) {
-        Object.defineProperty(entity, 'position', {
-            get: () => new Vector2(x, y),
-            configurable: true
-        });
+    _onEntityAdd ({entity}) {
         this._level.entities.push(entity);
-        this._onMenuSelect(entity.name);
+        this._onMenuSelect(entity.name, true);
     }
 
     @autobind
     _onEntitySelect ({entity}) {
-        this.setState({
-            selected: entity
-        });
+        const {entities} = this._level;
+        const index = entities.indexOf(entity);
+        if (index !== -1) {
+            entities.splice(index, 1);
+            entities.push(entity);
+        }
+        const selectedEntity = entity;
+        this.setState({selectedEntity});
     }
 
     @autobind
     _onEntityRemove ({entity}) {
-        const index = this._level.entities.indexOf(entity);
+        const {entities} = this._level;
+        const index = entities.indexOf(entity);
         if (index === -1) {
             return;
         }
-        this._level.entities.splice(index, 1);
-        this._onMenuSelect('Cursor');
+        entities.splice(index, 1);
+        const selectedEntity = null;
+        this.setState({selectedEntity});
+        this._onMenuSelect('CursorEntity');
     }
 
     @autobind
-    _onEditorClose () {
-        const isEditorOpened = false;
-        this.setState({isEditorOpened});
+    _onCodeEditorClose () {
+        const isCodeEditorOpened = false;
+        this.setState({isCodeEditorOpened});
     }
 
     @autobind
-    _onEditorOpen () {
+    _onCodeEditorOpen () {
         this._level.json = levelToJson(this._level);
-        const isEditorOpened = true;
-        this.setState({isEditorOpened});
+        const isCodeEditorOpened = true;
+        this.setState({isCodeEditorOpened});
     }
 
     @autobind
-    _onEditorSave (json) {
-        const isEditorOpened = false;
-        this.setState({isEditorOpened});
+    _onCodeEditorSave (json) {
+        this._onCodeEditorClose();
         try {
             JSON.parse(json);
             this._level = jsonToLevel(json, this.props.manager);
@@ -154,10 +133,15 @@ export default class App extends Tcaer.Component {
 
     @autobind
     _onDocumentKeyDown (event) {
-        if (event.keyCode === 27) {
-            this._onEditorClose();
-        } else if (event.keyCode === 69) {
-            this._onEditorOpen();
+        const {keyCode} = event;
+        if (keyCode === KEY_ESCAPE) {
+            this._onCodeEditorClose();
+        } else if (keyCode === KEY_E) {
+            if (document.activeElement &&
+                document.activeElement.tagName === 'INPUT') {
+                return;
+            }
+            this._onCodeEditorOpen();
         }
     }
 }

@@ -1,13 +1,13 @@
 import {
     Vector2
 } from 'engine/math.js';
-import Level from '../../game-source/Level.js';
+import Level from 'game/Level.js';
 
 const NOOP = Function.prototype;
 
 export default class LevelMock {
     constructor (settings={}, manager) {
-        this.name = 'Level';
+        this.name = 'LevelEntity';
         this.settings = settings;
         this.manager = manager;
         this.player = {
