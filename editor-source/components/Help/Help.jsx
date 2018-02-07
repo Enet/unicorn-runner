@@ -22,6 +22,8 @@ export default class Help extends Tcaer.Component {
                     <strong className="help__hotkey">CTRL</strong> - use sticky edges<br />
                     <strong className="help__hotkey">E</strong> - open code editor<br />
                     <strong className="help__hotkey">ESC</strong> - close code editor<br />
+                    <strong className="help__hotkey">←↑→↓</strong> - move selected entity<br />
+                    <strong className="help__hotkey">SHIFT</strong> - move entity faster<br />
                     <button
                         className="help__button"
                         onClick={this._onCloseButtonClick}>

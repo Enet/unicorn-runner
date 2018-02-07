@@ -149,6 +149,7 @@ export default class App extends Tcaer.Component {
     @autobind
     _onEntityChange () {
         this._saveLevel();
+        this.setState();
     }
 
     @autobind

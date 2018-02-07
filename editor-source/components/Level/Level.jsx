@@ -8,7 +8,11 @@ import {
     KEY_SPACE,
     KEY_CONTROL,
     KEY_DELETE,
-    KEY_BACKSPACE
+    KEY_BACKSPACE,
+    KEY_UP,
+    KEY_RIGHT,
+    KEY_DOWN,
+    KEY_LEFT
 } from 'game/constants.js';
 
 import './Level.styl';
@@ -568,27 +572,59 @@ export default class Level extends Tcaer.Component {
 
     @autobind
     _onDocumentKeyDown (event) {
-        if (event.keyCode === KEY_SPACE) {
-            this.setState({isSpacePressed: true});
-            if (document.activeElement &&
-                document.activeElement.tagName !== 'TEXTAREA' &&
-                document.activeElement.tagName !== 'INPUT') {
-                event.preventDefault();
-            }
-        } else if (event.keyCode === KEY_CONTROL) {
-            this.setState({isControlPressed: true});
-        } else if (event.keyCode === KEY_DELETE || event.keyCode === KEY_BACKSPACE) {
-            this._removeEntity();
+        let dx = 0;
+        let dy = 0;
+        switch (event.keyCode) {
+            case KEY_SPACE:
+                this.setState({isSpacePressed: true});
+                if (document.activeElement &&
+                    document.activeElement.tagName !== 'TEXTAREA' &&
+                    document.activeElement.tagName !== 'INPUT') {
+                    event.preventDefault();
+                }
+                break;
+            case KEY_CONTROL:
+                this.setState({isControlPressed: true});
+                break;
+            case KEY_DELETE:
+            case KEY_BACKSPACE:
+                this._removeEntity();
+                break;
+            case KEY_UP:
+                dy = -1;
+                break;
+            case KEY_RIGHT:
+                dx = 1;
+                break;
+            case KEY_DOWN:
+                dy = 1;
+                break;
+            case KEY_LEFT:
+                dx = -1;
+                break;
+        }
+        const {selectedEntity} = this.props;
+        if (selectedEntity && (dx || dy)) {
+            const shift = new Vector2(dx, dy).length(event.shiftKey ? 10 : 1);
+            const position = selectedEntity.position.add(shift);
+            Object.defineProperty(selectedEntity, 'position', {
+                get: () => position,
+                configurable: true
+            });
+            this.props.onEntityChange && this.props.onEntityChange();
         }
     }
 
     @autobind
     _onDocumentKeyUp (event) {
-        if (event.keyCode === KEY_SPACE) {
-            this.setState({isSpacePressed: false});
-            this._onMouseUp();
-        } else if (event.keyCode === KEY_CONTROL) {
-            this.setState({isControlPressed: false});
+        switch (event.keyCode) {
+            case KEY_SPACE:
+                this.setState({isSpacePressed: false});
+                this._onMouseUp();
+                break;
+            case KEY_CONTROL:
+                this.setState({isControlPressed: false});
+                break;
         }
     }
 }
