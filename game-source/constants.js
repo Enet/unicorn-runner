@@ -33,7 +33,7 @@ export const INDEX_CLOUD = 600;
 export const INDEX_LAVA_BACKGROUND = 1000;
 
 export const KEY_CONTROL = 17;
-export const KEY_TAB = 8;
+export const KEY_DELETE = 8;
 export const KEY_BACKSPACE = 46;
 export const KEY_ESCAPE = 27;
 export const KEY_SPACE = 32;
@@ -41,6 +41,7 @@ export const KEY_LEFT = 37;
 export const KEY_UP = 38;
 export const KEY_RIGHT = 39;
 export const KEY_DOWN = 40;
+export const KEY_H = 72;
 export const KEY_T = 84;
 export const KEY_C = 67;
 export const KEY_Z = 90;

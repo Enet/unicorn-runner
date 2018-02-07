@@ -8,9 +8,11 @@ import Level from 'components/Level/Level.jsx';
 import Menu from 'components/Menu/Menu.jsx';
 import SettingsEditor from 'components/SettingsEditor/SettingsEditor.jsx';
 import CodeEditor from 'components/CodeEditor/CodeEditor.jsx';
+import Help from 'components/Help/Help.jsx';
 import {
     KEY_ESCAPE,
-    KEY_E
+    KEY_E,
+    KEY_H
 } from 'game/constants.js';
 
 import './App.styl';
@@ -35,18 +37,23 @@ export default class App extends Tcaer.Component {
                 onSelect={this._onMenuSelect} />
             <SettingsEditor
                 selectedEntity={this.state.selectedEntity || this._level}
+                onHelpOpen={this._onHelpOpen}
                 onCodeEditorOpen={this._onCodeEditorOpen} />
             <CodeEditor
                 opened={this.state.isCodeEditorOpened}
                 json={this._level.json}
                 onSave={this._onCodeEditorSave}
                 onClose={this._onCodeEditorClose} />
+            <Help
+                opened={this.state.isHelpOpened}
+                onClose={this._onHelpClose} />
         </main>
     }
 
     componentWillMount () {
         this._level = jsonToLevel(JSON.stringify(getEmptyLevel()), this.props.manager);
         this.state.isCodeEditorOpened = false;
+        this.state.isHelpOpened = false;
         this.state.menuEntity = createEntity('CursorEntity');
     }
 
@@ -132,16 +139,31 @@ export default class App extends Tcaer.Component {
     }
 
     @autobind
+    _onHelpOpen () {
+        const isHelpOpened = true;
+        this.setState({isHelpOpened});
+    }
+
+    @autobind
+    _onHelpClose () {
+        const isHelpOpened = false;
+        this.setState({isHelpOpened});
+    }
+
+    @autobind
     _onDocumentKeyDown (event) {
         const {keyCode} = event;
         if (keyCode === KEY_ESCAPE) {
             this._onCodeEditorClose();
+            this._onHelpClose();
         } else if (keyCode === KEY_E) {
             if (document.activeElement &&
                 document.activeElement.tagName === 'INPUT') {
                 return;
             }
             this._onCodeEditorOpen();
+        } else if (keyCode === KEY_H) {
+            this._onHelpOpen();
         }
     }
 }

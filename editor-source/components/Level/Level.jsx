@@ -7,7 +7,7 @@ import {
     TILE_SIZE,
     KEY_SPACE,
     KEY_CONTROL,
-    KEY_TAB,
+    KEY_DELETE,
     KEY_BACKSPACE
 } from 'game/constants.js';
 
@@ -573,7 +573,7 @@ export default class Level extends Tcaer.Component {
             }
         } else if (event.keyCode === KEY_CONTROL) {
             this.setState({isControlPressed: true});
-        } else if (event.keyCode === KEY_TAB || event.keyCode === KEY_BACKSPACE) {
+        } else if (event.keyCode === KEY_DELETE || event.keyCode === KEY_BACKSPACE) {
             this._removeEntity();
         }
     }

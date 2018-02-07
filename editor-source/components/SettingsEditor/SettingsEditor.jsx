@@ -47,11 +47,18 @@ export default class SettingsEditor extends Tcaer.Component {
                         <br />
                     </label>
                 })}
-                {entity.name === 'LevelEntity' ? <button
-                    className="settings-editor__code-editor-button"
-                    onClick={this._onCodeEditorButtonClick}>
-                    Code Editor
-                </button> : null}
+                {entity.name === 'LevelEntity' ? <div>
+                    <button
+                        className="settings-editor__button"
+                        onClick={this._onCodeEditorButtonClick}>
+                        Code Editor
+                    </button>
+                    <button
+                        className="settings-editor__button"
+                        onClick={this._onHelpButtonClick}>
+                        Help
+                    </button>
+                </div> : null}
             </div>
         </div>
     }
@@ -69,6 +76,11 @@ export default class SettingsEditor extends Tcaer.Component {
         if (entity.name === 'LevelEntity') {
             entity.meta = expandSettings(entity.settings);
         }
+    }
+
+    @autobind
+    _onHelpButtonClick () {
+        this.props.onHelpOpen && this.props.onHelpOpen();
     }
 
     @autobind
