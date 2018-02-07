@@ -89,7 +89,7 @@ export default class App extends Tcaer.Component {
     @autobind
     _onTileChange ({xIndex, yIndex}) {
         const tile = this._level.tiles.getElement(xIndex, yIndex);
-        this._level.tiles.setElement(xIndex, yIndex, !tile);
+        this._level.tiles.setElement(xIndex, yIndex, tile ? null : {});
     }
 
     @autobind

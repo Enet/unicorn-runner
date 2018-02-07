@@ -272,11 +272,11 @@ export default class Level extends Tcaer.Component {
         for (let yIndex = yFrom; yIndex < yTo; yIndex++) {
             context.font = '20px Arial';
             context.textAlign = 'start';
-            context.fillText(yIndex, 0, (yIndex - 0.5) * TILE_SIZE + 10 - y);
+            context.fillText(yIndex - 1, 0, (yIndex - 0.5) * TILE_SIZE + 10 - y);
         }
         for (let xIndex = xFrom; xIndex < xTo; xIndex++) {
             context.textAlign = 'center';
-            context.fillText(xIndex, (xIndex - 0.5) * TILE_SIZE - x, 20);
+            context.fillText(xIndex - 1, (xIndex - 0.5) * TILE_SIZE - x, 20);
         }
         this._frame = requestAnimationFrame(this._onAnimationFrame);
 
