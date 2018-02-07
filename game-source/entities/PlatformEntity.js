@@ -32,8 +32,8 @@ export default class PlatformEntity extends BoxEntity {
         return [
             ...super._createTraits(...arguments),
             new MotionLiftTrait({
-                fromPoint: new Vector2(...settings.from),
-                toPoint: new Vector2(...settings.to),
+                fromPoint: new Vector2(settings.from.x, settings.from.y),
+                toPoint: new Vector2(settings.to.x, settings.to.y),
                 speed: settings.speed
             })
         ];

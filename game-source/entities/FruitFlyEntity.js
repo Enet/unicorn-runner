@@ -58,7 +58,14 @@ export default class FruitFly extends Entity {
     }
 
     _createTraits ({settings}) {
-        const {trigger} = settings;
+        const trigger = {
+            value: !!settings.trigger.isPositive
+        };
+        if (settings.trigger.isHorizontal) {
+            trigger.x = +settings.trigger.x;
+        } else {
+            trigger.y = +settings.trigger.y;
+        }
         return [
             new TriggerBoundTrait({
                 maxActivationCount: Infinity,

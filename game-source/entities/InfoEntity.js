@@ -46,7 +46,8 @@ export default class InfoEntity extends StaticEntity {
             return;
         }
         if (!this._isActivated) {
-            level.showInfo(this.options.settings.data);
+            const {ru, en} = this.options.settings;
+            level.showInfo({ru, en});
             level.createSound('MenuHover', {
                 position: this.body.center
             }).play();

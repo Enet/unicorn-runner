@@ -96,6 +96,8 @@ export default class FrogEntity extends Entity {
     }
 
     _createTraits ({settings, y}) {
+        const from = Math.min(settings.range.from, settings.range.to);
+        const to = Math.max(settings.range.from, settings.range.to);
         return [
             new FootholdTrait(),
             new BodyAngleLimitTrait({
@@ -112,8 +114,8 @@ export default class FrogEntity extends Entity {
                 onStart: this._onJumpStart.bind(this)
             }),
             new MotionJumpTrait({
-                fromPoint: new Vector2(settings.range.from, y),
-                toPoint: new Vector2(settings.range.to, y)
+                fromPoint: new Vector2(from, y),
+                toPoint: new Vector2(to, y)
             }),
             new AppearanceFadeOutTrait({
                 onEnd: this._onFadeOutEnd.bind(this)

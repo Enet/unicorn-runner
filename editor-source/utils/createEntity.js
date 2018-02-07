@@ -22,13 +22,14 @@ const settingsByEntityName = {
         'range.to': 0
     },
     FruitFly: {
-        'trigger.value': true,
+        'trigger.isPositive': true,
+        'trigger.isHorizontal': true,
         'trigger.x': 0,
         'trigger.y': 0
     },
     Info: {
-        'data.ru': '',
-        'data.en': ''
+        'ru': '',
+        'en': ''
     },
     Lizard: {
         'range.from': 0,
@@ -46,7 +47,8 @@ const settingsByEntityName = {
         'reaction': 0
     },
     Stone: {
-        'trigger.value': true,
+        'trigger.isPositive': true,
+        'trigger.isHorizontal': true,
         'trigger.x': 0,
         'trigger.y': 0
     }

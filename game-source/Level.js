@@ -271,10 +271,11 @@ export default class Level {
 
     _initBounds ({meta}) {
         const {bounds} = meta;
-        const top = +bounds[0];
-        const right = +bounds[1];
-        const bottom = +bounds[2];
-        const left = +bounds[3];
+        let {top, right, bottom, left} = bounds;
+        top = +top || 0;
+        right = +right || 0;
+        bottom = +bottom || 0;
+        left = +left || 0;
         this.bounds = {top, right, bottom, left};
     }
 
@@ -343,7 +344,7 @@ export default class Level {
     _initEntities (data) {
         const level = this;
         const {manager} = this;
-        data.entities.forEach(({name, position: [x, y], ...settings}) => {
+        data.entities.forEach(({name, position: {x, y}, settings={}}) => {
             const Entity = manager.getEntity(name);
             const entity = new Entity({level, settings, x, y});
             this.addEntity(entity);

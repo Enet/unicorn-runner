@@ -97,14 +97,16 @@ export default class LizardEntity extends Entity {
     }
 
     _createTraits ({settings, y}) {
+        const from = Math.min(settings.range.from, settings.range.to);
+        const to = Math.max(settings.range.from, settings.range.to);
         return [
             new FootholdTrait(),
             new AppearanceVisualDirectionTrait({
                 autoStart: false
             }),
             new MotionWalkerTrait({
-                fromPoint: new Vector2(settings.range[0], y),
-                toPoint: new Vector2(settings.range[1], y)
+                fromPoint: new Vector2(from, y),
+                toPoint: new Vector2(to, y)
             }),
             new ActionFightTrait({
                 damage: 0
