@@ -3,11 +3,12 @@ import Background from 'backgrounds/Background.js';
 const PARALLAX_SHIFT_X = 0.25;
 const PARALLAX_SHIFT_Y = 0.05;
 const OFFSET_X = 0;
-const OFFSET_Y = 50;
+const OFFSET_Y = 600;
 
 export default class ParallaxBackground extends Background {
-    constructor () {
+    constructor ({bounds}) {
         super(...arguments);
+        this.bounds = bounds;
 
         // Some calculations are cached
         const {images} = this;
@@ -62,6 +63,8 @@ export default class ParallaxBackground extends Background {
         const {height} = camera.size;
         const halfHeight = height * 0.5;
         const {images} = this;
+        const cameraX = camera.position.x + OFFSET_X;
+        const cameraY = camera.position.y - this.bounds.bottom + OFFSET_Y;
         for (let i = 0, il = Object.keys(images).length; i < il; i++) {
             const image = images[i];
             if (!image) {
@@ -73,8 +76,8 @@ export default class ParallaxBackground extends Background {
                 if (!this._shouldRenderLayer(i, r)) {
                     continue;
                 }
-                let x = -camera.position.x * i * PARALLAX_SHIFT_X - widthX6 + OFFSET_X;
-                let y = height - naturalHeight - (camera.position.y * i - halfHeight) * PARALLAX_SHIFT_Y + OFFSET_Y;
+                let x = -cameraX * i * PARALLAX_SHIFT_X - widthX6;
+                let y = height - naturalHeight - (cameraY * i - halfHeight) * PARALLAX_SHIFT_Y;
                 const position = this._getPosition(context, camera, {x, y, i, r});
                 x = (position.x + widthX[r + 1]) % widthX[rl] + widthX[rl - 1] | 0;
                 y = position.y | 0;

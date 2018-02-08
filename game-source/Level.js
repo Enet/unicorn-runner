@@ -306,12 +306,12 @@ export default class Level {
     }
 
     _initStaticBackground ({meta}) {
-        const {manager, scene} = this;
+        const {manager, scene, bounds} = this;
         const Background = manager.getBackground(meta.background);
         if (!Background) {
             return;
         }
-        const background = new Background({manager});
+        const background = new Background({manager, bounds});
         scene.add(background);
         return background;
     }

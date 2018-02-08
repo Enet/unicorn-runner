@@ -30,6 +30,19 @@ export default class Score extends Tcaer.Component {
 
     componentDidUpdate () {
         const delta = Math.sign(this.props.value - this.state.value);
-        delta && setTimeout(() => this.setState({value: this.state.value + delta}));
+        if (!delta) {
+            return;
+        }
+        clearTimeout(this._timer);
+        this._timer = setTimeout(this._onTimerTick.bind(this, delta));
+    }
+
+    componentWillUnmount () {
+        clearTimeout(this._timer);
+    }
+
+    _onTimerTick (delta) {
+        const value = this.state.value + delta;
+        this.setState({value});
     }
 }
