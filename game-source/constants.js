@@ -9,7 +9,7 @@ export const EFFECT_TIME = 5000;
 export const HEALTH_SCALE_TIME = 7500;
 
 export const RUN_SPEED = 0.1;
-export const FIGHT_DAMAGE = 10;
+export const FIGHT_DAMAGE = 20;
 export const FIGHT_SHIFT = 5;
 export const FIGHT_WAITING_TIME = 1000;
 export const FLY_GRAVITY = 300;

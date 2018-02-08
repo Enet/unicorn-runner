@@ -1,6 +1,9 @@
 import {
     Vector2
 } from 'engine/math.js';
+import {
+    REACTION_NO
+} from 'engine/constants.js';
 
 import StaticEntity from 'entities/StaticEntity.js';
 import AppearanceFadeInTrait from 'traits/AppearanceFadeInTrait.js';
@@ -73,6 +76,12 @@ export default class HealthScaleEntity extends StaticEntity {
 
     _getSize () {
         return new Vector2(TILE_SIZE, 0.25 * TILE_SIZE);
+    }
+
+    _createBody () {
+        const body = super._createBody(...arguments);
+        body.reaction = REACTION_NO;
+        return body;
     }
 
     _createTraits () {
