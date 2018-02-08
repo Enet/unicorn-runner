@@ -34,10 +34,9 @@ export default class CoinEntity extends Entity {
             }),
             new AppearanceFallDownTrait({
                 onEnd: this._onFallDownEnd.bind(this)
-            })
-        ].concat(settings.gravity ? [] : [
+            }),
             new BodyGravityTrait()
-        ]);
+        ];
     }
 
     _onPickableTimerTick () {

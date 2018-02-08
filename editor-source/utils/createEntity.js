@@ -21,15 +21,6 @@ const settingsByEntityName = {
         'range.from': 0,
         'range.to': 0
     },
-    Coin10Entity: {
-        'gravity': true
-    },
-    Coin50Entity: {
-        'gravity': true
-    },
-    Coin100Entity: {
-        'gravity': true
-    },
     FrogEntity: {
         'range.from': 0,
         'range.to': 0

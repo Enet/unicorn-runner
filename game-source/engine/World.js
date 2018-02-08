@@ -49,7 +49,7 @@ export default class World {
         }
     }
 
-    update (deltaTime, iterationCount=5) {
+    update (deltaTime, iterationCount=2) {
         this._updateBodies();
 
         while (iterationCount--) {

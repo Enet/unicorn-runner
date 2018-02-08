@@ -247,8 +247,9 @@ function findPath (matrix, xIndex, yIndex, pathId, angle) {
     } else if (pathEnvironment.size) {
         // Kind of corner tile
         const {imageName, deltaAngle, indexOffset} = pathEnvironment.getCornerData(pathEnvironment, filteredEnvironment, log);
+        angle += deltaAngle;
         Object.assign(tile, {imageName, pathId, angle});
-        findPath(matrix, xIndex + indexOffset.x, yIndex + indexOffset.y, pathId, angle + deltaAngle);
+        findPath(matrix, xIndex + indexOffset.x, yIndex + indexOffset.y, pathId, angle);
     }
 
     if (tile.pathId && !filteredEnvironment.has('top')) {
