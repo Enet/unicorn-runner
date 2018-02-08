@@ -225,7 +225,8 @@ export default class Level {
         const candidates = Array.from(entities.values()).map(entity => entity.body);
         entities.forEach((entity) => {
             const tiles = getTileRangeByBounds(this._tileMatrix, entity.body);
-            entity.body.candidates = tiles.concat(candidates);
+            const entityCandidates = this._isEntityVisible(entity) ? candidates : [];
+            entity.body.candidates = tiles.concat(entityCandidates);
             entity.entityWillUpdate(deltaTime, this);
         });
 
@@ -247,6 +248,19 @@ export default class Level {
         if (playbackRate > 1 && ++this._timeFactor % 2) {
             return this.update(deltaTime);
         }
+    }
+
+    _isEntityVisible (entity) {
+        const {center} = entity.body;
+        const {camera} = this.scene;
+        const {x, y} = camera.position;
+        const {width, height} = camera.size;
+
+        return true &&
+            center.x >= x &&
+            center.x <= x + width &&
+            center.y >= y &&
+            center.y <= y + height;
     }
 
     _updateSoundByPosition (sound) {

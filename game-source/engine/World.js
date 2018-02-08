@@ -7,7 +7,14 @@ import {
 } from './constants.js';
 
 export default class World {
-    constructor ({top=-Infinity, left=-Infinity, bottom=Infinity, right=Infinity, gravity, friction}) {
+    constructor ({
+        top=-Infinity,
+        left=-Infinity,
+        bottom=Infinity,
+        right=Infinity,
+        gravity,
+        friction
+    }) {
         this.bounds = {top, left, bottom, right};
         this.gravity = gravity || new Vector2(0, 981);
         this.friction = friction || new Vector2(0.98, 0.98);
