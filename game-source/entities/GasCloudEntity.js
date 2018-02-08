@@ -8,7 +8,7 @@ import {
 } from 'constants.js';
 
 const GAS_CLOUD_MIN_DISTANCE = 2;
-const GAS_CLOUD_DAMAGE = 2;
+const GAS_CLOUD_DAMAGE = 5;
 
 export default class GasCloudEntity extends StaticEntity {
     get index () {
@@ -57,6 +57,10 @@ export default class GasCloudEntity extends StaticEntity {
                 onEnd: this._onFadeOutEnd.bind(this)
             })
         ];
+    }
+
+    _addLavaSplash () {
+
     }
 
     _onFadeInEnd () {

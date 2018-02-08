@@ -20,7 +20,7 @@ export default class UnicornEntity extends Entity {
     }
 
     _getSize () {
-        return new Vector2(100, 65);
+        return new Vector2(100, 70);
     }
 
     _createTraits () {

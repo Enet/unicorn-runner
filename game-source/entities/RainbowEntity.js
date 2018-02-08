@@ -12,4 +12,8 @@ export default class RainbowEntity extends EffectEntity {
     _getEffectName () {
         return 'fly';
     }
+
+    _getDuration () {
+        return super._getDuration() * 1.5;
+    }
 }

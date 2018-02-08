@@ -15,8 +15,8 @@ import {
     SCORE_BIRD_DEATH
 } from 'constants.js';
 
-const BIRD_DROP_PERIOD = 1000;
-const BIRD_DROP_PROBABILITY = 0.005;
+const BIRD_DROP_PERIOD = 1500;
+const BIRD_DROP_PROBABILITY = 0.002;
 
 export default class BirdEntity extends Entity {
     entityWillUpdate () {

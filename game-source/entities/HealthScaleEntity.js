@@ -35,6 +35,9 @@ export default class HealthScaleEntity extends StaticEntity {
     }
 
     hide () {
+        if (!this.fadeIn || !this.fadeOut) {
+            return;
+        }
         this.fadeIn.stop();
         this.fadeOut.start();
     }

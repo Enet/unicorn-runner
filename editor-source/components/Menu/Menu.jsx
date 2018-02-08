@@ -22,6 +22,8 @@ const hiddenEntityNames = [
     'GasCloudEntity',
     'HealthScaleEntity',
     'MushroomEntity',
+    'DustMushroomEntity',
+    'GasMushroomEntity',
     'StaticEntity',
     'UnicornEntity'
 ];

@@ -32,6 +32,7 @@ export default class Body extends EventEmitter {
             point.set(point.subtract(relativePosition));
             point.cache.set(point.cache.subtract(relativePosition));
         });
+        this._updateCenterOfMass();
     }
 
     move (offset) {

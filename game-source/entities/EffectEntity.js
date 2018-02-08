@@ -2,6 +2,7 @@ import Entity from 'entities/Entity.js';
 import PickableTrait from 'traits/PickableTrait.js';
 import GameplayEffectTrait from 'traits/GameplayEffectTrait.js';
 import AppearanceFallDownTrait from 'traits/AppearanceFallDownTrait.js';
+import BodyGravityTrait from 'traits/BodyGravityTrait.js';
 import {
     EFFECT_TIME
 } from 'constants.js';
@@ -30,7 +31,8 @@ export default class EffectEntity extends Entity {
             }),
             new AppearanceFallDownTrait({
                 onEnd: this._onFallDownEnd.bind(this)
-            })
+            }),
+            new BodyGravityTrait()
         ];
     }
 

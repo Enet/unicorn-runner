@@ -49,6 +49,10 @@ export default class DustCloudEntity extends StaticEntity {
         return 'DustCloud';
     }
 
+    _addLavaSplash () {
+
+    }
+
     _onParticleSystemStop (particleSystem) {
         this.level.scene.remove(particleSystem);
     }

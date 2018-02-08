@@ -159,6 +159,7 @@ export default class GameScreen extends Screen {
 
     @autobind
     _onGameReady () {
+        this._onHideInfo();
         this.props.dispatch({
             type: 'SCREEN_CHANGE',
             payload: 'game'
