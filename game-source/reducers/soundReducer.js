@@ -40,7 +40,7 @@ export default function (state=defaultState, action) {
     if (action.type === 'SOUND_CLICK' ||
         action.type === 'SETTING_CHANGE' ||
         action.type === 'GAME_SELECT_STEP') {
-        play(manager, 'MenuClick', {amplitude: 0.5});
+        play(manager, 'MenuClick', {amplitude: 0.25});
     }
 
     if (action.type === 'SCREEN_CHANGE') {

@@ -7,6 +7,7 @@ import TriggerContactTrait from 'traits/TriggerContactTrait.js';
 import OrganismTrait from 'traits/OrganismTrait.js';
 import AppearanceFadeOutTrait from 'traits/AppearanceFadeOutTrait.js';
 import GameplayScoreTrait from 'traits/GameplayScoreTrait.js';
+import FootholdTrait from 'traits/FootholdTrait.js';
 import {
     SCORE_BUG_DEATH
 } from 'constants.js';
@@ -33,6 +34,7 @@ export default class BugEntity extends Entity {
 
     _createTraits () {
         return [
+            new FootholdTrait(),
             new TriggerContactTrait({
                 onActivate: this._onContact.bind(this)
             }),

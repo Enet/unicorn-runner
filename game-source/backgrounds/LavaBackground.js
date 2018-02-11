@@ -35,7 +35,11 @@ export default class LavaBackground extends Background {
         const bounds = this._bounds;
         const tx = camera.position.x | 0;
         const ty = camera.position.y | 0;
-        const {width} = camera.size;
+        const {width, height} = camera.size;
+
+        if (ty + height < bounds.bottom - LAVA_HEIGHT) {
+            return;
+        }
 
         context.save();
         context.translate(-tx, -ty);

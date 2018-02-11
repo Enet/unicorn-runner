@@ -48,6 +48,7 @@ export default class LizardEntity extends Entity {
         });
         this._walkSound = this.level.createSound('LizardWalk', {
             loop: true,
+            amplitude: 0.5,
             position: this.body.center,
             fadeInOnPlay: {},
             fadeOutOnPlay: {}

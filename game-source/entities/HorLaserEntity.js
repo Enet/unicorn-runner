@@ -46,7 +46,7 @@ export default class HorLaserEntity extends StaticEntity {
         this._defaultSize = this.size;
         this._idleSound = this.level.createSound('LaserIdle', {
             loop: true,
-            amplitude: 0.2,
+            amplitude: 0.1,
             position: this.body.center
         }).play();
         this._fightSound = this.level.createSound('LaserFight', {
