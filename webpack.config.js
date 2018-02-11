@@ -109,7 +109,8 @@ module.exports = function UnicornWebpackConfig (appName, port=8080) {
         devServer: {
             port,
             host: '0.0.0.0',
-            contentBase: path.resolve(appName + '-output')
+            contentBase: path.resolve(appName + '-output'),
+            open: true
         }
     };
 };

@@ -20,13 +20,15 @@ To start the game:
 ```sh
 yarn start:game
 ```
-<img src="https://raw.githubusercontent.com/Enet/unicorn-runner/master/UnicornRunner1.jpg" width="400" height="300" />
+or just click image below:
+[<img src="https://raw.githubusercontent.com/Enet/unicorn-runner/master/UnicornRunner1.jpg" width="400" height="300" />](http://unicorn.zhevak.name)
 
 To start the editor:
 ```sh
 yarn start:editor
 ```
-<img src="https://raw.githubusercontent.com/Enet/unicorn-runner/master/UnicornRunner2.jpg" width="400" height="300" />
+or just click image below:
+[<img src="https://raw.githubusercontent.com/Enet/unicorn-runner/master/UnicornRunner2.jpg" width="400" height="300" />](http://editor.zhevak.name)
 
 To build final bundles:
 ```sh

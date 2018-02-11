@@ -2,6 +2,7 @@ node_modules/
 game-output/bundles/
 game-output/images/
 game-output/sounds/
-editor-output/boundles/
+editor-output/bundles/
 editor-output/images/
+editor-output/sounds/
 *.todo
