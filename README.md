@@ -16,6 +16,7 @@ yarn install
 ```
 
 # Start
+### Game
 To start the game:
 ```sh
 yarn start:game
@@ -26,6 +27,7 @@ or just click image below:
     <img src="https://raw.githubusercontent.com/Enet/unicorn-runner/master/UnicornRunner1.jpg" width="400" height="300" />
 </a>
 
+### Editor
 To start the editor:
 ```sh
 yarn start:editor
@@ -36,6 +38,7 @@ or just click image below:
     <img src="https://raw.githubusercontent.com/Enet/unicorn-runner/master/UnicornRunner2.jpg" width="400" height="300" />
 </a>
 
+### Build
 To build final bundles:
 ```sh
 yarn build
