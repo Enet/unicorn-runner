@@ -27,6 +27,7 @@ export default function loadSettings (defaultSettings={}, type='boolean') {
                 setting = settings[s];
             }
         } catch (error) {
+            // eslint-disable-next-line
             console.error(error);
         }
         settings[s] = setting;

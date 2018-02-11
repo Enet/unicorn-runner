@@ -12,6 +12,7 @@ manager.fetchResources({images}).then(() => {
     const appNode = document.getElementById('app');
     Tcaer.render(<App manager={manager} />, appNode);
 }).catch((error) => {
+    // eslint-disable-next-line
     console.error(error);
     alert('Images cannot be loaded!');
 });

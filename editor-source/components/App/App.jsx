@@ -79,6 +79,7 @@ export default class App extends Tcaer.Component {
             }
             return json;
         } catch (error) {
+            // eslint-disable-next-line
             console.log(error);
             return JSON.stringify(getEmptyLevel());
         }
@@ -88,6 +89,7 @@ export default class App extends Tcaer.Component {
         try {
             localStorage.setItem('json', levelToJson(this._level));
         } catch (error) {
+            // eslint-disable-next-line
             console.error(error);
         }
     }
@@ -175,6 +177,7 @@ export default class App extends Tcaer.Component {
         try {
             localStorage.clear();
         } catch (error) {
+            // eslint-disable-next-line
             console.log(error);
         }
         this._level = jsonToLevel(this._loadLevel(), this.props.manager);
@@ -202,6 +205,7 @@ export default class App extends Tcaer.Component {
             this._level = jsonToLevel(json, this.props.manager);
             this._saveLevel();
         } catch (error) {
+            // eslint-disable-next-line
             console.error(error);
         }
     }

@@ -11,6 +11,7 @@ export default function jsonToLevel (json, manager) {
     try {
         data = JSON.parse(json);
     } catch (error) {
+        // eslint-disable-next-line
         console.error(error);
         data = getEmptyLevel();
     }

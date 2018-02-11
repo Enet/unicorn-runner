@@ -14,6 +14,7 @@ export default function saveSettings (settings, type='boolean') {
             localStorage.setItem(s, transform[type](settings[s]));
         }
     } catch (error) {
+        // eslint-disable-next-line
         console.error(error);
     }
     return settings;
