@@ -7,16 +7,36 @@ import {
 import Screen from 'components/Screen/Screen.jsx';
 import Button from 'components/Button/Button.jsx';
 import I18n from 'utils/I18n.js';
+import {
+    VICTORY_CONDITION
+} from 'constants.js';
 
 import dictionary from './WinnerScreen.json';
 import './WinnerScreen.styl';
 
 const i18n = new I18n(dictionary);
+const CREDIT_URI = 'https://www.tinkoff.ru/loans/cash-loan/';
 
 @connect(({step}) => step)
 export default class WinnerScreen extends Screen {
     renderContent () {
         return <nav className="screen__content winner-screen__content">
+            {this._isGameCompleted() ? <span>
+                <Button disabled={true}>
+                    {i18n.get(this, 'left').replace('{X}', this._getScore() - VICTORY_CONDITION)}
+                </Button>
+                <br />
+                <Button>
+                    <a
+                        className="winner-screen__link"
+                        href={CREDIT_URI}
+                        rel="noopener noreferrer"
+                        target="_blank">
+                        {i18n.get(this, 'credit')}
+                    </a>
+                </Button>
+                <br />
+            </span> : null}
             <Button
                 onClick={this._onMenuButtonClick}>
                 {i18n.get(this, 'menu')}
@@ -27,6 +47,11 @@ export default class WinnerScreen extends Screen {
                 {i18n.get(this, 'next')}
             </Button>
         </nav>
+    }
+
+    _getScore () {
+        const {step0, step1, step2, step3} = this.props;
+        return step0 + step1 + step2 + step3;
     }
 
     _getHeaderText () {
@@ -40,7 +65,7 @@ export default class WinnerScreen extends Screen {
         return <span>
             {i18n.get(this, 'subheader1')}
             <span className="winner-screen__line-break"> </span>
-            {i18n.get(this, 'subheader2')}
+            {i18n.get(this, 'subheader2').replace('{X}', VICTORY_CONDITION)}
         </span>
     }
 
@@ -49,7 +74,8 @@ export default class WinnerScreen extends Screen {
     }
 
     _isGameCompleted () {
-        return this.props.progress > 3;
+        const score = this._getScore();
+        return this.props.progress > 3 && score >= VICTORY_CONDITION;
     }
 
     _conditionalReset () {

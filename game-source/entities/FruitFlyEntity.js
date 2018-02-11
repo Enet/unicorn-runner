@@ -15,6 +15,7 @@ import {
     SCORE_FRUIT_FLY_DEATH
 } from 'constants.js';
 
+const FRUIT_FLY_HEALTH = 40;
 const FRUIT_FLY_DAMAGE = 25;
 const FRUIT_FLY_MAX_ANGLE = 0.2 * Math.PI;
 
@@ -75,6 +76,7 @@ export default class FruitFly extends Entity {
             }),
             new BodyGravityTrait(),
             new OrganismTrait({
+                health: FRUIT_FLY_HEALTH,
                 onDie: this._onDie.bind(this)
             }),
             new MotionRocketTrait(),

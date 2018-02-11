@@ -58,7 +58,7 @@ export default class HealthScaleEntity extends StaticEntity {
         const y = 0;
         const width = TILE_SIZE;
         const height = 8;
-        const health = organism.getHealth() * 0.01;
+        const health = organism.getPercent();
         context.beginPath();
         context.fillStyle = COLOR_BLACK.toString();
         context.fillRect(x, y, width, height);

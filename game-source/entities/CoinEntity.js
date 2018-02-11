@@ -8,7 +8,7 @@ const COIN_UNPICKABLE_TIME = 500;
 
 export default class CoinEntity extends Entity {
     get angle () {
-        return this._lifeTime * this._getNominal() / 10000;
+        return this._lifeTime * this._getNominal() * 0.0001;
     }
 
     entityDidMount () {

@@ -14,6 +14,7 @@ import {
 const DOUBLE_PI = 2 * Math.PI;
 const BUG_MAX_ANGLE = Math.PI / 12;
 const BUG_DAMAGE = 40;
+const BUG_HEALTH = 60;
 
 export default class BugEntity extends Entity {
     get offset () {
@@ -36,6 +37,7 @@ export default class BugEntity extends Entity {
                 onActivate: this._onContact.bind(this)
             }),
             new OrganismTrait({
+                health: BUG_HEALTH,
                 onDie: this._onDie.bind(this)
             }),
             new AppearanceFadeOutTrait({

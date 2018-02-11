@@ -18,8 +18,9 @@ import {
 } from 'constants.js';
 
 const LIZARD_DAMAGE = 10;
+const LIZARD_HEALTH = 70;
 const LIZARD_FIGHT_DISTANCE = 150;
-const LIZARD_FIGHT_WAITING_TIME = 2000;
+const LIZARD_FIGHT_WAITING_TIME = 3000;
 
 export default class LizardEntity extends Entity {
     get angle () {
@@ -112,6 +113,7 @@ export default class LizardEntity extends Entity {
                 damage: 0
             }),
             new OrganismTrait({
+                health: LIZARD_HEALTH,
                 onDie: this._onDie.bind(this)
             }),
             new AppearanceFadeOutTrait({

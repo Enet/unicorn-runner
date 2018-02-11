@@ -7,6 +7,8 @@ import {
     SCORE_GAS_MUSHROOM_DEATH
 } from 'constants.js';
 
+const GAS_MUSHROOM_HEALTH = 50;
+
 export default class GasMushroomEntity extends MushroomEntity {
     _getImageName () {
         return 'GasMushroom';
@@ -20,6 +22,7 @@ export default class GasMushroomEntity extends MushroomEntity {
         return [
             ...super._createTraits(...arguments),
             new OrganismTrait({
+                health: GAS_MUSHROOM_HEALTH,
                 onDie: this._onDie.bind(this)
             }),
             new AppearanceFadeOutTrait({

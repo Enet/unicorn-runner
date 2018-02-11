@@ -9,6 +9,9 @@ import Step from 'components/Step/Step.jsx';
 import Button from 'components/Button/Button.jsx';
 import I18n from 'utils/I18n.js';
 import fullscreenMode from 'utils/fullscreenMode.js';
+import {
+    VICTORY_CONDITION
+} from 'constants.js';
 
 import step0Image from 'menu/0.png';
 import step1Image from 'menu/1.png';
@@ -55,7 +58,7 @@ export default class MapScreen extends Screen {
                     onClick={this._onStepClick.bind(this, 3)} />
             </div>
             <Button disabled={true} className="map-screen__score-button">
-                {score}$ {i18n.get(this, 'of')} 10000$
+                {score}$ {i18n.get(this, 'of')} {VICTORY_CONDITION}$
             </Button>
             <br />
             <Button

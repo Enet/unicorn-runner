@@ -9,6 +9,10 @@ export default class OrganismTrait extends Trait {
         return this._health === MIN_HEALTH;
     }
 
+    getPercent () {
+        return this._health / this._maxHealth;
+    }
+
     getHealth () {
         return this._health;
     }
@@ -50,6 +54,7 @@ export default class OrganismTrait extends Trait {
 
     traitWillMount ({health=100}) {
         this._health = +health;
+        this._maxHealth = +health;
     }
 
     traitDidMount () {

@@ -15,6 +15,7 @@ import AppearanceFadeOutTrait from 'traits/AppearanceFadeOutTrait.js';
 import ActionFightTrait from 'traits/ActionFightTrait.js';
 import GameplayScoreTrait from 'traits/GameplayScoreTrait.js';
 import {
+    TILE_SIZE,
     SCORE_SPIDER_DEATH
 } from 'constants.js';
 
@@ -43,7 +44,9 @@ export default class SpiderEntity extends Entity {
         }
 
         const dx = this.body.center.x - player.body.center.x;
-        if (Math.abs(dx) > player.size.width / 2) {
+        const dy = this.body.center.y - player.body.center.y;
+        if (Math.abs(dx) > player.size.width / 2 ||
+            dy >= 0 || dy < -5 * TILE_SIZE) {
             return;
         }
 

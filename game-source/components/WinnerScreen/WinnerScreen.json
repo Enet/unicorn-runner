@@ -2,14 +2,18 @@
     "ru": {
         "header": "Победа!",
         "subheader1": "Ура! Единорог",
-        "subheader2": "отдал свой кредит.",
+        "subheader2": "отдал {X}$.",
+        "left": "{X}$ осталось",
+        "credit": "Взять кредит",
         "menu": "Выйти в меню",
         "next": "Далее"
     },
     "en": {
         "header": "Victory!",
         "subheader1": "Yeah! The unicorn has",
-        "subheader2": "returned his credit.",
+        "subheader2": "returned {X}$.",
+        "left": "{X}$ left",
+        "credit": "Get credit",
         "menu": "Main Menu",
         "next": "Next"
     }
