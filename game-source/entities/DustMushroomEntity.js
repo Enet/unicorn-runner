@@ -1,7 +1,7 @@
 import MushroomEntity from 'entities/MushroomEntity.js';
 import BombDustTrait from 'traits/BombDustTrait.js';
 
-const DUST_MUSHROOM_DAMAGE = 80;
+const DUST_MUSHROOM_DAMAGE = 50;
 
 export default class DustMushroomEntity extends MushroomEntity {
     _getImageName () {
