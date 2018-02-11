@@ -7,7 +7,7 @@ import BombDustTrait from 'traits/BombDustTrait.js';
 import FootholdTrait from 'traits/FootholdTrait.js';
 import TriggerContactTrait from 'traits/TriggerContactTrait.js';
 
-const TRAP_DAMAGE = 80;
+const TRAP_DAMAGE = 50;
 
 export default class TrapEntity extends Entity {
     get offset () {
