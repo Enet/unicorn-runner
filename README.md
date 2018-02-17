@@ -44,6 +44,12 @@ To build final bundles:
 yarn build
 ```
 
+### Skip
+If you want to skip level for some reasons, open developer tools in your browser and type in the console:
+```javascript
+localStorage.setItem('progress', 3)
+```
+
 Good luck and have fun! :frog:
 
 # Contacts
