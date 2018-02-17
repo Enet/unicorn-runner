@@ -2,6 +2,7 @@ $information-width = 400px
 
 .information
     width: $information-width
+    max-width: 90%
     position: absolute
     left: 50%
     top: $ui.size.margin
@@ -12,10 +13,17 @@ $information-width = 400px
     font-size: 0.5rem
     padding: ($ui.size.margin / 2)
     border-radius: ($ui.size.margin / 3)
+    z-index: 1
     transform: translateX(-50%)
 
     &:empty
         display: none
 
-@media screen and (max-width: $ui.breakpoint.netbook)
-    display: none
+@media screen and (min-width: $ui.breakpoint.tablet + 1)
+    span[tablet]
+        display: none
+
+@media screen and (max-width: $ui.breakpoint.tablet)
+    span[desktop]
+        display: none
+
