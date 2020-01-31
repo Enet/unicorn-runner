@@ -3,6 +3,8 @@ services:
     unicorn-runner-app:
         image: enet/unicorn-runner
         volumes:
-        - ..:/var/www/app
+        - ..:/usr/share/nginx/html
         ports:
-        - 9220:80
+        - 127.0.0.1:9220:80
+        environment:
+        - NGINX_PORT=80
