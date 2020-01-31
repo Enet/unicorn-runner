@@ -1,0 +1,8 @@
+version: '2'
+services:
+    unicorn-runner-app:
+        image: enet/unicorn-runner
+        volumes:
+        - ..:/var/www/app
+        ports:
+        - 9220:80
