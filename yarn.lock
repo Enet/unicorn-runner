@@ -3099,6 +3099,16 @@ gifsicle@^4.0.0:
     execa "^1.0.0"
     logalot "^2.0.0"
 
+gifsicle@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/gifsicle/-/gifsicle-5.0.0.tgz#d1ca7f223e949966d373eb1fb6e7ce156d257750"
+  integrity sha512-GZ1ym4uY12FHXsf26Kk1G06Edwago9zctqUqin69pm8ObA13jb3urgHU9PgKmtH6kHaCjEcjoRzNjxUyYvb1Bg==
+  dependencies:
+    bin-build "^3.0.0"
+    bin-wrapper "^4.0.0"
+    execa "^1.0.0"
+    logalot "^2.0.0"
+
 glob-base@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/glob-base/-/glob-base-0.3.0.tgz#dbb164f6221b1c0b1ccf82aea328b497df0ea3c4"

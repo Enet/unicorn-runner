@@ -24,7 +24,8 @@
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.10.1",
-    "yaml-loader": "^0.5.0"
+    "yaml-loader": "^0.5.0",
+    "gifsicle": "^5.0.0"
   },
   "name": "unicorn-runner",
   "version": "2.0.0",
